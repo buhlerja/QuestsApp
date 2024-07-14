@@ -1,0 +1,115 @@
+//
+//  ObjectiveCreateView.swift
+//  Prompts
+//
+//  Created by Jack Buhler on 2024-07-21.
+//
+
+import SwiftUI
+import MapKit
+
+struct ObjectiveCreateView: View {
+    @State private var selectedObjectiveType = 4
+    @State var objectiveDescription = ""
+    @State var objectiveSolution = ""
+    var body: some View {
+        VStack {
+            objectiveDescriptionView(objectiveDescription: $objectiveDescription)
+         
+            HStack {
+                Text("Objective Type: ")
+                Picker(selection: $selectedObjectiveType, label: Text("Picker")) {
+                    Text("Location").tag(1)
+                    Text("Photo").tag(2)
+                    Text("Code").tag(3)
+                    Text("Combination").tag(4)
+                }
+                .pickerStyle(MenuPickerStyle())
+                Spacer()
+            }
+            .padding()
+            if selectedObjectiveType == 3 {
+                HStack {
+                    Text("Solution to Objective: ")
+                    TextField("Enter your solution", text: $objectiveSolution)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                } .padding()
+            }
+            else if selectedObjectiveType == 4 {
+                VStack {
+                    Text("Solution: \(objectiveSolution)")
+                        .padding()
+                    NumericGrid()
+                }
+                
+            }
+            else if selectedObjectiveType == 1 {
+                
+            }
+        }
+    }
+    
+    // A helper function to display a number as a button
+     func number(of number: Int) -> some View {
+         Button(action: {
+             objectiveSolution += "\(number)"
+         }) {
+             ZStack {
+                 Circle()
+                     .fill(Color.cyan) // Set the color for the circle
+                     .frame(width: 50, height: 50) // Set the size of the circle
+                 Text("\(number)")
+                     .font(.title)
+                     .foregroundColor(.white) // Set the text color
+             }
+         }
+         .accessibilityLabel(Text("Button \(number)")) // Accessibility label
+     }
+    
+    // View for the numeric grid
+    func NumericGrid() -> some View {
+        let columns = [
+            GridItem(.flexible(), spacing: 16),
+            GridItem(.flexible(), spacing: 16),
+            GridItem(.flexible(), spacing: 16)
+        ]
+
+        return VStack(spacing: 16) {
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(1..<10) { digit in
+                    number(of: digit)
+                }
+            }
+            number(of: 0)
+        }
+        .padding()
+    }
+    
+    // Helper function containing objective description sub-view
+    private func objectiveDescriptionView(objectiveDescription: Binding<String>) -> some View
+    {
+        VStack(alignment: .leading) {
+             Text("Description of Objective: ")
+             Text("This is the set of instructions the adventurer will be presented with")
+                 .font(.subheadline)
+                 .padding(.top, 2)
+         
+             TextEditor(text: objectiveDescription)
+               .padding(4)
+               .frame(height: 200)
+               .overlay(
+                   RoundedRectangle(cornerRadius: 8)
+                       .stroke(Color.gray.opacity(0.5), lineWidth: 1))
+        }
+        .padding()
+    }
+}
+
+
+
+struct ObjectiveCreateView_Previews: PreviewProvider {
+    static var previews: some View {
+        ObjectiveCreateView()
+            .previewLayout(.fixed(width: 400, height: 400))
+    }
+}
