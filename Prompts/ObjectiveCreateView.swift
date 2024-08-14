@@ -9,44 +9,93 @@ import SwiftUI
 import MapKit
 
 struct ObjectiveCreateView: View {
-    @State private var selectedObjectiveType = 4
+    @State private var selectedObjectiveType = 3
     @State var objectiveDescription = ""
     @State var objectiveSolution = ""
+    @State var hint = ""
+    @State var selectedHours = 0
+    @State var selectedMinutes = 0
     var body: some View {
-        VStack {
-            objectiveDescriptionView(objectiveDescription: $objectiveDescription)
-         
-            HStack {
-                Text("Objective Type: ")
-                Picker(selection: $selectedObjectiveType, label: Text("Picker")) {
-                    Text("Location").tag(1)
-                    Text("Photo").tag(2)
-                    Text("Code").tag(3)
-                    Text("Combination").tag(4)
-                }
-                .pickerStyle(MenuPickerStyle())
-                Spacer()
-            }
-            .padding()
-            if selectedObjectiveType == 3 {
+        ScrollView {
+            VStack {
+                objectiveDescriptionView(objectiveDescription: $objectiveDescription)
+             
                 HStack {
-                    Text("Solution to Objective: ")
-                    TextField("Enter your solution", text: $objectiveSolution)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                } .padding()
-            }
-            else if selectedObjectiveType == 4 {
-                VStack {
-                    Text("Solution: \(objectiveSolution)")
-                        .padding()
-                    NumericGrid()
+                    Text("Objective Type: ")
+                    Picker(selection: $selectedObjectiveType, label: Text("Picker")) {
+                        Text("Location").tag(1)
+                        Text("Photo").tag(2)
+                        Text("Code").tag(3)
+                        Text("Combination").tag(4)
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    Spacer()
                 }
-                
-            }
-            else if selectedObjectiveType == 1 {
-                
-            }
+                .padding()
+                if selectedObjectiveType == 3 {
+                    VStack {
+                        HStack {
+                            Text("Solution to Objective: ")
+                            TextField("Enter your solution", text: $objectiveSolution)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        } .padding()
+                        HStack {
+                            Text("Enter Time Constraint? (Optional)")
+                            Spacer()
+                        }
+                        HStack {
+                            Picker("Hours", selection: $selectedHours) {
+                                ForEach(0..<24) { hour in
+                                    Text("\(hour) h").tag(hour)
+                                }
+                            }
+                            .pickerStyle(.wheel)
+                            .frame(width: 100, height: 100)
+                            .clipped()
+
+                            Picker("Minutes", selection: $selectedMinutes) {
+                                ForEach(0..<60) { minute in
+                                    Text("\(minute) min").tag(minute)
+                                }
+                            }
+                            .pickerStyle(.wheel)
+                            .frame(width: 100, height: 100)
+                            .clipped()
+                        }
+                        .padding()
+        
+                        HStack {
+                            Text("Add Hint? (Optional)")
+                            TextField("Enter your hint", text: $hint)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        } .padding()
+                        Text("Users will be able to access your hint after a failed attempt or after half of their time has expired")
+                            .font(.footnote)
+                        HStack {
+                            Text("Add Area? (Optional)")
+                            Spacer()
+                            // Followed by an AREA selector.
+                        } .padding()
+                        // Placeholder for eventual area selector
+                        Map()
+                            .frame(width: 300, height: 300)
+                            .cornerRadius(12)
+                    } .padding()
+                }
+                else if selectedObjectiveType == 4 {
+                    VStack {
+                        Text("Solution: \(objectiveSolution)")
+                            .padding()
+                        NumericGrid()
+                    }
+                    
+                }
+                else if selectedObjectiveType == 1 {
+                    
+                }
+            }.padding()
         }
+        
     }
     
     // A helper function to display a number as a button
@@ -110,6 +159,6 @@ struct ObjectiveCreateView: View {
 struct ObjectiveCreateView_Previews: PreviewProvider {
     static var previews: some View {
         ObjectiveCreateView()
-            .previewLayout(.fixed(width: 400, height: 400))
+            //.previewLayout(.fixed(width: 400, height: 700))
     }
 }
