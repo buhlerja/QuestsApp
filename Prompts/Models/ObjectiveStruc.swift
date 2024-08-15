@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import MapKit
+
+struct ObjectiveStruc: Identifiable {
+    let id: UUID // We should assign the same UUID as corresponding quest so we know which quest this objective belongs to?
+    let objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high)
+    
+    
+    
+ 
+}
+
+

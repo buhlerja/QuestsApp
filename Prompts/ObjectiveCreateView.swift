@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct ObjectiveCreateView: View {
+    @Binding var showObjectiveCreateView: Bool
     @State private var selectedObjectiveType = 3
     @State var objectiveDescription = ""
     @State var objectiveSolution = ""
@@ -93,6 +94,35 @@ struct ObjectiveCreateView: View {
                 else if selectedObjectiveType == 1 {
                     
                 }
+                HStack {
+                    Button(action: {}) {
+                        HStack {
+                            Spacer()
+                            Text("Cancel")
+                                .padding()
+                                .background(Color.cyan)
+                                .cornerRadius(8)
+                            Spacer()
+                        }
+                        
+                    }
+                    Button(action: {
+                        // 1) SAVE OBJECTIVE
+                        // 2) Save and display objective that was just created, create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view
+                        showObjectiveCreateView = false // this should change the variable in main view because of BINDING label
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Save Objective")
+                                .padding()
+                                .background(Color.cyan)
+                                .cornerRadius(8)
+                            Spacer()
+                        }
+                        
+                    }
+                }
+               
             }.padding()
         }
         
@@ -158,7 +188,7 @@ struct ObjectiveCreateView: View {
 
 struct ObjectiveCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        ObjectiveCreateView()
+        ObjectiveCreateView(showObjectiveCreateView: .constant(false))
             //.previewLayout(.fixed(width: 400, height: 700))
     }
 }

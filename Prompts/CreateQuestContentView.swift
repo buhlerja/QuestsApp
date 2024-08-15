@@ -23,14 +23,14 @@ struct CreateQuestContentView: View {
                 VStack(spacing: 20) {
                     VStack {
                         HStack {
-                            Text("What is a Quest?")
+                            Text("Create a Quest!")
                                 .font(.title)
                                 .fontWeight(.bold)
                             Spacer()
                         }
                         .padding()
                         
-                        Text("A Quest is a challenge done in your local area. It is broken down into steps, where in each step you meet an objective to proceed. Objectives can be locations, photos of objects, codes, or combinations. Quests may lead to physical treasures, but do not have to.")
+                        Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each step you meet criteria to proceed. Objectives can be locations, photos, codes, or combinations. Quests may lead to treasure, but do not have to.")
                     }
                     .padding()
                     .background(Color.white)
@@ -74,7 +74,7 @@ struct CreateQuestContentView: View {
                     .cornerRadius(8)
                     
                     if showObjectiveCreateView {
-                        ObjectiveCreateView()
+                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)

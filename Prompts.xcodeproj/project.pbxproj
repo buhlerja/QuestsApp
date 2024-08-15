@@ -11,6 +11,7 @@
 		830BCD7D2BFA735D0056BC8D /* PromptsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */; };
 		830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD822BFA73650056BC8D /* Assets.xcassets */; };
 		830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD852BFA73650056BC8D /* Preview Assets.xcassets */; };
+		83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */; };
 		8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B76B2C692A440053084D /* SupportingInfoView.swift */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
@@ -28,6 +29,7 @@
 		830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptsApp.swift; sourceTree = "<group>"; };
 		830BCD822BFA73650056BC8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		830BCD852BFA73650056BC8D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveStruc.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				83FE5BA92C38B57D0005EA55 /* QuestStruc.swift */,
+				83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */,
 				83FE5BAB2C38B6090005EA55 /* Theme.swift */,
 			);
 			path = Models;
@@ -179,6 +182,7 @@
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */,
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
+				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,
 				83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */,
 				83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */,
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,

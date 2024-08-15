@@ -32,7 +32,8 @@ struct StartingLocSelector: View {
                     }
                 }
                 .edgesIgnoringSafeArea(.all)
-                .frame(height: 300)
+                .frame(width: 350, height: 300)
+                .cornerRadius(12)
                 .onMapCameraChange { context in
                     region = context.region
                     if locChosen == true {
