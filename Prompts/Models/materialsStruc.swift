@@ -7,12 +7,14 @@
 
 import Foundation
 
-struct materialsStruc {
+struct materialsStruc: Identifiable {
+    let id: UUID
     let material: String
     let cost: Double
 
-    init(material: String, cost: Double)
+    init(id: UUID = UUID(), material: String, cost: Double)
     {
+        self.id = id
         self.material = material
         self.cost = cost
     }

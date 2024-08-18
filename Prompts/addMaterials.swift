@@ -28,7 +28,7 @@ struct addMaterials: View {
                         Text("Material Cost")
                         Slider(value: $materialCost, in: 1...10, step: 1)
                     }
-                    
+        
                     Button(action: {
                         // Ensure that materialName is not empty to avoid adding empty items
                         guard !materialName.isEmpty else { return }
@@ -68,14 +68,28 @@ struct addMaterials: View {
                 }
             }
             
-            List(materials, id: \.material) { material in
-                Text("\(material.material) - $\(Int(material.cost))")
-                    .foregroundColor(Color.black)
+            /*List {
+                ForEach(materials) { material in
+                    Text("\(material.material) - $\(Int(material.cost))")
+                        .foregroundColor(Color.black)
+                }
             }
             .listStyle(PlainListStyle())  // Use a plain list style to reduce extra padding
             .frame(maxHeight: 200)  // Constrain the height of the list to 200 points
             
-            .padding(.top, addNew ? 0 : 20)  // Add more space only when "Add New Material" button is alone
+            .padding(.top, addNew ? 0 : 20)  // Add more space only when "Add New Material" button is alone*/
+            
+            ForEach(materials) { material in
+               HStack {
+                   Text(material.material)
+                       .font(.headline)
+                   Spacer()
+                   Text("$\(Int(material.cost))")
+                       .font(.subheadline)
+               }
+               .padding()
+            }
+        
         }
         .padding()
     }
