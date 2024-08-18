@@ -16,6 +16,8 @@ struct SupportingInfoView: View {
     @State private var addTreasureValue: Bool = true
     @State private var verifyPhotos: Bool = false
     @State private var treasureValue: Double = 5
+    @State private var specialInstructions: String = ""
+    @State var materials: [materialsStruc] = []
     var body: some View {
         ScrollView {
             VStack {
@@ -67,24 +69,20 @@ struct SupportingInfoView: View {
                 }
                 
                 if showAddMaterials {
-                    
+                    addMaterials(materials: $materials)
                 }
                 
-                Button(action: {
-                    withAnimation {
-                        // Add toggle statement here
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "plus")
-                        Text("Add Special Instructions")
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
-                    .padding()
-                    .background(Color.cyan)
-                    .cornerRadius(8)
+                VStack(alignment: .leading) {
+                     Text("Add Special Instructions? (Optional)")
+                 
+                     TextEditor(text: $specialInstructions)
+                       .padding(4)
+                       .frame(height: 200)
+                       .overlay(
+                           RoundedRectangle(cornerRadius: 8)
+                               .stroke(Color.gray.opacity(0.5), lineWidth: 1))
                 }
+                .padding()
                 
                 Toggle(isOn: $treasure) {
                     Text("Treasure to be found?")
