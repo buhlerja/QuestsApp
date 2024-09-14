@@ -16,10 +16,15 @@ struct ObjectiveCreateView: View {
     @State var hint = ""
     @State var selectedHours = 0
     @State var selectedMinutes = 0
+    @State var objectiveTitle: String = ""
+    @State var selectedArea = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589),
+        span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
+    )
     var body: some View {
         ScrollView {
             VStack {
-                objectiveDescriptionView(objectiveDescription: $objectiveDescription)
+                objectiveDescriptionView(objectiveDescription: $objectiveDescription, objectiveTitle: $objectiveTitle)
              
                 HStack {
                     Text("Objective Type: ")
@@ -78,7 +83,7 @@ struct ObjectiveCreateView: View {
                             // Followed by an AREA selector.
                         } .padding()
                         // Placeholder for eventual area selector
-                        Map()
+                        areaSelector(selectedArea: $selectedArea)
                             .frame(width: 300, height: 300)
                             .cornerRadius(12)
                     } .padding()
@@ -107,8 +112,10 @@ struct ObjectiveCreateView: View {
                         
                     }
                     Button(action: {
-                        // 1) SAVE OBJECTIVE
-                        // 2) Save and display objective that was just created, create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view
+                        // 1) SAVE OBJECTIVE as an ObjectiveStruc type
+                        // 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest
+                        // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView)
+                        // 4) create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view
                         showObjectiveCreateView = false // this should change the variable in main view because of BINDING label
                     }) {
                         HStack {
@@ -165,9 +172,12 @@ struct ObjectiveCreateView: View {
     }
     
     // Helper function containing objective description sub-view
-    private func objectiveDescriptionView(objectiveDescription: Binding<String>) -> some View
+    private func objectiveDescriptionView(objectiveDescription: Binding<String>, objectiveTitle: Binding<String>) -> some View
     {
         VStack(alignment: .leading) {
+             Text("Title of Objective: ")
+             TextField("Title", text: $objectiveTitle)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
              Text("Description of Objective: ")
              Text("This is the set of instructions the adventurer will be presented with")
                  .font(.subheadline)

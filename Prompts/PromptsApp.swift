@@ -6,10 +6,20 @@
 //
 
 import SwiftUI
+import Firebase
 import SwiftData
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+    return true
+  }
+}
 
 @main
 struct PromptsApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate // register app for Firebase setup
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
         ])
@@ -29,3 +39,5 @@ struct PromptsApp: App {
         .modelContainer(sharedModelContainer)
     }
 }
+
+
