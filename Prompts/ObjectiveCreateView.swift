@@ -21,6 +21,18 @@ struct ObjectiveCreateView: View {
         center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589),
         span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
     )
+    @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
+    @State var objectiveContent = ObjectiveStruc(objectiveNumber: 0,
+                                                 objectiveTitle: "",
+                                                 objectiveDescription: "",
+                                                 objectiveType: 0,
+                                                 solutionCombinationAndCode: "",
+                                                 objectiveHint: "",
+                                                 hoursConstraint: 0,
+                                                 minutesConstraint: 0,
+                                                 objectiveArea: MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+                                                 )
+
     var body: some View {
         ScrollView {
             VStack {
@@ -100,7 +112,9 @@ struct ObjectiveCreateView: View {
                     
                 }
                 HStack {
-                    Button(action: {}) {
+                    Button(action: {
+                    
+                    }) {
                         HStack {
                             Spacer()
                             Text("Cancel")
@@ -198,7 +212,17 @@ struct ObjectiveCreateView: View {
 
 struct ObjectiveCreateView_Previews: PreviewProvider {
     static var previews: some View {
-        ObjectiveCreateView(showObjectiveCreateView: .constant(false))
+        ObjectiveCreateView(showObjectiveCreateView: .constant(false),
+                            questContent: .constant(
+                                QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 0.0,                                longitude: 0.0),
+                                                                  title: "",
+                                                                  description: "",
+                                                                  lengthInMinutes: 0,
+                                                                  difficulty: 0.0,
+                                                                  cost: ""
+                                          )
+                                )
+                            )
             //.previewLayout(.fixed(width: 400, height: 700))
     }
 }

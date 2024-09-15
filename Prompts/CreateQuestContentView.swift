@@ -13,7 +13,13 @@ struct CreateQuestContentView: View {
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
     @State private var selectedStartingLoc: CLLocationCoordinate2D?
-    
+    @State var questContent = QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 0.0,                                longitude: 0.0),
+                                      title: "",
+                                      description: "",
+                                      lengthInMinutes: 0,
+                                      difficulty: 0.0,
+                                      cost: ""
+                            )
     var body: some View {
         ZStack {
             Color(.systemCyan)
@@ -74,7 +80,7 @@ struct CreateQuestContentView: View {
                     .cornerRadius(8)
                     
                     if showObjectiveCreateView {
-                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView)
+                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)

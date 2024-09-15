@@ -4,6 +4,7 @@
 //
 //  Created by Jack Buhler on 2024-07-05.
 //
+let MAX_OBJECTIVES = 20
 
 import Foundation
 import MapKit
@@ -16,9 +17,11 @@ struct QuestStruc: Identifiable {
     var lengthInMinutes: Int
     var difficulty: Double
     var cost: String
-    var theme: Theme
+    //var theme: Theme
+    var objectiveCount: Int
+    var objectives: [ObjectiveStruc] = [] //Initially an empty array
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String, theme: Theme)
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String /*theme: Theme*/)
     {
         self.id = id
         self.coordinateStart = coordinateStart
@@ -27,8 +30,14 @@ struct QuestStruc: Identifiable {
         self.lengthInMinutes = lengthInMinutes
         self.difficulty = difficulty
         self.cost = cost
-        self.theme = theme
+        //self.theme = theme
+        self.objectiveCount = 0
     }
+    
+    mutating func addObjective(_ objective: ObjectiveStruc) {
+        objectives.append(objective)
+    }
+    
 }
 
 extension QuestStruc {
@@ -39,14 +48,14 @@ extension QuestStruc {
                    description: "A unique take on a classic punishment",
                    lengthInMinutes: 5,
                    difficulty: 7,
-                   cost: "Low",
-                   theme: .orange),
+                   cost: "Low"
+                   /*theme: .orange*/),
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
                    description: "A fun design challenge using the arts",
                    lengthInMinutes: 10,
                    difficulty: 5,
-                   cost: "Medium",
-                   theme: .yellow)
+                   cost: "Medium"
+                   /*theme: .yellow*/)
     ]
 }
