@@ -11,7 +11,7 @@ import MapKit
 
 struct QuestStruc: Identifiable {
     let id: UUID
-    let coordinateStart: CLLocationCoordinate2D
+    var coordinateStart: CLLocationCoordinate2D
     var title: String
     var description: String
     var lengthInMinutes: Int
@@ -35,7 +35,21 @@ struct QuestStruc: Identifiable {
     }
     
     mutating func addObjective(_ objective: ObjectiveStruc) {
-        objectives.append(objective)
+        let permanentObjective = ObjectiveStruc(
+                objectiveNumber: objectives.count + 1, // Set objective number
+                objectiveTitle: objective.objectiveTitle,
+                objectiveDescription: objective.objectiveDescription,
+                objectiveType: objective.objectiveType,
+                solutionCombinationAndCode: objective.solutionCombinationAndCode,
+                objectiveHint: objective.objectiveHint,
+                hoursConstraint: objective.hoursConstraint,
+                minutesConstraint: objective.minutesConstraint,
+                objectiveArea: objective.objectiveArea
+        )
+
+        // Append the new instance to the objectives array
+        objectives.append(permanentObjective)
+        objectiveCount += 1
     }
     
 }

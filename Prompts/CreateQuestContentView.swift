@@ -63,6 +63,11 @@ struct CreateQuestContentView: View {
                             .zIndex(1)
                     }
                     
+                    // Display objectives that have been created.
+                    ForEach(questContent.objectives.indices, id: \.self) { index in
+                                    ObjectiveHighLevelView(objective: questContent.objectives[index])
+                    }
+                    
                     Button(action: {
                         withAnimation {
                             showObjectiveCreateView.toggle()
