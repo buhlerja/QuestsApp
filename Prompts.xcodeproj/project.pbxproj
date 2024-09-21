@@ -12,6 +12,9 @@
 		830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD822BFA73650056BC8D /* Assets.xcassets */; };
 		830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD852BFA73650056BC8D /* Preview Assets.xcassets */; };
 		83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */; };
+		8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1E92C9F7B010079E403 /* AuthenticationView.swift */; };
+		8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */; };
+		8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */; };
 		8344B7052C7263B000B9216A /* addMaterials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7042C7263B000B9216A /* addMaterials.swift */; };
 		8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7062C7263EC00B9216A /* materialsStruc.swift */; };
 		8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */; };
@@ -37,6 +40,9 @@
 		830BCD822BFA73650056BC8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		830BCD852BFA73650056BC8D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveStruc.swift; sourceTree = "<group>"; };
+		8315E1E92C9F7B010079E403 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
+		8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		8344B7042C7263B000B9216A /* addMaterials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMaterials.swift; sourceTree = "<group>"; };
 		8344B7062C7263EC00B9216A /* materialsStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = materialsStruc.swift; sourceTree = "<group>"; };
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
@@ -90,6 +96,7 @@
 				83E4D75F2C41F14200B8346F /* Info.plist */,
 				83BDD94A2C1498D0001853A3 /* Prompts.entitlements */,
 				830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */,
+				8315E1E82C9F7AD00079E403 /* Authentication */,
 				83FE5BA82C38B5430005EA55 /* Models */,
 				83FE5BAF2C38BA2C0005EA55 /* CardView.swift */,
 				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
@@ -115,6 +122,16 @@
 				830BCD852BFA73650056BC8D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8315E1E82C9F7AD00079E403 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				8315E1E92C9F7B010079E403 /* AuthenticationView.swift */,
+				8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */,
+				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		83FE5BA82C38B5430005EA55 /* Models */ = {
@@ -210,15 +227,18 @@
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
 				83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */,
+				8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */,
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
 				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,
 				83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */,
+				8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */,
 				834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */,
 				83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */,
 				8344B7052C7263B000B9216A /* addMaterials.swift in Sources */,
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,
 				830BCD7D2BFA735D0056BC8D /* PromptsApp.swift in Sources */,
 				83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */,
+				8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,
 				83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */,
 				83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */,

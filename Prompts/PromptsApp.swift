@@ -34,7 +34,10 @@ struct PromptsApp: App {
 
     var body: some Scene {
         WindowGroup {
-            QuestView(quests: QuestStruc.sampleData)
+            NavigationStack {
+                AuthenticationView()
+            }
+            //QuestView(quests: QuestStruc.sampleData)
         }
         .modelContainer(sharedModelContainer)
     }

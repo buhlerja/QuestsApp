@@ -11,12 +11,54 @@ import MapKit
 struct ObjectiveHighLevelView: View {
     var objective: ObjectiveStruc
     var body: some View {
-        VStack {
-            Text(objective.objectiveTitle)
-            Text(objective.objectiveDescription)
-            // Other UI elements...
+            VStack(spacing: 16) {
+                // Title
+                Text(objective.objectiveTitle)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+
+                // Objective Description
+                Text(objective.objectiveDescription)
+                    .font(.body)
+                    .padding(.horizontal)
+
+                // Hint
+                Text("Hint: \(objective.objectiveHint)")
+                    .font(.subheadline)
+                    .italic()
+                    .foregroundColor(.blue)
+
+                // Status Section
+                HStack {
+                    Text("Hours: \(objective.hoursConstraint)")
+                    Text("Minutes: \(objective.minutesConstraint)")
+                }
+                .font(.headline)
+                .padding(.top)
+
+
+                // Action Buttons
+                HStack {
+                    Button(action: {
+                        // Action to edit objective
+                        // TO DO: Figure out how to parametrize objectiveCreateView to edit objectives
+                    }) {
+                        Text("Edit")
+                            .fontWeight(.semibold)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+
+                }
+                .padding(.top)
+
+                Spacer()
+            }
+            .padding()
         }
-    }
 }
 
 struct ObjectiveHighLevelView_Previews: PreviewProvider {
