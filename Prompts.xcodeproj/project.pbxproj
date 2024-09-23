@@ -15,6 +15,8 @@
 		8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1E92C9F7B010079E403 /* AuthenticationView.swift */; };
 		8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */; };
 		8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */; };
+		8315E1F02CA2176A0079E403 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EF2CA2176A0079E403 /* RootView.swift */; };
+		8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1F12CA21D580079E403 /* ProfilePage.swift */; };
 		8344B7052C7263B000B9216A /* addMaterials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7042C7263B000B9216A /* addMaterials.swift */; };
 		8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7062C7263EC00B9216A /* materialsStruc.swift */; };
 		8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */; };
@@ -43,6 +45,8 @@
 		8315E1E92C9F7B010079E403 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
 		8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		8315E1EF2CA2176A0079E403 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		8315E1F12CA21D580079E403 /* ProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePage.swift; sourceTree = "<group>"; };
 		8344B7042C7263B000B9216A /* addMaterials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMaterials.swift; sourceTree = "<group>"; };
 		8344B7062C7263EC00B9216A /* materialsStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = materialsStruc.swift; sourceTree = "<group>"; };
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 				83FE5BA82C38B5430005EA55 /* Models */,
 				83FE5BAF2C38BA2C0005EA55 /* CardView.swift */,
 				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
+				8315E1F12CA21D580079E403 /* ProfilePage.swift */,
 				83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */,
 				8344B76B2C692A440053084D /* SupportingInfoView.swift */,
 				8344B7042C7263B000B9216A /* addMaterials.swift */,
@@ -127,6 +132,7 @@
 		8315E1E82C9F7AD00079E403 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				8315E1EF2CA2176A0079E403 /* RootView.swift */,
 				8315E1E92C9F7B010079E403 /* AuthenticationView.swift */,
 				8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */,
 				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
@@ -226,7 +232,9 @@
 				8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */,
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
+				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,
 				83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */,
+				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
 				8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */,
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
 				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,

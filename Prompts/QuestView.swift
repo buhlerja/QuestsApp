@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct QuestView: View {
-    //@State private var showCreateQuest = false
+    
+    @Binding var showSignInView: Bool
+    
     let quests: [QuestStruc]
     
     var body: some View {
@@ -74,7 +76,7 @@ struct QuestView: View {
                     Button(action: {}) {
                         Image(systemName: "gear")
                     }
-                    Button(action: {}) {
+                    NavigationLink(destination: ProfilePage(showSignInView: $showSignInView)) {
                         Image(systemName: "person")
                     }
                 }
@@ -85,7 +87,7 @@ struct QuestView: View {
 
 struct QuestView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestView(quests: QuestStruc.sampleData)
+        QuestView(showSignInView: .constant(false), quests: QuestStruc.sampleData)
     }
 }
 
