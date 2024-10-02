@@ -27,6 +27,7 @@
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
+		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */; };
 		83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FB09C22C4D920900723EBE /* ObjectiveCreateView.swift */; };
@@ -56,6 +57,7 @@
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Prompts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Prompts.entitlements; sourceTree = "<group>"; };
+		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
 		83E4D75F2C41F14200B8346F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQuestContentView.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				83E4D75F2C41F14200B8346F /* Info.plist */,
 				83BDD94A2C1498D0001853A3 /* Prompts.entitlements */,
 				830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */,
+				83C7D98F2CACC9A10046D553 /* MapViewModel */,
 				8315E1E82C9F7AD00079E403 /* Authentication */,
 				83FE5BA82C38B5430005EA55 /* Models */,
 				83FE5BAF2C38BA2C0005EA55 /* CardView.swift */,
@@ -138,6 +141,14 @@
 				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
 			);
 			path = Authentication;
+			sourceTree = "<group>";
+		};
+		83C7D98F2CACC9A10046D553 /* MapViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				83C7D9902CACC9D70046D553 /* MapView.swift */,
+			);
+			path = MapViewModel;
 			sourceTree = "<group>";
 		};
 		83FE5BA82C38B5430005EA55 /* Models */ = {
@@ -232,6 +243,7 @@
 				8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */,
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
+				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,
 				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,
 				83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */,
 				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
@@ -388,6 +400,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Prompts/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show it on the map and suggest relevant quest opportunities.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -419,6 +432,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Prompts/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show it on the map and suggest relevant quest opportunities.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

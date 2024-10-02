@@ -6,21 +6,48 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct ActiveQuestView: View {
+    
+    @StateObject private var viewModel = MapViewModel()
+    //@State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.785834, longitude: -122.406417), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @Binding var showActiveQuest: Bool
     var body: some View {
         ZStack {
             Color(.systemCyan)
                 .ignoresSafeArea()
             
-            Button(action: { showActiveQuest = false})
-            {
-                Text("Close Active Quest")
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(10)
+            VStack {
+                /*Map(
+                    coordinateRegion: viewModel.binding,
+                    showsUserLocation: true,
+                    userTrackingMode: .constant(.follow))
+                    .ignoresSafeArea()
+                    .accentColor(Color.cyan)
+                    .onAppear {
+                        viewModel.checkIfLocationServicesIsEnabled()
+                    }*/
+                Map(position: $position)
+                    .ignoresSafeArea()
+                    .accentColor(Color.cyan)
+                    .onAppear {
+                        viewModel.checkIfLocationServicesIsEnabled()
+                    }
+                    .onMapCameraChange {
+                        position = .userLocation(followsHeading: true, fallback: .automatic)
+                        // Have to manually reset position to the user location. This works
+                    }
+                
+                Button(action: { showActiveQuest = false})
+                {
+                    Text("Close Active Quest")
+                        .padding()
+                        .background(Color.white)
+                        .foregroundColor(.black)
+                        .cornerRadius(10)
+                }
             }
         }
     }

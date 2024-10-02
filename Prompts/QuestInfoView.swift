@@ -41,11 +41,12 @@ struct QuestInfoView: View {
             }
             .navigationTitle(quest.title)
             
-            // pop-up for active quest
-            if showActiveQuest {
+            // pop-up for active quest.
+            // Full-screen cover for ActiveQuestView
+            .fullScreenCover(isPresented: $showActiveQuest) {
                 ActiveQuestView(showActiveQuest: $showActiveQuest)
             }
-        }
+}
     }
 }
 
