@@ -30,9 +30,10 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     
     func checkIfLocationServicesIsEnabled() {
         if CLLocationManager.locationServicesEnabled() {
-            locationManager = CLLocationManager()
+            locationManager = CLLocationManager() // Delegate method for authorization updates is automatically called here
             locationManager!.delegate = self
             locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+
         } else {
             print("Go turn on location services")
         }
@@ -69,5 +70,17 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             checkLocationAuthorization()
         }
     }
-
+    
+    // Function to return the latest location asynchronously
+    func getLiveLocationUpdates() async throws -> CLLocation? {
+        let updates = CLLocationUpdate.liveUpdates()
+        
+        // Iterate liveUpdates and return the first valid location
+        for try await update in updates {
+            if let loc = update.location {
+                return loc
+            }
+        }
+        return nil
+    }
 }

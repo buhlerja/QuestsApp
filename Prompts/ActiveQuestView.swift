@@ -10,7 +10,7 @@ import MapKit
 
 struct ActiveQuestView: View {
     
-    @StateObject private var viewModel = MapViewModel()
+    @ObservedObject var viewModel: MapViewModel
     @State private var bottomMenuExpanded = false
     //@State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.785834, longitude: -122.406417), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
@@ -35,10 +35,15 @@ struct ActiveQuestView: View {
                     UserAnnotation()
                 }
                     .ignoresSafeArea()
-                    .accentColor(Color.cyan)
-                    .onAppear {
-                        viewModel.checkIfLocationServicesIsEnabled()
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
                     }
+                    .accentColor(Color.cyan)
+                    /*.onAppear {
+                        viewModel.checkIfLocationServicesIsEnabled()
+                    }*/ // Check done in Parent View (QuestInfoView)
                 
                 Spacer()
                 
@@ -121,9 +126,12 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(showActiveQuest: showActiveQuest)
+            ActiveQuestView(viewModel: sampleViewModel, showActiveQuest: showActiveQuest)
         }
     }
+    
+    static var sampleViewModel = MapViewModel()
+    
 }
 
 // Helper to provide a Binding in the preview
