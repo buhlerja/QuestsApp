@@ -19,10 +19,9 @@ struct QuestStruc: Identifiable {
     var cost: String
     //var theme: Theme
     var objectiveCount: Int
-    var objectives: [ObjectiveStruc] = [] //Initially an empty array
+    var objectives: [ObjectiveStruc] = [] // Initially an empty array
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String /*theme: Theme*/)
-    {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [] /*theme: Theme*/) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
@@ -31,27 +30,31 @@ struct QuestStruc: Identifiable {
         self.difficulty = difficulty
         self.cost = cost
         //self.theme = theme
-        self.objectiveCount = 0
+        self.objectiveCount = objectiveCount
+        self.objectives = objectives
     }
     
     mutating func addObjective(_ objective: ObjectiveStruc) {
         let permanentObjective = ObjectiveStruc(
-                objectiveNumber: objectives.count + 1, // Set objective number
-                objectiveTitle: objective.objectiveTitle,
-                objectiveDescription: objective.objectiveDescription,
-                objectiveType: objective.objectiveType,
-                solutionCombinationAndCode: objective.solutionCombinationAndCode,
-                objectiveHint: objective.objectiveHint,
-                hoursConstraint: objective.hoursConstraint,
-                minutesConstraint: objective.minutesConstraint,
-                objectiveArea: objective.objectiveArea
+            objectiveNumber: objectives.count + 1, // Set objective number
+            objectiveTitle: objective.objectiveTitle,
+            objectiveDescription: objective.objectiveDescription,
+            objectiveType: objective.objectiveType,
+            solutionCombinationAndCode: objective.solutionCombinationAndCode,
+            objectiveHint: objective.objectiveHint,
+            hoursConstraint: objective.hoursConstraint,
+            minutesConstraint: objective.minutesConstraint,
+            objectiveArea: objective.objectiveArea
         )
 
         // Append the new instance to the objectives array
-        objectives.append(permanentObjective)
-        objectiveCount += 1
+        if permanentObjective.objectiveNumber <= MAX_OBJECTIVES {
+            objectiveCount = permanentObjective.objectiveNumber
+            objectives.append(permanentObjective)
+        } else {
+            print("Max number of objectives exceeded")
+        }
     }
-    
 }
 
 extension QuestStruc {
@@ -62,14 +65,18 @@ extension QuestStruc {
                    description: "A unique take on a classic punishment",
                    lengthInMinutes: 5,
                    difficulty: 7,
-                   cost: "Low"
+                   cost: "Low",
+                   objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
+                   objectives: ObjectiveStruc.objectiveSampleData
                    /*theme: .orange*/),
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
                    description: "A fun design challenge using the arts",
                    lengthInMinutes: 10,
                    difficulty: 5,
-                   cost: "Medium"
+                   cost: "Medium",
+                   objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
+                   objectives: ObjectiveStruc.objectiveSampleData
                    /*theme: .yellow*/)
     ]
 }

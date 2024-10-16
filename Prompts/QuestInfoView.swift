@@ -19,17 +19,40 @@ struct QuestInfoView: View {
     let quest: QuestStruc
     var body: some View {
         ZStack {
-            Color(.systemCyan)
+            LinearGradient(gradient: Gradient(colors: [.blue, .cyan]), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
-            
-            VStack
-            {
-                HStack {
+
+            VStack(alignment: .leading, spacing: 10) {
+                // Quest title and information
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(quest.title)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
                     Text(quest.description)
                         .font(.subheadline)
-                        .padding()
-                    Spacer()
+                        .foregroundColor(.white.opacity(0.8))
+                    
+                    HStack(spacing: 15) {
+                        HStack {
+                            Image(systemName: "clock")
+                            Text("\(quest.lengthInMinutes) min")
+                        }
+                        HStack {
+                            Image(systemName: "chart.bar.fill")
+                            Text("Difficulty: \(quest.difficulty, specifier: "%.1f")")
+                        }
+                        HStack {
+                            Image(systemName: "dollarsign.circle")
+                            Text(quest.cost)
+                        }
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.white.opacity(0.8))
                 }
+                .padding()
+
+                // Map and directions button
                 Map(position: $position) {
                     UserAnnotation()
                     Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: quest.coordinateStart)
@@ -38,38 +61,53 @@ struct QuestInfoView: View {
                             .stroke(.blue, lineWidth: 5)
                     }
                 }
-                    .frame(height: 600)
-                    .onAppear {
-                        viewModel.checkIfLocationServicesIsEnabled()
-                    }
-                    .mapControls {
-                        MapUserLocationButton()
-                        MapCompass()
-                        MapScaleView()
-                    }
+                .accentColor(Color.cyan)
+                .frame(height: 400)
+                .cornerRadius(15)
+                .shadow(radius: 10)
+                .padding(.horizontal)
+                .onAppear {
+                    viewModel.checkIfLocationServicesIsEnabled()
+                }
+                .mapControls {
+                    MapUserLocationButton()
+                    MapCompass()
+                    MapScaleView()
+                }
+
+                // Directions button
                 Button(action: {
                     getDirections()
                 }) {
                     Text("Get directions to starting location")
-                        .background(Rectangle().foregroundColor(Color.white))
-                }
-                Spacer()
-                Button(action: {showActiveQuest = true}) {
-                    Text("Start Challenge")
+                        .fontWeight(.medium)
                         .padding()
-                        .background(Rectangle().foregroundColor(Color.white))
-                        .cornerRadius(12)
-                        .shadow(radius: 15)
-                        .foregroundColor(.black)
-                        .padding(20)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                        .shadow(radius: 5)
+                        .foregroundColor(.blue)
                 }
+                .padding()
+
+                //Spacer()
+
+                // Start challenge button
+                Button(action: { showActiveQuest = true }) {
+                    Text("Start Challenge")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding()
+                        .background(LinearGradient(gradient: Gradient(colors: [.orange, .yellow]), startPoint: .top, endPoint: .bottom))
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .shadow(radius: 10)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
             }
             .navigationTitle(quest.title)
-            
-            // pop-up for active quest.
-            // Full-screen cover for ActiveQuestView
             .fullScreenCover(isPresented: $showActiveQuest) {
-                ActiveQuestView(viewModel: viewModel, showActiveQuest: $showActiveQuest)
+                ActiveQuestView(viewModel: viewModel, showActiveQuest: $showActiveQuest, quest: quest)
             }
         }
     }

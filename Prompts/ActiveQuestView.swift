@@ -15,6 +15,16 @@ struct ActiveQuestView: View {
     //@State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.785834, longitude: -122.406417), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @Binding var showActiveQuest: Bool
+    
+    @State private var currentObjectiveIndex = 0
+    @State private var remainingTime = 0 // Time in seconds
+    
+    let quest: QuestStruc
+    
+    var currentObjective: ObjectiveStruc {
+        quest.objectives[currentObjectiveIndex]
+    }
+    
     var body: some View {
         ZStack {
             Color(.systemCyan)
@@ -102,17 +112,22 @@ struct ActiveQuestView: View {
             Image(systemName: "chevron.up")
                 .font(.largeTitle)
                 .foregroundColor(.blue)
-                .padding()
 
             // Peek of the menu
             Text("Tap to Expand")
                 .font(.subheadline)
                 .padding()
             
+            Text("\(currentObjective.objectiveTitle)")
+                .font(.headline)
+            
+            Text("\(currentObjective.objectiveDescription)")
+                .font(.subheadline)
+            
             Spacer().frame(height: 20) // Add space above "Tap to Expand"
             
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: 200)
         .background(Color.white)
         .cornerRadius(16)
         .onTapGesture {
@@ -126,7 +141,7 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(viewModel: sampleViewModel, showActiveQuest: showActiveQuest)
+            ActiveQuestView(viewModel: sampleViewModel, showActiveQuest: showActiveQuest, quest: QuestStruc.sampleData[0])
         }
     }
     
