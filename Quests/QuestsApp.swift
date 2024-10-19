@@ -1,6 +1,6 @@
 //
-//  PromptsApp.swift
-//  Prompts
+//  QuestsApp.swift
+//  Quests
 //
 //  Created by Jack Buhler on 2024-05-19.
 //
@@ -18,7 +18,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 @main
-struct PromptsApp: App {
+struct QuestsApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate // register app for Firebase setup
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([

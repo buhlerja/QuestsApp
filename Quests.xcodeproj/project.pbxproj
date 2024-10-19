@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830524352C5877B5003BD2C2 /* StartingLocSelector.swift */; };
-		830BCD7D2BFA735D0056BC8D /* PromptsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */; };
+		830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */; };
 		830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD822BFA73650056BC8D /* Assets.xcassets */; };
 		830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD852BFA73650056BC8D /* Preview Assets.xcassets */; };
 		830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F234D2CC416A8008586C9 /* QuestCompleteView.swift */; };
@@ -23,9 +23,9 @@
 		8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */; };
 		8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B76B2C692A440053084D /* SupportingInfoView.swift */; };
 		834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834C44912C950DCC00DC1BFC /* areaSelector.swift */; };
-		834C44942C95DF6500DC1BFC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 834C44932C95DF6500DC1BFC /* GoogleService-Info.plist */; };
 		834C44972C95E29000DC1BFC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44962C95E29000DC1BFC /* FirebaseAnalytics */; };
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
+		838F2AA12CC42794001E741D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 838F2AA02CC42794001E741D /* GoogleService-Info.plist */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
@@ -39,8 +39,8 @@
 
 /* Begin PBXFileReference section */
 		830524352C5877B5003BD2C2 /* StartingLocSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingLocSelector.swift; sourceTree = "<group>"; };
-		830BCD792BFA735D0056BC8D /* Prompts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Prompts.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptsApp.swift; sourceTree = "<group>"; };
+		830BCD792BFA735D0056BC8D /* Quests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quests.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsApp.swift; sourceTree = "<group>"; };
 		830BCD822BFA73650056BC8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		830BCD852BFA73650056BC8D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		830F234D2CC416A8008586C9 /* QuestCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteView.swift; sourceTree = "<group>"; };
@@ -55,10 +55,10 @@
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
-		834C44932C95DF6500DC1BFC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		838F2AA02CC42794001E741D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
-		83BDD94A2C1498D0001853A3 /* Prompts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Prompts.entitlements; sourceTree = "<group>"; };
+		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
 		83E4D75F2C41F14200B8346F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		830BCD702BFA735D0056BC8D = {
 			isa = PBXGroup;
 			children = (
-				830BCD7B2BFA735D0056BC8D /* Prompts */,
+				830BCD7B2BFA735D0056BC8D /* Quests */,
 				830BCD7A2BFA735D0056BC8D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,17 +93,17 @@
 		830BCD7A2BFA735D0056BC8D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				830BCD792BFA735D0056BC8D /* Prompts.app */,
+				830BCD792BFA735D0056BC8D /* Quests.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		830BCD7B2BFA735D0056BC8D /* Prompts */ = {
+		830BCD7B2BFA735D0056BC8D /* Quests */ = {
 			isa = PBXGroup;
 			children = (
 				83E4D75F2C41F14200B8346F /* Info.plist */,
-				83BDD94A2C1498D0001853A3 /* Prompts.entitlements */,
-				830BCD7C2BFA735D0056BC8D /* PromptsApp.swift */,
+				83BDD94A2C1498D0001853A3 /* Quests.entitlements */,
+				830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */,
 				83C7D98F2CACC9A10046D553 /* MapViewModel */,
 				8315E1E82C9F7AD00079E403 /* Authentication */,
 				83FE5BA82C38B5430005EA55 /* Models */,
@@ -120,11 +120,11 @@
 				83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */,
 				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
-				834C44932C95DF6500DC1BFC /* GoogleService-Info.plist */,
+				838F2AA02CC42794001E741D /* GoogleService-Info.plist */,
 				830BCD822BFA73650056BC8D /* Assets.xcassets */,
 				830BCD842BFA73650056BC8D /* Preview Content */,
 			);
-			path = Prompts;
+			path = Quests;
 			sourceTree = "<group>";
 		};
 		830BCD842BFA73650056BC8D /* Preview Content */ = {
@@ -168,9 +168,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		830BCD782BFA735D0056BC8D /* Prompts */ = {
+		830BCD782BFA735D0056BC8D /* Quests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 830BCD892BFA73650056BC8D /* Build configuration list for PBXNativeTarget "Prompts" */;
+			buildConfigurationList = 830BCD892BFA73650056BC8D /* Build configuration list for PBXNativeTarget "Quests" */;
 			buildPhases = (
 				830BCD752BFA735D0056BC8D /* Sources */,
 				830BCD762BFA735D0056BC8D /* Frameworks */,
@@ -180,13 +180,13 @@
 			);
 			dependencies = (
 			);
-			name = Prompts;
+			name = Quests;
 			packageProductDependencies = (
 				834C44962C95E29000DC1BFC /* FirebaseAnalytics */,
 				834C44982C95E29000DC1BFC /* FirebaseAuth */,
 			);
 			productName = Prompts;
-			productReference = 830BCD792BFA735D0056BC8D /* Prompts.app */;
+			productReference = 830BCD792BFA735D0056BC8D /* Quests.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -204,7 +204,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 830BCD742BFA735D0056BC8D /* Build configuration list for PBXProject "Prompts" */;
+			buildConfigurationList = 830BCD742BFA735D0056BC8D /* Build configuration list for PBXProject "Quests" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -220,7 +220,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				830BCD782BFA735D0056BC8D /* Prompts */,
+				830BCD782BFA735D0056BC8D /* Quests */,
 			);
 		};
 /* End PBXProject section */
@@ -232,7 +232,7 @@
 			files = (
 				830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */,
 				830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */,
-				834C44942C95DF6500DC1BFC /* GoogleService-Info.plist in Resources */,
+				838F2AA12CC42794001E741D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +260,7 @@
 				83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */,
 				8344B7052C7263B000B9216A /* addMaterials.swift in Sources */,
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,
-				830BCD7D2BFA735D0056BC8D /* PromptsApp.swift in Sources */,
+				830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */,
 				83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */,
 				8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,
@@ -396,14 +396,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Prompts/Prompts.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Quests/Quests.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Prompts/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Quests/Preview Content\"";
 				DEVELOPMENT_TEAM = 946TY26Z33;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Prompts/Info.plist;
+				INFOPLIST_FILE = Quests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Quests;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show it on the map and suggest relevant quest opportunities.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -415,7 +417,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jack.Prompts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jack.Quests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -428,14 +430,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Prompts/Prompts.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Quests/Quests.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Prompts/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Quests/Preview Content\"";
 				DEVELOPMENT_TEAM = 946TY26Z33;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Prompts/Info.plist;
+				INFOPLIST_FILE = Quests/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Quests;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show it on the map and suggest relevant quest opportunities.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -447,7 +451,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jack.Prompts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jack.Quests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -458,7 +462,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		830BCD742BFA735D0056BC8D /* Build configuration list for PBXProject "Prompts" */ = {
+		830BCD742BFA735D0056BC8D /* Build configuration list for PBXProject "Quests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				830BCD872BFA73650056BC8D /* Debug */,
@@ -467,7 +471,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		830BCD892BFA73650056BC8D /* Build configuration list for PBXNativeTarget "Prompts" */ = {
+		830BCD892BFA73650056BC8D /* Build configuration list for PBXNativeTarget "Quests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				830BCD8A2BFA73650056BC8D /* Debug */,

@@ -25,8 +25,10 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>Prompts.xcscheme_^#shared#^_</key>
+		<key>Quests.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>

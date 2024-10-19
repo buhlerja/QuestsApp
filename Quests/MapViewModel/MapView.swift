@@ -1,6 +1,6 @@
 //
 //  MapView.swift
-//  Prompts
+//  Quests
 //
 //  Created by Jack Buhler on 2024-10-01.
 //
