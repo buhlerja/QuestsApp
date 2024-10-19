@@ -11,13 +11,17 @@ import MapKit
 struct ActiveQuestView: View {
     
     @ObservedObject var viewModel: MapViewModel
-    @State private var bottomMenuExpanded = false
+    @State private var bottomMenuExpanded = true
     //@State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.785834, longitude: -122.406417), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @Binding var showActiveQuest: Bool
     
     @State private var currentObjectiveIndex = 0
     @State private var remainingTime = 0 // Time in seconds
+    @State private var enteredObjectiveSolution = ""
+    @State private var questCompleted = false
+    @State private var showHintButton = false
+    @State private var displayHint = false
     
     let quest: QuestStruc
     
@@ -69,37 +73,92 @@ struct ActiveQuestView: View {
                }
             }
             .edgesIgnoringSafeArea(.bottom)
+            .fullScreenCover(isPresented: $questCompleted) {
+                QuestCompleteView(showActiveQuest: $showActiveQuest)
+            }
         }
     }
     
     private var bottomMenu: some View {
         VStack {
-            // Key info or content in the expanded menu
-            Text("More Information")
-                .font(.headline)
-                .padding()
-
-            Divider()
-
-            // Add your menu items here
-            Button(action: { showActiveQuest = false})
-            {
-                Text("Close Active Quest")
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(10)
-            }
-           
-            Button("Close") {
+            Button(action: {
                 withAnimation {
                     bottomMenuExpanded.toggle()
                 }
+                
+            }){
+                VStack {
+                    Image(systemName: "chevron.down")
+                        .font(.largeTitle)
+                        .foregroundColor(.blue)
+
+                    // Peek of the menu
+                    Text("Close Menu")
+                        .font(.subheadline)
+                        .padding()
+                }
             }
 
+            Divider()
+            
+            Text("\(currentObjective.objectiveTitle)")
+                .font(.headline)
+            
+            Text("\(currentObjective.objectiveDescription)")
+                .font(.subheadline)
+            
+            HStack {
+                Text("Enter Objective Solution:")
+                TextField("Solution", text: $enteredObjectiveSolution)
+            }
+            
+            Button(action: {
+                if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
+                    // Objective has successfully been completed, can move on to the next objective
+                    // Check if it's the final objective
+                    if currentObjectiveIndex == quest.objectives.count - 1 { // Final objective
+                        // Quest completed
+                        questCompleted = true
+                    }
+                    if currentObjectiveIndex + 1 < quest.objectives.count {
+                        currentObjectiveIndex += 1
+                    }
+                }
+                else {
+                    // Answer is wrong
+                    // Somehow turn the screen red or something for a second
+                    showHintButton = true
+                }
+            })
+            {
+                Text("Check Solution")
+            }
+            
+            if showHintButton == true {
+                Button(action: {
+                    displayHint = true
+                }) {
+                    HStack {
+                        //Image(sys)
+                        Text("Get a hint")
+                    }
+                }
+            }
+            
+            if displayHint == true {
+                Text("\(currentObjective.objectiveHint)")
+            }
+            
+            // Progress Bar
+           
+            Button(action: {
+                showActiveQuest = false
+            }) {
+                Text("Exit Active Quest")
+            }
             Spacer()
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: 450)
         .padding()
         .background(Color.white)
         .cornerRadius(16)
@@ -117,6 +176,8 @@ struct ActiveQuestView: View {
             Text("Tap to Expand")
                 .font(.subheadline)
                 .padding()
+            
+            Divider()
             
             Text("\(currentObjective.objectiveTitle)")
                 .font(.headline)
