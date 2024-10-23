@@ -9,19 +9,19 @@ import SwiftUI
 import MapKit
 
 struct ActiveQuestView: View {
-    
     @ObservedObject var viewModel: MapViewModel
     @State private var bottomMenuExpanded = true
-    //@State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.785834, longitude: -122.406417), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @Binding var showActiveQuest: Bool
     
     @State private var currentObjectiveIndex = 0
-    @State private var remainingTime = 0 // Time in seconds
     @State private var enteredObjectiveSolution = ""
     @State private var questCompleted = false
     @State private var showHintButton = false
     @State private var displayHint = false
+    @State private var answerIsWrong = false
+    @State private var hoursTimerString = ""
+    @State private var minutesTimerString = ""
     
     let quest: QuestStruc
     
@@ -35,158 +35,184 @@ struct ActiveQuestView: View {
                 .ignoresSafeArea()
             
             VStack {
-                /*Map(
-                    coordinateRegion: viewModel.binding,
-                    showsUserLocation: true,
-                    userTrackingMode: .constant(.follow))
-                    .ignoresSafeArea()
-                    .accentColor(Color.cyan)
-                    .onAppear {
-                        viewModel.checkIfLocationServicesIsEnabled()
-                    }*/
-                Map(position: $position)
-                {
+                // Map view
+                Map(position: $position) {
                     UserAnnotation()
                 }
-                    .ignoresSafeArea()
-                    .mapControls {
-                        MapUserLocationButton()
-                        MapCompass()
-                        MapScaleView()
-                    }
-                    .accentColor(Color.cyan)
-                    /*.onAppear {
-                        viewModel.checkIfLocationServicesIsEnabled()
-                    }*/ // Check done in Parent View (QuestInfoView)
-                
+                .ignoresSafeArea()
+                .mapControls {
+                    MapUserLocationButton()
+                    MapCompass()
+                    MapScaleView()
+                }
+                .accentColor(Color.cyan)
+
                 Spacer()
                 
                 // Bottom pop-up menu
                 if bottomMenuExpanded {
                     bottomMenu
-                       .transition(.move(edge: .bottom))
-                       .animation(.easeInOut, value: bottomMenuExpanded)
+                        .transition(.move(edge: .bottom))
+                        .animation(.easeInOut, value: bottomMenuExpanded)
                 } else {
                     smallIndicator
-                       .transition(.move(edge: .bottom))
-                       .animation(.easeInOut, value: bottomMenuExpanded)
-               }
+                        .transition(.move(edge: .bottom))
+                        .animation(.easeInOut, value: bottomMenuExpanded)
+                }
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
                 QuestCompleteView(showActiveQuest: $showActiveQuest)
             }
+            
+            VStack {
+                Text("\(hoursTimerString):\(minutesTimerString)")
+                       .font(.system(size: 12)) // Set font size to 12 points
+                       .foregroundColor(.white) // Text color
+                       .padding()
+                       .background(
+                           RoundedRectangle(cornerRadius: 10)
+                               .fill(Color.black) // Background color
+                               .shadow(radius: 5) // Optional shadow
+                       )
+                       .padding() // Padding around the callout
+                Spacer()
+            }
+            
+            // Overlay for incorrect answers
+            Color(answerIsWrong ? .red.opacity(0.5) : .clear)
+                .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                .ignoresSafeArea()
+        }
+        .onAppear {
+            updateTimerStrings()
         }
     }
     
     private var bottomMenu: some View {
-        VStack {
-            Button(action: {
-                withAnimation {
-                    bottomMenuExpanded.toggle()
-                }
-                
-            }){
-                VStack {
-                    Image(systemName: "chevron.down")
-                        .font(.largeTitle)
-                        .foregroundColor(.blue)
-
-                    // Peek of the menu
-                    Text("Close Menu")
-                        .font(.subheadline)
-                        .padding()
-                }
-            }
-
-            Divider()
-            
-            Text("\(currentObjective.objectiveTitle)")
-                .font(.headline)
-            
-            Text("\(currentObjective.objectiveDescription)")
-                .font(.subheadline)
-            
-            HStack {
-                Text("Enter Objective Solution:")
-                TextField("Solution", text: $enteredObjectiveSolution)
-            }
-            
-            Button(action: {
-                if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
-                    // Objective has successfully been completed, can move on to the next objective
-                    // Check if it's the final objective
-                    if currentObjectiveIndex == quest.objectives.count - 1 { // Final objective
-                        // Quest completed
-                        questCompleted = true
-                    }
-                    if currentObjectiveIndex + 1 < quest.objectives.count {
-                        currentObjectiveIndex += 1
-                    }
-                }
-                else {
-                    // Answer is wrong
-                    // Somehow turn the screen red or something for a second
-                    showHintButton = true
-                }
-            })
-            {
-                Text("Check Solution")
-            }
-            
-            if showHintButton == true {
+        ScrollView {
+            VStack(spacing: 10) { // Adjust spacing for better layout
                 Button(action: {
-                    displayHint = true
+                    withAnimation {
+                        bottomMenuExpanded.toggle()
+                    }
                 }) {
                     HStack {
-                        //Image(sys)
-                        Text("Get a hint")
+                        Image(systemName: "chevron.down")
+                            .font(.largeTitle)
+                            .foregroundColor(.blue)
+                        Text("Close Menu")
+                            .font(.subheadline)
                     }
                 }
-            }
-            
-            if displayHint == true {
-                Text("\(currentObjective.objectiveHint)")
-            }
-            
-            // Progress Bar
-           
-            Button(action: {
-                showActiveQuest = false
-            }) {
-                Text("Exit Active Quest")
-            }
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: 450)
-        .padding()
-        .background(Color.white)
-        .cornerRadius(16)
-        .shadow(radius: 10)
-    }
+                .padding(.top)
 
+                Divider()
+                
+                Text(currentObjective.objectiveTitle)
+                    .font(.headline)
+                    .padding()
+
+                Text(currentObjective.objectiveDescription)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .padding()
+
+                HStack {
+                    Text("Enter Solution:")
+                    TextField("Solution", text: $enteredObjectiveSolution)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.leading, 10)
+                }
+                .padding(.bottom)
+
+                if answerIsWrong {
+                    Text("Answer Incorrect")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .padding(.top, 5)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                }
+
+                Button(action: {
+                    checkSolution()
+                }) {
+                    Text("Check Solution")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .shadow(radius: 5)
+                }
+                .padding(.vertical)
+
+                if showHintButton {
+                    Button(action: {
+                        displayHint = true
+                    }) {
+                        HStack {
+                            Text("Get a hint")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .padding(.bottom)
+                }
+                
+                if displayHint {
+                    Text(currentObjective.objectiveHint)
+                        .font(.caption)
+                        .foregroundColor(.black)
+                        .padding(.top, 5)
+                }
+                
+                // Progress bar
+                ProgressView(value: Double(currentObjectiveIndex + 1), total: Double(quest.objectives.count))
+                    .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                    .padding(.vertical, 20)
+                
+                Button(action: {
+                    showActiveQuest = false
+                }) {
+                    Text("Exit Active Quest")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .shadow(radius: 5)
+                }
+                Spacer()
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: 600)
+            .background(Color.white)
+            .cornerRadius(16)
+            .shadow(radius: 10)
+        }
+    }
+    
     private var smallIndicator: some View {
         VStack {
-            // Small upward-facing arrow
             Image(systemName: "chevron.up")
                 .font(.largeTitle)
                 .foregroundColor(.blue)
-
-            // Peek of the menu
+            
             Text("Tap to Expand")
                 .font(.subheadline)
                 .padding()
             
             Divider()
             
-            Text("\(currentObjective.objectiveTitle)")
+            Text(currentObjective.objectiveTitle)
                 .font(.headline)
             
-            Text("\(currentObjective.objectiveDescription)")
+            Text(currentObjective.objectiveDescription)
                 .font(.subheadline)
+                .foregroundColor(.gray)
             
-            Spacer().frame(height: 20) // Add space above "Tap to Expand"
-            
+            Spacer().frame(height: 20)
         }
         .frame(maxWidth: .infinity, maxHeight: 200)
         .background(Color.white)
@@ -197,6 +223,40 @@ struct ActiveQuestView: View {
             }
         }
     }
+    
+    private func checkSolution() {
+        if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
+            // Objective has successfully been completed, can move on to the next objective
+            if currentObjectiveIndex == quest.objectives.count - 1 {
+                questCompleted = true // Quest completed
+            }
+            if currentObjectiveIndex + 1 < quest.objectives.count {
+                currentObjectiveIndex += 1
+                enteredObjectiveSolution = ""
+            }
+        } else {
+            // Answer is wrong
+            answerIsWrong = true
+            showHintButton = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                answerIsWrong = false
+            }
+        }
+    }
+    
+    private func updateTimerStrings() {
+            if currentObjective.hoursConstraint < 10 {
+                hoursTimerString = "0" + String(currentObjective.hoursConstraint)
+            } else {
+                hoursTimerString = String(currentObjective.hoursConstraint)
+            }
+
+            if currentObjective.minutesConstraint < 10 {
+                minutesTimerString = "0" + String(currentObjective.minutesConstraint)
+            } else {
+                minutesTimerString = String(currentObjective.minutesConstraint)
+            }
+        }
 }
 
 struct ActiveQuestView_Previews: PreviewProvider {
@@ -207,7 +267,6 @@ struct ActiveQuestView_Previews: PreviewProvider {
     }
     
     static var sampleViewModel = MapViewModel()
-    
 }
 
 // Helper to provide a Binding in the preview
@@ -225,4 +284,3 @@ struct StatefulPreviewWrapperTwo<Content: View>: View {
         content($value)
     }
 }
-
