@@ -20,6 +20,7 @@ struct ActiveQuestView: View {
     @State private var showHintButton = false
     @State private var displayHint = false
     @State private var answerIsWrong = false
+    @State private var answerIsRight = false
     @State private var hoursTimerString = ""
     @State private var minutesTimerString = ""
     
@@ -40,6 +41,7 @@ struct ActiveQuestView: View {
                     UserAnnotation()
                 }
                 .ignoresSafeArea()
+                .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
                 .mapControls {
                     MapUserLocationButton()
                     MapCompass()
@@ -78,6 +80,11 @@ struct ActiveQuestView: View {
                        .padding() // Padding around the callout
                 Spacer()
             }
+            
+            //Overlay for correct answers
+            Color(answerIsRight ? .green.opacity(0.2) : .clear)
+                .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                .ignoresSafeArea()
             
             // Overlay for incorrect answers
             Color(answerIsWrong ? .red.opacity(0.5) : .clear)
@@ -133,6 +140,15 @@ struct ActiveQuestView: View {
                         .padding(.top, 5)
                         .transition(.opacity)
                         .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                }
+                
+                if answerIsRight {
+                    Text("Correct")
+                        .font(.caption)
+                        .foregroundColor(.green)
+                        .padding(.top, 5)
+                        .transition(.opacity)
+                        .animation(.easeInOut(duration: 0.3), value: answerIsRight)
                 }
 
                 Button(action: {
@@ -234,6 +250,13 @@ struct ActiveQuestView: View {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
             }
+            
+            answerIsRight = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                answerIsRight = false
+            }
+            
+            
         } else {
             // Answer is wrong
             answerIsWrong = true
