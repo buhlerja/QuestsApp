@@ -21,7 +21,7 @@ struct ActiveQuestView: View {
     @State private var displayHint = false
     @State private var answerIsWrong = false
     @State private var answerIsRight = false
-    @State private var timerValue = 60
+    @State var timerValue = 60
     @State var timerIsUp = false
     
     let quest: QuestStruc
@@ -71,7 +71,7 @@ struct ActiveQuestView: View {
             }
             
             VStack {
-                timerView(secondsToAdd: timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
+                timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
                     .padding()
                 Spacer()
             }

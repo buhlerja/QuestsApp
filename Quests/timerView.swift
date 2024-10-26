@@ -14,15 +14,15 @@ struct timerView: View {
     
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    var secondsToAdd: Int // Parameter to specify the countdown duration in seconds
+    @Binding var timerValue: Int // Parameter to specify the countdown duration in seconds
     
     private let desiredDuration: Date // Target time for countdown
 
-    init(secondsToAdd: Int, timerIsUp: Binding<Bool>, questCompletedStopTimer: Binding<Bool>) {
+    init(timerValue: Binding<Int>, timerIsUp: Binding<Bool>, questCompletedStopTimer: Binding<Bool>) {
         self._questCompletedStopTimer = questCompletedStopTimer
         self._timerIsUp = timerIsUp // Initialize the @Binding property
-        self.secondsToAdd = secondsToAdd
-        self.desiredDuration = Calendar.current.date(byAdding: .second, value: secondsToAdd, to: Date())!
+        self._timerValue = timerValue
+        self.desiredDuration = Calendar.current.date(byAdding: .second, value: timerValue.wrappedValue, to: Date())!
     }
     
     static var durationFormatter: DateComponentsFormatter = {
@@ -54,6 +54,7 @@ struct timerView: View {
                 timerIsUp = true // let the parent view know that the timer is up
                 timer.upstream.connect().cancel()
             }
+            timerValue -= 1
             duration = timerView.durationFormatter.string(from: delta) ?? "---"
         }
         .onChange(of: questCompletedStopTimer) {
@@ -64,7 +65,7 @@ struct timerView: View {
 
 struct timerView_Previews: PreviewProvider {
     static var previews: some View {
-        timerView(secondsToAdd: 5, timerIsUp: .constant(false), questCompletedStopTimer: .constant(false)) // Example usage with a 5-second countdown
+        timerView(timerValue: .constant(5), timerIsUp: .constant(false), questCompletedStopTimer: .constant(false)) // Example usage with a 5-second countdown
     }
 }
 
