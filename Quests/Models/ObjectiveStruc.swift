@@ -45,8 +45,8 @@ extension ObjectiveStruc {
             objectiveType: 3,
             solutionCombinationAndCode: "1234",
             objectiveHint: "The code is 1234",
-            hoursConstraint: 3,
-            minutesConstraint: 0,
+            hoursConstraint: 0,
+            minutesConstraint: 1,
             objectiveArea: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060), // New York City coordinates
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -59,8 +59,8 @@ extension ObjectiveStruc {
             objectiveType: 3,
             solutionCombinationAndCode: "5678",
             objectiveHint: "Check the statue's plaque",
-            hoursConstraint: 2,
-            minutesConstraint: 30,
+            hoursConstraint: 0,
+            minutesConstraint: 1,
             objectiveArea: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 40.7580, longitude: -73.9855), // Times Square coordinates
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)

@@ -13,9 +13,11 @@ struct QuestCompleteView: View {
     
     var body: some View {
         ZStack {
-            Color(.green)
+            Color(.cyan)
+                .ignoresSafeArea()
             VStack {
                 Text("Quest Complete!")
+                    .font(.headline)
                 Text("Stats:")
                 Spacer()
                 Button(action: {

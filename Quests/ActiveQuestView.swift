@@ -21,8 +21,8 @@ struct ActiveQuestView: View {
     @State private var displayHint = false
     @State private var answerIsWrong = false
     @State private var answerIsRight = false
-    @State private var hoursTimerString = ""
-    @State private var minutesTimerString = ""
+    @State private var timerValue = 60
+    @State var timerIsUp = false
     
     let quest: QuestStruc
     
@@ -66,18 +66,13 @@ struct ActiveQuestView: View {
             .fullScreenCover(isPresented: $questCompleted) {
                 QuestCompleteView(showActiveQuest: $showActiveQuest)
             }
+            .fullScreenCover(isPresented: $timerIsUp) {
+                QuestFailedView()
+            }
             
             VStack {
-                Text("\(hoursTimerString):\(minutesTimerString)")
-                       .font(.system(size: 12)) // Set font size to 12 points
-                       .foregroundColor(.white) // Text color
-                       .padding()
-                       .background(
-                           RoundedRectangle(cornerRadius: 10)
-                               .fill(Color.black) // Background color
-                               .shadow(radius: 5) // Optional shadow
-                       )
-                       .padding() // Padding around the callout
+                timerView(secondsToAdd: timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
+                    .padding()
                 Spacer()
             }
             
@@ -92,7 +87,7 @@ struct ActiveQuestView: View {
                 .ignoresSafeArea()
         }
         .onAppear {
-            updateTimerStrings()
+            updateTimerValue()
         }
     }
     
@@ -249,6 +244,7 @@ struct ActiveQuestView: View {
             if currentObjectiveIndex + 1 < quest.objectives.count {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
+                updateTimerValue() // Reset the timer for the new objective
             }
             
             answerIsRight = true
@@ -267,19 +263,11 @@ struct ActiveQuestView: View {
         }
     }
     
-    private func updateTimerStrings() {
-            if currentObjective.hoursConstraint < 10 {
-                hoursTimerString = "0" + String(currentObjective.hoursConstraint)
-            } else {
-                hoursTimerString = String(currentObjective.hoursConstraint)
-            }
-
-            if currentObjective.minutesConstraint < 10 {
-                minutesTimerString = "0" + String(currentObjective.minutesConstraint)
-            } else {
-                minutesTimerString = String(currentObjective.minutesConstraint)
-            }
-        }
+    private func updateTimerValue() {
+        
+        timerValue = currentObjective.hoursConstraint * 3600 + currentObjective.minutesConstraint * 60
+        
+    }
 }
 
 struct ActiveQuestView_Previews: PreviewProvider {
