@@ -21,8 +21,9 @@ struct ObjectiveStruc {
     var hoursConstraint: Int
     var minutesConstraint: Int
     var objectiveArea: MKCoordinateRegion
+    var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int, minutesConstraint: Int, objectiveArea: MKCoordinateRegion)
+    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int, minutesConstraint: Int, objectiveArea: MKCoordinateRegion, isEditing: Bool)
     {
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
@@ -33,6 +34,7 @@ struct ObjectiveStruc {
         self.hoursConstraint = hoursConstraint
         self.minutesConstraint = minutesConstraint
         self.objectiveArea = objectiveArea
+        self.isEditing = isEditing
     }
 }
 
@@ -50,7 +52,8 @@ extension ObjectiveStruc {
             objectiveArea: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060), // New York City coordinates
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            )
+            ),
+            isEditing: false
         ),
         ObjectiveStruc(
             objectiveNumber: 2,
@@ -64,7 +67,8 @@ extension ObjectiveStruc {
             objectiveArea: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 40.7580, longitude: -73.9855), // Times Square coordinates
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            )
+            ),
+            isEditing: false
         )
     ]
 }

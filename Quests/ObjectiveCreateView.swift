@@ -11,31 +11,22 @@ import MapKit
 struct ObjectiveCreateView: View {
     @Binding var showObjectiveCreateView: Bool
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
-    @State var objectiveContent = ObjectiveStruc(objectiveNumber: 0,
-                                                 objectiveTitle: "",
-                                                 objectiveDescription: "",
-                                                 objectiveType: 3,
-                                                 solutionCombinationAndCode: "",
-                                                 objectiveHint: "",
-                                                 hoursConstraint: 0,
-                                                 minutesConstraint: 0,
-                                                 objectiveArea: MKCoordinateRegion(
-                                                    center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-                                                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
-                                                 )
+    @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
 
     var body: some View {
         ScrollView {
             VStack {
+                
                 // Objective Number set in function in QuestStruc file (add objective)
                 
                 objectiveDescriptionView(objectiveDescription: $objectiveContent.objectiveDescription, objectiveTitle: $objectiveContent.objectiveTitle)
+                             
              
                 HStack {
                     Text("Objective Type: ")
                     Picker(selection: $objectiveContent.objectiveType, label: Text("Picker")) {
-                        Text("Location").tag(1)
-                        Text("Photo").tag(2)
+                        //Text("Location").tag(1) // ONLY COMBINATION AND CODE FOR RELEASE 1
+                        //Text("Photo").tag(2)
                         Text("Code").tag(3)
                         Text("Combination").tag(4)
                     }
@@ -43,15 +34,26 @@ struct ObjectiveCreateView: View {
                     Spacer()
                 }
                 .padding()
-                if objectiveContent.objectiveType == 3 {
+                if objectiveContent.objectiveType == 3  || objectiveContent.objectiveType == 4 {
                     VStack {
+                        if objectiveContent.objectiveType == 3 {
+                            HStack {
+                                Text("Solution to Objective: ")
+                                TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                
+                            } .padding()
+                        }
+                        else {
+                            VStack {
+                                Text("Solution: \(objectiveContent.solutionCombinationAndCode)")
+                                    .padding()
+                                NumericGrid() // Automatically adds the combination to the data structure
+                            }
+                        }
+                        
                         HStack {
-                            Text("Solution to Objective: ")
-                            TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                        } .padding()
-                        HStack {
-                            Text("Enter Time Constraint? (Optional)")
+                            Text("Enter Time Constraint? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER THERES A TIME CONSTRAINT OR NOT
                             Spacer()
                         }
                         HStack {
@@ -76,14 +78,14 @@ struct ObjectiveCreateView: View {
                         .padding()
         
                         HStack {
-                            Text("Add Hint? (Optional)")
+                            Text("Add Hint? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER A HINT WAS ADDED OR NOT
                             TextField("Enter your hint", text: $objectiveContent.objectiveHint)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         } .padding()
                         Text("Users will be able to access your hint after a failed attempt or after half of their time has expired")
                             .font(.footnote)
                         HStack {
-                            Text("Add Area? (Optional)")
+                            Text("Add Area? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER AN AREA WAS ADDED OR NOT
                             Spacer()
                             // Followed by an AREA selector.
                         } .padding()
@@ -92,20 +94,10 @@ struct ObjectiveCreateView: View {
                             .cornerRadius(12)
                     } .padding()
                 }
-                else if objectiveContent.objectiveType == 4 {
-                    VStack {
-                        Text("Solution: \(objectiveContent.solutionCombinationAndCode)")
-                            .padding()
-                        NumericGrid()
-                    }
-                    
-                }
-                else if objectiveContent.objectiveType == 1 {
-                    
-                }
                 
                 HStack {
                     Button(action: {
+                        objectiveContent.isEditing = false
                         showObjectiveCreateView = false
                     }) {
                         HStack {
@@ -119,12 +111,16 @@ struct ObjectiveCreateView: View {
                         
                     }
                     Button(action: {
+                        
                         // 1) Objective data is saved in objectiveContent Structure
-                        // 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest
-                        questContent.addObjective(objectiveContent)
+                        if objectiveContent.isEditing == false {
+                            // From the CREATE flow, not the EDIT flow, so append to struc
+                            questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
+                        }  // IF editing, the objective is already saved to the data structure, and it is modified directly by this view
+                        
+                        objectiveContent.isEditing = false
                         // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
-                        // 4) create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view
-                        showObjectiveCreateView = false
+                        showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view */
                     }) {
                         HStack {
                             Spacer()
@@ -217,8 +213,23 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     difficulty: 0.0,
                                     cost: ""
                                     )
+                                ),
+                            objectiveContent: .constant(
+                                ObjectiveStruc(
+                                    objectiveNumber: 0,
+                                    objectiveTitle: "",
+                                    objectiveDescription: "",
+                                    objectiveType: 3,
+                                    solutionCombinationAndCode: "",
+                                    objectiveHint: "",
+                                    hoursConstraint: 0,
+                                    minutesConstraint: 0,
+                                    objectiveArea: MKCoordinateRegion(
+                                        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+                                        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)),
+                                    isEditing: false
                                 )
                             )
-            //.previewLayout(.fixed(width: 400, height: 700))
+        )
     }
 }

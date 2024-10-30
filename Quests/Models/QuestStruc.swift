@@ -44,11 +44,12 @@ struct QuestStruc: Identifiable {
             objectiveHint: objective.objectiveHint,
             hoursConstraint: objective.hoursConstraint,
             minutesConstraint: objective.minutesConstraint,
-            objectiveArea: objective.objectiveArea
+            objectiveArea: objective.objectiveArea,
+            isEditing: objective.isEditing
         )
 
         // Append the new instance to the objectives array
-        if permanentObjective.objectiveNumber <= MAX_OBJECTIVES {
+        if permanentObjective.objectiveNumber <= MAX_OBJECTIVES { /* Need to come up with a flow to prevent users from adding more than the max number of objectives in the first place */
             objectiveCount = permanentObjective.objectiveNumber
             objectives.append(permanentObjective)
         } else {

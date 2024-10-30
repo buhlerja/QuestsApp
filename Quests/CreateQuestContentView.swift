@@ -13,13 +13,29 @@ struct CreateQuestContentView: View {
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
     @State private var selectedStartingLoc: CLLocationCoordinate2D?
-    @State var questContent = QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 0.0,                                longitude: 0.0),
-                                      title: "",
-                                      description: "",
-                                      lengthInMinutes: 0,
-                                      difficulty: 0.0,
-                                      cost: ""
-                            )
+    @State var questContent = QuestStruc(
+        coordinateStart: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+        title: "",
+        description: "",
+        lengthInMinutes: 0,
+        difficulty: 0.0,
+        cost: ""
+    )
+    @State var objectiveContent = ObjectiveStruc(
+        objectiveNumber: 0,
+        objectiveTitle: "",
+        objectiveDescription: "",
+        objectiveType: 3,
+        solutionCombinationAndCode: "",
+        objectiveHint: "",
+        hoursConstraint: 0,
+        minutesConstraint: 0,
+        objectiveArea: MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)),
+        isEditing: false
+    )
+    
     var body: some View {
         ZStack {
             Color(.systemCyan)
@@ -65,12 +81,32 @@ struct CreateQuestContentView: View {
                     
                     // Display objectives that have been created.
                     ForEach(questContent.objectives.indices, id: \.self) { index in
-                                    ObjectiveHighLevelView(objective: questContent.objectives[index])
+                        ObjectiveHighLevelView(objective: $questContent.objectives[index])
                     }
+                    .padding()
+                    .background(Color(.systemGray6)) // Added background color
+                    .cornerRadius(10) // Rounded corners
+                    .shadow(radius: 5) // Added shadow
                     
                     Button(action: {
                         withAnimation {
                             showObjectiveCreateView.toggle()
+                            objectiveContent = ObjectiveStruc(
+                                                objectiveNumber: 0,
+                                                objectiveTitle: "",
+                                                objectiveDescription: "",
+                                                objectiveType: 3,
+                                                solutionCombinationAndCode: "",
+                                                objectiveHint: "",
+                                                hoursConstraint: 0,
+                                                minutesConstraint: 0,
+                                                objectiveArea: MKCoordinateRegion(
+                                                    center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+                                                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                                                ),
+                                                isEditing: false
+                                            )
+                            /* Above code resets the dummy struct passed into objectiveCreateView, which this subview then fills up and adds to quest array. This code is to make sure that the struct is not filled with old data. */
                         }
                     }) {
                         HStack {
@@ -85,7 +121,7 @@ struct CreateQuestContentView: View {
                     .cornerRadius(8)
                     
                     if showObjectiveCreateView {
-                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent)
+                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent, objectiveContent: $objectiveContent)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)

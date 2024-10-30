@@ -9,9 +9,27 @@ import SwiftUI
 import MapKit
 
 struct ObjectiveHighLevelView: View {
-    var objective: ObjectiveStruc
+    @Binding var objective: ObjectiveStruc
+    @State var showObjectiveCreateView = false
+    @State var questContent =
+        QuestStruc(coordinateStart: CLLocationCoordinate2D(
+            latitude: 0.0,
+            longitude: 0.0),
+            title: "",
+            description: "",
+            lengthInMinutes: 0,
+            difficulty: 0.0,
+            cost: ""
+        ) // Dummy variable which is never filled when ObjectiveCreateView is called from this view
+    
     var body: some View {
-            VStack(spacing: 16) {
+        VStack(spacing: 16) {
+            
+            if objective.isEditing {
+                // Call the objective creation flow!
+                ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent, objectiveContent: $objective)
+            }
+            else {
                 // Title
                 Text(objective.objectiveTitle)
                     .font(.largeTitle)
@@ -42,7 +60,8 @@ struct ObjectiveHighLevelView: View {
                 HStack {
                     Button(action: {
                         // Action to edit objective
-                        // TO DO: Figure out how to parametrize objectiveCreateView to edit objectives
+                        objective.isEditing = true
+                        showObjectiveCreateView = true
                     }) {
                         Text("Edit")
                             .fontWeight(.semibold)
@@ -57,25 +76,28 @@ struct ObjectiveHighLevelView: View {
 
                 Spacer()
             }
-            .padding()
         }
+        .frame(minWidth: 300) // Set a minimum width
+    }
 }
 
 struct ObjectiveHighLevelView_Previews: PreviewProvider {
     static var previews: some View {
-        ObjectiveHighLevelView(objective:
-                                ObjectiveStruc(
-                                    objectiveNumber: 1,
-                                    objectiveTitle: "Wash me",
-                                    objectiveDescription: "Break into an old folks home and give a senior citizen a bath",
-                                    objectiveType: 3,
-                                    solutionCombinationAndCode: "BATHTIME",
-                                    objectiveHint: "BATH____",
-                                    hoursConstraint: 10,
-                                    minutesConstraint: 0,
-                                    objectiveArea: MKCoordinateRegion(
-                                        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-                                        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+        ObjectiveHighLevelView(objective: .constant(
+                                    ObjectiveStruc(
+                                        objectiveNumber: 1,
+                                        objectiveTitle: "Wash me",
+                                        objectiveDescription: "Break into an old folks home and give a senior citizen a bath",
+                                        objectiveType: 3,
+                                        solutionCombinationAndCode: "BATHTIME",
+                                        objectiveHint: "BATH____",
+                                        hoursConstraint: 10,
+                                        minutesConstraint: 0,
+                                        objectiveArea: MKCoordinateRegion(
+                                            center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+                                            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)),
+                                        isEditing: false
+                                    )
                                 )
         )
     }
