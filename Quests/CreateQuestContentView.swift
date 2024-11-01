@@ -53,6 +53,7 @@ struct CreateQuestContentView: View {
                         .padding()
                         
                         Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each step you meet criteria to proceed. Objectives can be locations, photos, codes, or combinations. Quests may lead to treasure, but do not have to.")
+                        
                     }
                     .padding()
                     .background(Color.white)
