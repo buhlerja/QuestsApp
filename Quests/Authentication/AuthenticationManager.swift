@@ -59,7 +59,7 @@ final class AuthenticationManager {
         try await user.updatePassword(to: password)
     }
     
-    func updateEmail(email: String) async throws { // UNTESTED!! MAY NOT WORK SINCE I USED A DIFFERENT FUNCTION SENDEMAILVERIFICATION
+    func updateEmail(email: String) async throws { // UNTESTED
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse) // NEED to replace with custom error
         }

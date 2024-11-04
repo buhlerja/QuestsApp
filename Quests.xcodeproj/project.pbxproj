@@ -27,7 +27,6 @@
 		834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834C44912C950DCC00DC1BFC /* areaSelector.swift */; };
 		834C44972C95E29000DC1BFC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44962C95E29000DC1BFC /* FirebaseAnalytics */; };
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
-		838F2AA12CC42794001E741D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 838F2AA02CC42794001E741D /* GoogleService-Info.plist */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
@@ -37,6 +36,9 @@
 		83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FE5BA92C38B57D0005EA55 /* QuestStruc.swift */; };
 		83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FE5BAB2C38B6090005EA55 /* Theme.swift */; };
 		83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FE5BAF2C38BA2C0005EA55 /* CardView.swift */; };
+		83FF50622CD849A500F4E3B0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */; };
+		83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */; };
+		83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,7 +61,6 @@
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
-		838F2AA02CC42794001E741D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
@@ -71,6 +72,7 @@
 		83FE5BA92C38B57D0005EA55 /* QuestStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStruc.swift; sourceTree = "<group>"; };
 		83FE5BAB2C38B6090005EA55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		83FE5BAF2C38BA2C0005EA55 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,8 @@
 			files = (
 				834C44972C95E29000DC1BFC /* FirebaseAnalytics in Frameworks */,
 				834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */,
+				83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */,
+				83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,7 +130,7 @@
 				832A938B2CCD323D00324719 /* timerView.swift */,
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
 				832A938D2CCD3CB200324719 /* QuestFailedView.swift */,
-				838F2AA02CC42794001E741D /* GoogleService-Info.plist */,
+				83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */,
 				830BCD822BFA73650056BC8D /* Assets.xcassets */,
 				830BCD842BFA73650056BC8D /* Preview Content */,
 			);
@@ -190,6 +194,8 @@
 			packageProductDependencies = (
 				834C44962C95E29000DC1BFC /* FirebaseAnalytics */,
 				834C44982C95E29000DC1BFC /* FirebaseAuth */,
+				83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */,
+				83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */,
 			);
 			productName = Prompts;
 			productReference = 830BCD792BFA735D0056BC8D /* Quests.app */;
@@ -221,6 +227,7 @@
 			mainGroup = 830BCD702BFA735D0056BC8D;
 			packageReferences = (
 				834C44952C95E29000DC1BFC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				83FF50632CD84C1A00F4E3B0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 830BCD7A2BFA735D0056BC8D /* Products */;
 			projectDirPath = "";
@@ -238,7 +245,7 @@
 			files = (
 				830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */,
 				830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */,
-				838F2AA12CC42794001E741D /* GoogleService-Info.plist in Resources */,
+				83FF50622CD849A500F4E3B0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,6 +506,14 @@
 				minimumVersion = 11.2.0;
 			};
 		};
+		83FF50632CD84C1A00F4E3B0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -511,6 +526,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 834C44952C95E29000DC1BFC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83FF50632CD84C1A00F4E3B0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83FF50632CD84C1A00F4E3B0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
