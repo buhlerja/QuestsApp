@@ -23,7 +23,7 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func updateEmail() async throws {
-        let email = "hello123@gmail.com" // Static email for testing
+        let email = "jabbuhler@icloud.com" // Static email for testing
         try await AuthenticationManager.shared.updateEmail(email: email)
     }
     
@@ -87,7 +87,7 @@ extension ProfilePage {
                     }
                 }
             }
-            Button("Update Email") { // Doesn't work yet!!
+            Button("Update Email") { // Works!!
                 Task {
                     do {
                         try await viewModel.updateEmail()

@@ -59,7 +59,7 @@ final class AuthenticationManager {
         try await user.updatePassword(to: password)
     }
     
-    func updateEmail(email: String) async throws { // UNTESTED
+    func updateEmail(email: String) async throws { // TESTED!!
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse) // NEED to replace with custom error
         }
