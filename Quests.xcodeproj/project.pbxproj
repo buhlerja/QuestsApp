@@ -39,6 +39,7 @@
 		83FF50622CD849A500F4E3B0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */; };
 		83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */; };
 		83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */; };
+		83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF50692CD84FED00F4E3B0 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		83FE5BAB2C38B6090005EA55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		83FE5BAF2C38BA2C0005EA55 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		83FF50692CD84FED00F4E3B0 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				83E4D75F2C41F14200B8346F /* Info.plist */,
 				83BDD94A2C1498D0001853A3 /* Quests.entitlements */,
 				830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */,
+				83FF50682CD84FCC00F4E3B0 /* Utilities */,
 				83C7D98F2CACC9A10046D553 /* MapViewModel */,
 				8315E1E82C9F7AD00079E403 /* Authentication */,
 				83FE5BA82C38B5430005EA55 /* Models */,
@@ -173,6 +176,14 @@
 				83FE5BAB2C38B6090005EA55 /* Theme.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		83FF50682CD84FCC00F4E3B0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				83FF50692CD84FED00F4E3B0 /* Utilities.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +271,7 @@
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
+				83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */,
 				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,
 				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,
 				83FE5BB02C38BA2C0005EA55 /* CardView.swift in Sources */,

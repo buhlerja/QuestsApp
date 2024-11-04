@@ -6,8 +6,19 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
+
+@MainActor
+final class AuthenticationViewModel: ObservableObject {
+    
+    func signInGoogle() {
+        //let something = GIDSignIn.sharedInstance.signIn(withPresenting: UIViewController)
+    }
+}
 
 struct AuthenticationView: View {
+    @StateObject private var viewModel = AuthenticationViewModel()
     @Binding var showSignInView: Bool
     var body: some View {
         VStack {
@@ -23,6 +34,11 @@ struct AuthenticationView: View {
                     .cornerRadius(10)
             }
             Spacer()
+            
+            GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
+                
+            }
+            
         }
         .padding()
         .navigationTitle("Sign In")
