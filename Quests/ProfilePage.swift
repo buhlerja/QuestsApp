@@ -10,6 +10,14 @@ import SwiftUI
 @MainActor
 final class ProfileViewModel: ObservableObject {
     
+    @Published var authProviders: [AuthProviderOption] = []
+    
+    func loadAuthProviders() {
+        if let providers = try? AuthenticationManager.shared.getProviders() {
+            authProviders = providers
+        }
+    }
+    
     func signOut() throws {
         try AuthenticationManager.shared.signOut()
     }
@@ -49,7 +57,14 @@ struct ProfilePage: View {
                     }
                 }
             }
-            emailSection
+            
+            if viewModel.authProviders.contains(.email) {
+                emailSection
+            }
+      
+        }
+        .onAppear {
+            viewModel.loadAuthProviders()
         }
         .navigationBarTitle("Profile")
     }

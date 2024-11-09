@@ -40,6 +40,7 @@
 		83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */; };
 		83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */; };
 		83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF50692CD84FED00F4E3B0 /* Utilities.swift */; };
+		83FF506C2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +76,7 @@
 		83FE5BAF2C38BA2C0005EA55 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		83FF50692CD84FED00F4E3B0 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 				8315E1E92C9F7B010079E403 /* AuthenticationView.swift */,
 				8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */,
 				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
+				83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
 				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,
 				83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */,
+				83FF506C2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift in Sources */,
 				8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */,
 				834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */,
 				830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */,

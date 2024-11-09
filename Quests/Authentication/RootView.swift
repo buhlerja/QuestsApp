@@ -13,17 +13,20 @@ struct RootView: View {
     
     var body: some View {
         ZStack {
-            NavigationStack {
-                QuestView(showSignInView: $showSignInView, quests: QuestStruc.sampleData) // Eventually need to call by loading local quests from user data structure
+            if !showSignInView {
+                NavigationStack {
+                    QuestView(showSignInView: $showSignInView, quests: QuestStruc.sampleData) // Eventually need to call by loading local quests from user data structure
+                }
             }
-            .onAppear { // Check if user is signed in. If they are, no need to display sign in page
+        }
+        .onAppear { // Check if user is signed in. If they are, no need to display sign in page
                 let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
                 self.showSignInView = authUser == nil // Set Boolean
-            }
-            .fullScreenCover(isPresented: $showSignInView) { // Sign in page covers main page of app
-                NavigationStack {
-                    AuthenticationView(showSignInView: $showSignInView)
-                }
+    
+        }
+        .fullScreenCover(isPresented: $showSignInView) { // Sign in page covers main page of app
+            NavigationStack {
+                AuthenticationView(showSignInView: $showSignInView)
             }
         }
     }
