@@ -92,7 +92,7 @@ struct SupportingInfoView: View {
                 
                 if treasure {
                     Toggle(isOn: $addTreasureValue) {
-                        Text("Add treasure value?")
+                        Text("Add treasure value")
                     }
                     if addTreasureValue {
                         HStack {
@@ -114,11 +114,11 @@ struct SupportingInfoView: View {
                 Text("A recurring quest may be completed repeatedly. A non-recurring quest may only be completed once. Non-recurring quests may involve treasure that is found and taken at the end of the quest by the adventurer.")
                     .font(.footnote)
 
-                Toggle(isOn: $verifyPhotos) {
+                /*Toggle(isOn: $verifyPhotos) {
                     Text("Verify Submitted Photos?")
                 }
                 Text("If selected, photos from objectives requiring photo evidence will be submitted to you for verification. You will be able to decide whether submitted photos match the quest criteria.")
-                    .font(.footnote)
+                    .font(.footnote) */
                 
             } .padding()
         }

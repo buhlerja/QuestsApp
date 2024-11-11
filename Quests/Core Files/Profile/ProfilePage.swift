@@ -9,44 +9,6 @@
 
 import SwiftUI
 
-@MainActor
-final class ProfileViewModel: ObservableObject {
-    
-    @Published var authProviders: [AuthProviderOption] = []
-    
-    func loadAuthProviders() {
-        if let providers = try? AuthenticationManager.shared.getProviders() {
-            authProviders = providers
-        }
-    }
-    
-    func signOut() throws {
-        try AuthenticationManager.shared.signOut()
-    }
-    
-    func resetPassword() async throws {
-        let authUser = try AuthenticationManager.shared.getAuthenticatedUser()
-        guard let email = authUser.email else {
-            throw URLError(.fileDoesNotExist) // Need to create actual custom errors
-        }
-        try await AuthenticationManager.shared.resetPassword(email: email)
-    }
-    
-    func updateEmail() async throws {
-        let email = "jabbuhler@icloud.com" // Static email for testing
-        try await AuthenticationManager.shared.updateEmail(email: email)
-    }
-    
-    func updatePassword() async throws {
-        let password = "Hello123!" // Should be passed into the functions
-        try await AuthenticationManager.shared.updatePassword(password: password)
-    }
-    
-    func deleteAccount() async throws {
-        try await AuthenticationManager.shared.delete()
-    }
-}
-
 struct ProfilePage: View {
     
     @StateObject private var viewModel = ProfileViewModel()
@@ -55,6 +17,9 @@ struct ProfilePage: View {
     var body: some View {
         ZStack {
             List {
+                if let user = viewModel.user {
+                    Text("User ID: \(user.userId)")
+                }
                 Button("Sign Out") {
                     Task {
                         do {
@@ -80,12 +45,7 @@ struct ProfilePage: View {
                 }
           
             }
-            .onAppear {
-                viewModel.loadAuthProviders()
-            }
-            .navigationBarTitle("Profile")
-            .animation(.easeInOut, value: isShowingPopup)
-            
+
             if isShowingPopup {
                 Color.black.opacity(0.4) // Dimmed background
                    .edgesIgnoringSafeArea(.all)
@@ -98,6 +58,15 @@ struct ProfilePage: View {
                    .zIndex(1) // Make sure the pop-up is on top
             }
         }
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.large)
+        .onAppear {
+            viewModel.loadAuthProviders()
+        }
+        .task {
+            try? await viewModel.loadCurrentUser()
+        }
+        .animation(.easeInOut, value: isShowingPopup)
     }
 }
 
@@ -108,19 +77,19 @@ extension ProfilePage {
                 .font(.headline)
                 .padding(.top, 20)
             
-            Text("Deleting your account is permanent and cannot be undone. You are required to re-authenticate before account deletion.")
+            Text("Deleting your account is permanent and cannot be undone.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
             
             HStack {
-                Button("Don't Allow") {
+                Button("Back") {
                     isShowingPopup = false
                 }
                 .foregroundColor(.red)
                 .padding()
                 
-                Button("Allow") {
+                Button("Delete") {
                     Task {
                         do {
                             try await viewModel.deleteAccount()

@@ -1,6 +1,6 @@
 //
 //  CardView.swift
-//  Prompts
+//  Quests
 //
 //  Created by Jack Buhler on 2024-07-05.
 //
