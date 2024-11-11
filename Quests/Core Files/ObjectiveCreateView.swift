@@ -87,7 +87,7 @@ struct ObjectiveCreateView: View {
                         HStack {
                             Text("Add Area? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER AN AREA WAS ADDED OR NOT
                             Spacer()
-                            // Followed by an AREA selector.
+                            // Followed by an AREA selector which appears below.
                         } .padding()
                         areaSelector(selectedArea: $objectiveContent.objectiveArea)
                             .frame(width: 300, height: 300)
@@ -211,7 +211,8 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     description: "",
                                     lengthInMinutes: 0,
                                     difficulty: 0.0,
-                                    cost: ""
+                                    cost: "",
+                                    supportingInfo: SupportingInfoStruc.sampleData
                                     )
                                 ),
                             objectiveContent: .constant(

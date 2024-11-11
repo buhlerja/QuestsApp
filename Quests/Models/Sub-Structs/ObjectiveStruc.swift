@@ -15,8 +15,7 @@ struct ObjectiveStruc {
     var objectiveDescription: String // Description given to the objective
     var objectiveType: Int // Code = 3, Combination = 4, Photo, Location, etc...
     var solutionCombinationAndCode: String // 1234, or any sequence of letters or numbers. Numbers converted to string format
-    // Need to add a coordinate type solution variable for location
-    // Photo will be dealt with in a later release cause fuck that shit
+    // Photo will be dealt with in a later release
     var objectiveHint: String
     var hoursConstraint: Int
     var minutesConstraint: Int

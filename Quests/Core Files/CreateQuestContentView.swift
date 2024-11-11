@@ -19,7 +19,8 @@ struct CreateQuestContentView: View {
         description: "",
         lengthInMinutes: 0,
         difficulty: 0.0,
-        cost: ""
+        cost: "",
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [])
     )
     @State var objectiveContent = ObjectiveStruc(
         objectiveNumber: 0,

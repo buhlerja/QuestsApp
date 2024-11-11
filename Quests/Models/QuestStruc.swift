@@ -20,8 +20,9 @@ struct QuestStruc: Identifiable {
     //var theme: Theme
     var objectiveCount: Int
     var objectives: [ObjectiveStruc] = [] // Initially an empty array
+    var supportingInfo: SupportingInfoStruc
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [] /*theme: Theme*/) {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
@@ -32,6 +33,7 @@ struct QuestStruc: Identifiable {
         //self.theme = theme
         self.objectiveCount = objectiveCount
         self.objectives = objectives
+        self.supportingInfo = supportingInfo
     }
     
     mutating func addObjective(_ objective: ObjectiveStruc) {
@@ -68,7 +70,8 @@ extension QuestStruc {
                    difficulty: 7,
                    cost: "Low",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
-                   objectives: ObjectiveStruc.objectiveSampleData
+                   objectives: ObjectiveStruc.objectiveSampleData,
+                   supportingInfo: SupportingInfoStruc.sampleData
                    /*theme: .orange*/),
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
@@ -77,7 +80,8 @@ extension QuestStruc {
                    difficulty: 5,
                    cost: "Medium",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
-                   objectives: ObjectiveStruc.objectiveSampleData
+                   objectives: ObjectiveStruc.objectiveSampleData,
+                   supportingInfo: SupportingInfoStruc.sampleData
                    /*theme: .yellow*/)
     ]
 }
