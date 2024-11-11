@@ -41,6 +41,7 @@
 		83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */; };
 		83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF50692CD84FED00F4E3B0 /* Utilities.swift */; };
 		83FF506C2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */; };
+		83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,7 @@
 		83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		83FF50692CD84FED00F4E3B0 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
+		83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 				8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */,
 				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
 				83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */,
+				83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
+				83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */,
 				83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */,
 				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,
 				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,

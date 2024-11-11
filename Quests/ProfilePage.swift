@@ -5,6 +5,8 @@
 //  Created by Jack Buhler on 2024-09-23.
 //
 
+// Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to delete an account
+
 import SwiftUI
 
 @MainActor
@@ -39,34 +41,106 @@ final class ProfileViewModel: ObservableObject {
         let password = "Hello123!" // Should be passed into the functions
         try await AuthenticationManager.shared.updatePassword(password: password)
     }
+    
+    func deleteAccount() async throws {
+        try await AuthenticationManager.shared.delete()
+    }
 }
 
 struct ProfilePage: View {
     
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
+    @State private var isShowingPopup = false
     var body: some View {
-        List {
-            Button("Sign Out") {
-                Task {
-                    do {
-                        try viewModel.signOut()
-                        showSignInView = true
-                    } catch {
-                        print(error)
+        ZStack {
+            List {
+                Button("Sign Out") {
+                    Task {
+                        do {
+                            try viewModel.signOut()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
                     }
                 }
+                
+                Button(role: .destructive) {
+                    Task {
+                        isShowingPopup = true
+                    }
+                } label: {
+                    // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
+                    Text("Delete Account")
+                }
+                
+                if viewModel.authProviders.contains(.email) {
+                    emailSection
+                }
+          
             }
+            .onAppear {
+                viewModel.loadAuthProviders()
+            }
+            .navigationBarTitle("Profile")
+            .animation(.easeInOut, value: isShowingPopup)
             
-            if viewModel.authProviders.contains(.email) {
-                emailSection
+            if isShowingPopup {
+                Color.black.opacity(0.4) // Dimmed background
+                   .edgesIgnoringSafeArea(.all)
+                   .onTapGesture {
+                       isShowingPopup = false // Dismiss pop-up if background is tapped
+                   }
+               
+                deletePopup
+                   .transition(.scale) // Add a smooth transition
+                   .zIndex(1) // Make sure the pop-up is on top
             }
-      
         }
-        .onAppear {
-            viewModel.loadAuthProviders()
+    }
+}
+
+extension ProfilePage {
+    private var deletePopup: some View {
+        VStack(spacing: 16) {
+            Text("Delete Account?")
+                .font(.headline)
+                .padding(.top, 20)
+            
+            Text("Deleting your account is permanent and cannot be undone. You are required to re-authenticate before account deletion.")
+                .font(.body)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 20)
+            
+            HStack {
+                Button("Don't Allow") {
+                    isShowingPopup = false
+                }
+                .foregroundColor(.red)
+                .padding()
+                
+                Button("Allow") {
+                    Task {
+                        do {
+                            try await viewModel.deleteAccount()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
+                        isShowingPopup = false
+                    }
+                }
+                .foregroundColor(.blue)
+                .padding()
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 20)
         }
-        .navigationBarTitle("Profile")
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 20)
+        .frame(width: 300)
     }
 }
 
