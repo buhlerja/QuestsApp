@@ -19,10 +19,10 @@ struct ObjectiveStruc {
     var objectiveHint: String
     var hoursConstraint: Int
     var minutesConstraint: Int
-    var objectiveArea: MKCoordinateRegion
+    var objectiveArea: (CLLocationCoordinate2D, CLLocationDistance)
     var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int, minutesConstraint: Int, objectiveArea: MKCoordinateRegion, isEditing: Bool)
+    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int, minutesConstraint: Int, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
     {
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
@@ -48,10 +48,7 @@ extension ObjectiveStruc {
             objectiveHint: "The code is 1234",
             hoursConstraint: 0,
             minutesConstraint: 1,
-            objectiveArea: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060), // New York City coordinates
-                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            ),
+            objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
             isEditing: false
         ),
         ObjectiveStruc(
@@ -63,10 +60,7 @@ extension ObjectiveStruc {
             objectiveHint: "Check the statue's plaque",
             hoursConstraint: 0,
             minutesConstraint: 1,
-            objectiveArea: MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 40.7580, longitude: -73.9855), // Times Square coordinates
-                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-            ),
+            objectiveArea:(CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
             isEditing: false
         )
     ]

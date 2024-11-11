@@ -39,6 +39,7 @@ struct ActiveQuestView: View {
                 // Map view
                 Map(position: $position) {
                     UserAnnotation()
+                    MapCircle(center: currentObjective.objectiveArea.0, radius: currentObjective.objectiveArea.1)
                 }
                 .ignoresSafeArea()
                 .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
