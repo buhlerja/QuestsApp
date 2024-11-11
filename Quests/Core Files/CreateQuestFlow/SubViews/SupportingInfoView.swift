@@ -8,15 +8,9 @@
 import SwiftUI
 
 struct SupportingInfoView: View {
+    @Binding var supportingInfo: SupportingInfoStruc
     @State private var showAddMaterials = false
-    @State private var difficulty: Double = 5
-    @State private var distance: Double = 5
-    @State private var recurring: Bool = false
-    @State private var treasure: Bool = false
-    @State private var addTreasureValue: Bool = true
-    @State private var verifyPhotos: Bool = false
-    @State private var treasureValue: Double = 5
-    @State private var specialInstructions: String = ""
+    @State private var addTreasureValue = true
     @State var materials: [materialsStruc] = []
     var body: some View {
         ScrollView {
@@ -33,7 +27,7 @@ struct SupportingInfoView: View {
                 } .padding()
                 
                 // Slider for difficulty selection
-                Slider(value: $difficulty, in: 1...10, step: 1)
+                Slider(value: $supportingInfo.difficulty, in: 1...10, step: 1)
                     .padding()
                 
                 Text("Select Distance Level")
@@ -48,7 +42,7 @@ struct SupportingInfoView: View {
                 } .padding()
                 
                 // Slider for difficulty selection
-                Slider(value: $distance, in: 1...10, step: 1)
+                Slider(value: $supportingInfo.distance, in: 1...10, step: 1)
                     .padding()
                             
                 Button(action: {
@@ -75,7 +69,7 @@ struct SupportingInfoView: View {
                 VStack(alignment: .leading) {
                      Text("Add Special Instructions? (Optional)")
                  
-                     TextEditor(text: $specialInstructions)
+                    TextEditor(text: $supportingInfo.specialInstructions)
                        .padding(4)
                        .frame(height: 200)
                        .overlay(
@@ -84,13 +78,13 @@ struct SupportingInfoView: View {
                 }
                 .padding()
                 
-                Toggle(isOn: $treasure) {
+                Toggle(isOn: $supportingInfo.treasure) {
                     Text("Treasure to be found?")
                 }
                 Text("Treasure is found by the adventurer as a reward upon quest completion and will not be returned.")
                     .font(.footnote)
                 
-                if treasure {
+                if $supportingInfo.treasure.wrappedValue {
                     Toggle(isOn: $addTreasureValue) {
                         Text("Add treasure value")
                     }
@@ -103,12 +97,12 @@ struct SupportingInfoView: View {
                                 .font(.subheadline)
                         } .padding()
                         
-                        Slider(value: $treasureValue, in: 1...10, step: 1)
+                        Slider(value: $supportingInfo.treasureValue, in: 1...10, step: 1)
                             .padding()
                     }
                 }
                 
-                Toggle(isOn: $recurring) {
+                Toggle(isOn: $supportingInfo.recurring) {
                     Text("Recurring quest?")
                 }
                 Text("A recurring quest may be completed repeatedly. A non-recurring quest may only be completed once. Non-recurring quests may involve treasure that is found and taken at the end of the quest by the adventurer.")
@@ -127,7 +121,7 @@ struct SupportingInfoView: View {
 
 struct SupportingInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        SupportingInfoView()
+        SupportingInfoView(supportingInfo: .constant(SupportingInfoStruc.sampleData))
             //.previewLayout(.fixed(width: 400, height: 700))
     }
 }

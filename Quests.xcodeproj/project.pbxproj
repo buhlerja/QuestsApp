@@ -224,6 +224,56 @@
 			path = "Sub-Structs";
 			sourceTree = "<group>";
 		};
+		83E9F08A2CE2B821003595B8 /* CreateQuestFlow */ = {
+			isa = PBXGroup;
+			children = (
+				83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */,
+				83E9F08B2CE2B834003595B8 /* SubViews */,
+			);
+			path = CreateQuestFlow;
+			sourceTree = "<group>";
+		};
+		83E9F08B2CE2B834003595B8 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */,
+				830524352C5877B5003BD2C2 /* StartingLocSelector.swift */,
+				8344B76B2C692A440053084D /* SupportingInfoView.swift */,
+				83FB09C22C4D920900723EBE /* ObjectiveCreateView.swift */,
+				83E9F08C2CE2B865003595B8 /* SubViews */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
+		83E9F08C2CE2B865003595B8 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				834C44912C950DCC00DC1BFC /* areaSelector.swift */,
+				8344B7042C7263B000B9216A /* addMaterials.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
+		83E9F08D2CE2B95B003595B8 /* ActiveQuestFlow */ = {
+			isa = PBXGroup;
+			children = (
+				83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */,
+				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
+				83E9F08E2CE2BA56003595B8 /* SubViews */,
+			);
+			path = ActiveQuestFlow;
+			sourceTree = "<group>";
+		};
+		83E9F08E2CE2BA56003595B8 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
+				832A938D2CCD3CB200324719 /* QuestFailedView.swift */,
+				832A938B2CCD323D00324719 /* timerView.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
 		83FE5BA82C38B5430005EA55 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,21 +303,11 @@
 			isa = PBXGroup;
 			children = (
 				83E9F0782CE263E9003595B8 /* Profile */,
+				83E9F08A2CE2B821003595B8 /* CreateQuestFlow */,
 				83E9F07C2CE26551003595B8 /* Authentication */,
+				83E9F08D2CE2B95B003595B8 /* ActiveQuestFlow */,
 				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
-				83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */,
-				8344B76B2C692A440053084D /* SupportingInfoView.swift */,
-				8344B7042C7263B000B9216A /* addMaterials.swift */,
-				834C44912C950DCC00DC1BFC /* areaSelector.swift */,
 				83E9F0762CE2639E003595B8 /* CardView.swift */,
-				830524352C5877B5003BD2C2 /* StartingLocSelector.swift */,
-				8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */,
-				83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */,
-				83FB09C22C4D920900723EBE /* ObjectiveCreateView.swift */,
-				832A938B2CCD323D00324719 /* timerView.swift */,
-				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
-				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
-				832A938D2CCD3CB200324719 /* QuestFailedView.swift */,
 				8315E1EF2CA2176A0079E403 /* RootView.swift */,
 			);
 			path = "Core Files";

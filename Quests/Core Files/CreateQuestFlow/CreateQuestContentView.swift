@@ -147,7 +147,7 @@ struct CreateQuestContentView: View {
                     }
                    
                     if showSupportingInfoView {
-                        SupportingInfoView()
+                        SupportingInfoView(supportingInfo: $questContent.supportingInfo)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)

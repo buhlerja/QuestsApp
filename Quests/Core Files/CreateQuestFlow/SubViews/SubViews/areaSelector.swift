@@ -15,6 +15,8 @@ struct areaSelector: View {
            center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589),
            span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
        )
+    //@State private var centerCoordinate = CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589)
+    //@State private var rangeOfArea = CLLocationDistance(0.05)
     @State private var areaChosen = false
     
     var body: some View {
