@@ -13,14 +13,12 @@ import SwiftUI
 struct addMaterials: View {
     @State private var addNew = true
     @State private var materialName: String = ""
-    @State private var materialCostLowerBound: Double = 0
-    @State private var materialCostUpperBound: Double = 10
-    @State private var rangeError = false
+    @State private var materialCost: Double = 0
     @State private var nameError = false
     @Binding var materials: [materialsStruc]
     
     let minPriceValue: Double = 0
-    let maxPriceValue: Double = 100
+    let maxPriceValue: Double = 250
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {  // Adjust spacing between elements
@@ -33,20 +31,15 @@ struct addMaterials: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                     
+                
                     HStack {
-                        Text("Cost Lower Bound: \(Int(materialCostLowerBound))")
-                        Slider(value: $materialCostLowerBound, in: minPriceValue...maxPriceValue, step: 1)
+                        if materialCost >= maxPriceValue {
+                            Text("Cost Estimate: $\(Int(materialCost)) +")
+                        } else {
+                            Text("Cost Estimate: $\(Int(materialCost))")
+                        }
+                        Slider(value: $materialCost, in: minPriceValue...maxPriceValue, step: 1)
                             .accentColor(.green)
-                    }
-                    
-                    HStack {
-                        Text("Cost Upper Bound: \(Int(materialCostUpperBound))")
-                        Slider(value: $materialCostUpperBound, in: minPriceValue...maxPriceValue, step: 1)
-                            .accentColor(.green)
-                    }
-                    
-                    if rangeError {
-                        Text("Please ensure that the price lower bound is less than the price upper bound!")
                     }
                     
                     if nameError {
@@ -58,10 +51,7 @@ struct addMaterials: View {
                         nameError = materialName.isEmpty
                         if nameError { return }
                         
-                        rangeError = materialCostLowerBound >= materialCostUpperBound
-                        if rangeError { return }
-                        
-                        let anotherMaterial = materialsStruc(material: materialName, costLowerBound: materialCostLowerBound, costUpperBound: materialCostUpperBound)
+                        let anotherMaterial = materialsStruc(material: materialName, cost: materialCost)
                         materials.append(anotherMaterial)
                         addNew = false
 
@@ -81,8 +71,7 @@ struct addMaterials: View {
             
             if !addNew {
                 Button(action: {
-                    materialCostLowerBound = 0
-                    materialCostUpperBound = 10
+                    materialCost = 0
                     materialName = ""
                     // Clearing out state variables for the addition of a new material
                     addNew = true
@@ -113,8 +102,13 @@ struct addMaterials: View {
                    Text(material.material)
                        .font(.headline)
                    Spacer()
-                   Text("$\(Int(material.costLowerBound)) - $\(Int(material.costUpperBound))")
-                       .font(.subheadline)
+                   if material.cost >= maxPriceValue {
+                       Text("$\(Int(material.cost)) +")
+                           .font(.subheadline)
+                   } else {
+                       Text("$\(Int(material.cost))")
+                           .font(.subheadline)
+                   }
                }
                .padding()
             }

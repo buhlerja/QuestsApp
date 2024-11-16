@@ -80,7 +80,7 @@ struct SupportingInfoView: View {
                     Text("Quest cost is influenced by factors such as transportation costs (think transit fares or vehicle fuel), costs associated with equipment and supplies required for the Quest, and potentially even food and accomodation costs.")
                     
                 }
-                // Then add a display showing a cost range. If materials with an associated cost have already been added, factor them into the range
+                // Then add a display showing a cost estimate. If materials with an associated cost have already been added, factor them into the estimate
                 
                 VStack(alignment: .leading) {
                      Text("Add Special Instructions? (Optional)")

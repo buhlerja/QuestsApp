@@ -33,7 +33,7 @@ struct CardView: View {
                 VStack(alignment: .leading){
                     Label("\(quest.lengthInMinutes)", systemImage: "clock")
                         .font(.footnote)
-                    Label("\(quest.supportingInfo.cost)", systemImage: "dollarsign.circle")
+                    Label("\(Int(quest.supportingInfo.cost))", systemImage: "dollarsign.circle")
                         .font(.footnote)
                 } .padding(20)
                 VStack(alignment: .leading) {

@@ -44,7 +44,7 @@ struct QuestInfoView: View {
                         }
                         HStack {
                             Image(systemName: "dollarsign.circle")
-                            Text("\(quest.supportingInfo.cost)")
+                            Text("\(Int(quest.supportingInfo.cost))")
                         }
                     }
                     .font(.footnote)
