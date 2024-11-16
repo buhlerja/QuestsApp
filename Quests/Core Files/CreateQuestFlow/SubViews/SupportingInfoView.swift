@@ -11,7 +11,7 @@ struct SupportingInfoView: View {
     @Binding var supportingInfo: SupportingInfoStruc
     @State private var showAddMaterials = false
     @State private var addTreasureValue = true
-    @State var materials: [materialsStruc] = []
+    @State private var costToolTip = false
     var body: some View {
         ScrollView {
             VStack {
@@ -30,7 +30,7 @@ struct SupportingInfoView: View {
                 Slider(value: $supportingInfo.difficulty, in: 1...10, step: 1)
                     .padding()
                 
-                Text("Select Distance Level")
+                Text("Rate the Quest Travel Distance")
                     .font(.headline)
                     .padding()
                 HStack {
@@ -48,12 +48,11 @@ struct SupportingInfoView: View {
                 Button(action: {
                     withAnimation {
                         showAddMaterials.toggle()
-                        // Associate a cost level with each material
                     }
                 }) {
                     HStack {
                         Image(systemName: "plus")
-                        Text("Add Materials Needed")
+                        Text("Add Supplies and Equipment Needed")
                             .fontWeight(.bold)
                         Spacer()
                     }
@@ -63,8 +62,25 @@ struct SupportingInfoView: View {
                 }
                 
                 if showAddMaterials {
-                    addMaterials(materials: $materials)
+                    addMaterials(materials: $supportingInfo.materials)
                 }
+                
+                // Cost add flow
+                HStack {
+                    Text("Add an estimate for total Quest cost level")
+                    Button(action: {
+                        costToolTip.toggle()
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
+                if costToolTip {
+                    Text("What contributes to Quest cost?")
+                        .font(.headline)
+                    Text("Quest cost is influenced by factors such as transportation costs (think transit fares or vehicle fuel), costs associated with equipment and supplies required for the Quest, and potentially even food and accomodation costs.")
+                    
+                }
+                // Then add a display showing a cost range. If materials with an associated cost have already been added, factor them into the range
                 
                 VStack(alignment: .leading) {
                      Text("Add Special Instructions? (Optional)")

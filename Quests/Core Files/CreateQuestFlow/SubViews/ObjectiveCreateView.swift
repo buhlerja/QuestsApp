@@ -210,8 +210,6 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     title: "",
                                     description: "",
                                     lengthInMinutes: 0,
-                                    difficulty: 0.0,
-                                    cost: "",
                                     supportingInfo: SupportingInfoStruc.sampleData
                                     )
                                 ),

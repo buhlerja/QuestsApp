@@ -33,11 +33,11 @@ struct CardView: View {
                 VStack(alignment: .leading){
                     Label("\(quest.lengthInMinutes)", systemImage: "clock")
                         .font(.footnote)
-                    Label("\(quest.cost)", systemImage: "dollarsign.circle")
+                    Label("\(quest.supportingInfo.cost)", systemImage: "dollarsign.circle")
                         .font(.footnote)
                 } .padding(20)
                 VStack(alignment: .leading) {
-                    Gauge(value: quest.difficulty, in: 1.0...10.0) {
+                    Gauge(value: quest.supportingInfo.difficulty, in: 1.0...10.0) {
                     }
                     .gaugeStyle(.accessoryCircular) // Default gauge style
                     .scaleEffect() // Adjusted gauge scale

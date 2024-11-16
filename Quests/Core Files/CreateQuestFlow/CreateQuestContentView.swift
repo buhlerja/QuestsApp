@@ -12,15 +12,13 @@ struct CreateQuestContentView: View {
     @State private var showObjectiveCreateView = false
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
-    @State private var selectedStartingLoc: CLLocationCoordinate2D?
+    @State private var noStartingLocation = false
     @State var questContent = QuestStruc(
-        coordinateStart: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+        // Starting location is automatically initialized to NIL, but still is a mandatory parameter
         title: "",
         description: "",
         lengthInMinutes: 0,
-        difficulty: 0.0,
-        cost: "",
-        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [])
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0)
     )
     @State var objectiveContent = ObjectiveStruc(
         objectiveNumber: 0,
@@ -73,7 +71,7 @@ struct CreateQuestContentView: View {
                     .cornerRadius(8)
                     
                     if showStartingLocCreateView {
-                        StartingLocSelector(selectedStartingLoc: $selectedStartingLoc)
+                        StartingLocSelector(selectedStartingLoc: $questContent.coordinateStart)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .zIndex(1)
@@ -150,8 +148,20 @@ struct CreateQuestContentView: View {
                     }
                     
                     Spacer()
+                    
+                    if noStartingLocation {
+                        Text("Oops! You must add a Starting Location to your Quest!")
+                    }
                         
-                    Button(action: {}) {
+                    Button(action: {
+                        // save quest to the databases required
+                        noStartingLocation = questContent.coordinateStart == nil
+                        if !noStartingLocation {
+                            print("Proceed to save to database")
+                        }
+                         
+                        
+                    }) {
                         HStack {
                             Spacer()
                             Text("Save")

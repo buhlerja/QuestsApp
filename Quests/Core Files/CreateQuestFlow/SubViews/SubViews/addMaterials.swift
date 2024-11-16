@@ -5,13 +5,22 @@
 //  Created by Jack Buhler on 2024-08-18.
 //
 
+// Future enhancements:
+// Create a double bubble slider to specify price range. This eliminates the possibility of incorrectly selecting lower and upper bounds
+
 import SwiftUI
 
 struct addMaterials: View {
     @State private var addNew = true
     @State private var materialName: String = ""
-    @State private var materialCost: Double = 5
+    @State private var materialCostLowerBound: Double = 0
+    @State private var materialCostUpperBound: Double = 10
+    @State private var rangeError = false
+    @State private var nameError = false
     @Binding var materials: [materialsStruc]
+    
+    let minPriceValue: Double = 0
+    let maxPriceValue: Double = 100
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {  // Adjust spacing between elements
@@ -19,26 +28,42 @@ struct addMaterials: View {
             if addNew {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("Material Name")
+                        Text("Name of Item")
                         TextField("Name", text: $materialName)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                     
                     HStack {
-                        Text("Material Cost")
-                        Slider(value: $materialCost, in: 1...10, step: 1)
+                        Text("Cost Lower Bound: \(Int(materialCostLowerBound))")
+                        Slider(value: $materialCostLowerBound, in: minPriceValue...maxPriceValue, step: 1)
+                            .accentColor(.green)
+                    }
+                    
+                    HStack {
+                        Text("Cost Upper Bound: \(Int(materialCostUpperBound))")
+                        Slider(value: $materialCostUpperBound, in: minPriceValue...maxPriceValue, step: 1)
+                            .accentColor(.green)
+                    }
+                    
+                    if rangeError {
+                        Text("Please ensure that the price lower bound is less than the price upper bound!")
+                    }
+                    
+                    if nameError {
+                        Text("Please enter a name for the equipment!")
                     }
         
                     Button(action: {
                         // Ensure that materialName is not empty to avoid adding empty items
-                        guard !materialName.isEmpty else { return }
+                        nameError = materialName.isEmpty
+                        if nameError { return }
                         
-                        let anotherMaterial = materialsStruc(material: materialName, cost: materialCost)
+                        rangeError = materialCostLowerBound >= materialCostUpperBound
+                        if rangeError { return }
+                        
+                        let anotherMaterial = materialsStruc(material: materialName, costLowerBound: materialCostLowerBound, costUpperBound: materialCostUpperBound)
                         materials.append(anotherMaterial)
                         addNew = false
-                        for material in materials {
-                            print("Material: \(material.material), Cost: \(material.cost)")
-                        }
 
                     }) {
                         HStack {
@@ -56,11 +81,15 @@ struct addMaterials: View {
             
             if !addNew {
                 Button(action: {
+                    materialCostLowerBound = 0
+                    materialCostUpperBound = 10
+                    materialName = ""
+                    // Clearing out state variables for the addition of a new material
                     addNew = true
                 }) {
                     HStack {
                         Spacer()
-                        Text("Add New Material")
+                        Text("Add New Supplies and Equipment")
                         Spacer()
                     }
                     .background(Color.cyan)
@@ -84,7 +113,7 @@ struct addMaterials: View {
                    Text(material.material)
                        .font(.headline)
                    Spacer()
-                   Text("$\(Int(material.cost))")
+                   Text("$\(Int(material.costLowerBound)) - $\(Int(material.costUpperBound))")
                        .font(.subheadline)
                }
                .padding()

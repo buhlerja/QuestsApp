@@ -40,11 +40,11 @@ struct QuestInfoView: View {
                         }
                         HStack {
                             Image(systemName: "chart.bar.fill")
-                            Text("Difficulty: \(quest.difficulty, specifier: "%.1f")")
+                            Text("Difficulty: \(quest.supportingInfo.difficulty, specifier: "%.1f")")
                         }
                         HStack {
                             Image(systemName: "dollarsign.circle")
-                            Text(quest.cost)
+                            Text("\(quest.supportingInfo.cost)")
                         }
                     }
                     .font(.footnote)
@@ -53,40 +53,61 @@ struct QuestInfoView: View {
                 .padding()
 
                 // Map and directions button
-                Map(position: $position) {
-                    UserAnnotation()
-                    Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: quest.coordinateStart)
-                    if let route = route {
-                        MapPolyline(route)
-                            .stroke(.blue, lineWidth: 5)
+                if let startingLocation = quest.coordinateStart {
+                    Map(position: $position) {
+                        UserAnnotation()
+                        Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
+                        if let route = route {
+                            MapPolyline(route)
+                                .stroke(.blue, lineWidth: 5)
+                        }
+                    }
+                    .accentColor(Color.cyan)
+                    .frame(height: 400)
+                    .cornerRadius(15)
+                    .shadow(radius: 10)
+                    .padding(.horizontal)
+                    .onAppear {
+                        viewModel.checkIfLocationServicesIsEnabled()
+                    }
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
+                    }
+                    
+                    // Directions button
+                    Button(action: {
+                        getDirections()
+                    }) {
+                        Text("Get directions to starting location")
+                            .fontWeight(.medium)
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                            .shadow(radius: 5)
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+
+                    
+                } else {
+                    Map(position: $position) {
+                        UserAnnotation()
+                    }
+                    .accentColor(Color.cyan)
+                    .frame(height: 400)
+                    .cornerRadius(15)
+                    .shadow(radius: 10)
+                    .padding(.horizontal)
+                    .onAppear {
+                        viewModel.checkIfLocationServicesIsEnabled()
+                    }
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
                     }
                 }
-                .accentColor(Color.cyan)
-                .frame(height: 400)
-                .cornerRadius(15)
-                .shadow(radius: 10)
-                .padding(.horizontal)
-                .onAppear {
-                    viewModel.checkIfLocationServicesIsEnabled()
-                }
-                .mapControls {
-                    MapUserLocationButton()
-                    MapCompass()
-                    MapScaleView()
-                }
-
-                // Directions button
-                Button(action: {
-                    getDirections()
-                }) {
-                    Text("Get directions to starting location")
-                        .fontWeight(.medium)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                        .shadow(radius: 5)
-                        .foregroundColor(.blue)
-                }
-                .padding()
 
                 //Spacer()
 
@@ -116,38 +137,39 @@ struct QuestInfoView: View {
         route = nil
 
         let request = MKDirections.Request()
-        let startCoordinate = quest.coordinateStart
-
-        // Create a source item with the current user location
-        Task {
-            // Get the user's current location asynchronously
-            if let userLocation = try? await viewModel.getLiveLocationUpdates() {
-                let userCoordinate = userLocation.coordinate
-                print("User Coordinate: \(userCoordinate)")
-                request.source = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
-            } else {
-                print("No user location available.")
-                return // Exit if no user location is available
-            }
-
-            // Set the destination as the quest's starting location
-            request.destination = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinate))
-
-            // Calculate directions now that both source and destination are set
-            do {
-                let directions = MKDirections(request: request)
-                let response = try await directions.calculate()
-                route = response.routes.first
-                print("Route calculation completed successfully.")
-                if let route = route {
-                    print("Route details: \(route.name) with distance \(route.distance) meters.")
+        if let startCoordinate = quest.coordinateStart {
+            // Create a source item with the current user location
+            Task {
+                // Get the user's current location asynchronously
+                if let userLocation = try? await viewModel.getLiveLocationUpdates() {
+                    let userCoordinate = userLocation.coordinate
+                    print("User Coordinate: \(userCoordinate)")
+                    request.source = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
                 } else {
-                    print("No routes found.")
+                    print("No user location available.")
+                    return // Exit if no user location is available
                 }
-            } catch {
-                print("Error calculating directions: \(error.localizedDescription)")
+
+                // Set the destination as the quest's starting location
+                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinate))
+
+                // Calculate directions now that both source and destination are set
+                do {
+                    let directions = MKDirections(request: request)
+                    let response = try await directions.calculate()
+                    route = response.routes.first
+                    print("Route calculation completed successfully.")
+                    if let route = route {
+                        print("Route details: \(route.name) with distance \(route.distance) meters.")
+                    } else {
+                        print("No routes found.")
+                    }
+                } catch {
+                    print("Error calculating directions: \(error.localizedDescription)")
+                }
             }
         }
+   
     }
 
 }

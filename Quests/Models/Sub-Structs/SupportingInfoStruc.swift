@@ -14,10 +14,11 @@ struct SupportingInfoStruc {
     var treasure: Bool
     var treasureValue: Double
     var specialInstructions: String
-    var materials: [materialsStruc]  // materialsStruc is a Sub-Struct for supporting information
+    var materials: [materialsStruc] = []  // materialsStruc is a Sub-Struct for supporting information. Start it as an empty array (no materials added)
+    var cost: Double
     //var verifyPhotos: Bool // NOT IN SCOPE FOR FIRST RELEASE
     
-    init(difficulty: Double, distance: Double, recurring: Bool, treasure: Bool, treasureValue: Double, specialInstructions: String, materials: [materialsStruc]) {
+    init(difficulty: Double, distance: Double, recurring: Bool, treasure: Bool, treasureValue: Double, specialInstructions: String, materials: [materialsStruc] = [], cost: Double) {
         self.difficulty = difficulty
         self.distance = distance
         self.recurring = recurring
@@ -25,9 +26,10 @@ struct SupportingInfoStruc {
         self.treasureValue = treasureValue
         self.specialInstructions = specialInstructions
         self.materials = materials
+        self.cost = cost
     }
 }
 
 extension SupportingInfoStruc {
-    static let sampleData = SupportingInfoStruc(difficulty: 5, distance: 9, recurring: true, treasure: false, treasureValue: 8, specialInstructions: "Be very careful while on the slippery slope in objective 5!!", materials: materialsStruc.sampleData)
+    static let sampleData = SupportingInfoStruc(difficulty: 5, distance: 9, recurring: true, treasure: false, treasureValue: 8, specialInstructions: "Be very careful while on the slippery slope in objective 5!!", materials: materialsStruc.sampleData, cost: 25.6)
 }

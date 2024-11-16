@@ -18,9 +18,7 @@ struct ObjectiveHighLevelView: View {
             title: "",
             description: "",
             lengthInMinutes: 0,
-            difficulty: 0.0,
-            cost: "",
-            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [])
+                   supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0)
         ) // Dummy variable which is never filled when ObjectiveCreateView is called from this view
     
     var body: some View {

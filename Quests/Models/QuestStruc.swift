@@ -11,25 +11,21 @@ import MapKit
 
 struct QuestStruc: Identifiable {
     let id: UUID
-    var coordinateStart: CLLocationCoordinate2D
+    var coordinateStart: CLLocationCoordinate2D? = nil
     var title: String
     var description: String
     var lengthInMinutes: Int
-    var difficulty: Double
-    var cost: String
     //var theme: Theme
     var objectiveCount: Int
     var objectives: [ObjectiveStruc] = [] // Initially an empty array
     var supportingInfo: SupportingInfoStruc
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D, title: String, description: String, lengthInMinutes: Int, difficulty: Double, cost: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, lengthInMinutes: Int, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
         self.description = description
         self.lengthInMinutes = lengthInMinutes
-        self.difficulty = difficulty
-        self.cost = cost
         //self.theme = theme
         self.objectiveCount = objectiveCount
         self.objectives = objectives
@@ -67,8 +63,6 @@ extension QuestStruc {
                    title: "Public shaming",
                    description: "A unique take on a classic punishment",
                    lengthInMinutes: 5,
-                   difficulty: 7,
-                   cost: "Low",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData
@@ -77,8 +71,6 @@ extension QuestStruc {
                    title: "Design",
                    description: "A fun design challenge using the arts",
                    lengthInMinutes: 10,
-                   difficulty: 5,
-                   cost: "Medium",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData
