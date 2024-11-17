@@ -15,35 +15,68 @@ struct addMaterials: View {
     @State private var materialName: String = ""
     @State private var materialCost: Double = 0
     @State private var nameError = false
+    @State private var addCost = false
+    @State private var costToolTip = false
+    @State private var addPlusSymbol = false
+    @State private var selectedCategory: materialsStruc.CategoryType = .equipment
     @Binding var materials: [materialsStruc]
+    @Binding var cost: Double 
     
     let minPriceValue: Double = 0
     let maxPriceValue: Double = 250
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {  // Adjust spacing between elements
             
             if addNew {
+                
+                HStack {
+                    Text("Pick type:")
+                    Button(action: {
+                        costToolTip.toggle()
+                    }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
+                if costToolTip {
+                    Text("What contributes to Quest cost?")
+                        .font(.headline)
+                    Text("Quest cost is influenced by factors such as transportation costs (think transit fares or vehicle fuel), costs associated with obtaining supplies, and food or accomodation costs.")
+                    
+                }
+                
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(materialsStruc.CategoryType.allCases) { category in
+                            Text(category.rawValue.capitalized).tag(category)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+            
+                
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("Name of Item")
+                        Text("Name")
                         TextField("Name", text: $materialName)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                     }
                     
-                
-                    HStack {
-                        if materialCost >= maxPriceValue {
-                            Text("Cost Estimate: $\(Int(materialCost)) +")
-                        } else {
-                            Text("Cost Estimate: $\(Int(materialCost))")
+                    Toggle("Add cost amount?", isOn: $addCost)
+                        .padding()
+                    if addCost {
+                        HStack {
+                            if materialCost >= maxPriceValue {
+                                Text("Cost Estimate: $\(Int(materialCost)) +")
+                            } else {
+                                Text("Cost Estimate: $\(Int(materialCost))")
+                            }
+                            Slider(value: $materialCost, in: minPriceValue...maxPriceValue, step: 1)
+                                .accentColor(.green)
                         }
-                        Slider(value: $materialCost, in: minPriceValue...maxPriceValue, step: 1)
-                            .accentColor(.green)
                     }
                     
                     if nameError {
-                        Text("Please enter a name for the equipment!")
+                        Text("Please enter a name for the supply or cost!")
                     }
         
                     Button(action: {
@@ -51,8 +84,17 @@ struct addMaterials: View {
                         nameError = materialName.isEmpty
                         if nameError { return }
                         
-                        let anotherMaterial = materialsStruc(material: materialName, cost: materialCost)
+                        var anotherMaterial: materialsStruc
+                        if materialCost != 0 {
+                            anotherMaterial = materialsStruc(material: materialName, cost: materialCost, category: selectedCategory)
+                            if materialCost >= maxPriceValue {
+                                addPlusSymbol = true
+                            }
+                        } else {
+                            anotherMaterial = materialsStruc(material: materialName, category: selectedCategory)
+                        }
                         materials.append(anotherMaterial)
+                        cost += materialCost
                         addNew = false
 
                     }) {
@@ -68,17 +110,43 @@ struct addMaterials: View {
                 }
                 .padding()
             }
+        
+            ForEach(materials) { material in
+                HStack {
+                    if let materialCategory = material.category {
+                        Text(materialCategory.rawValue)
+                            .font(.headline)
+                    }
+                    Spacer()
+                    Text(material.material)
+                        .font(.headline)
+                    Spacer()
+                    if let costOfMaterial = material.cost {
+                        if costOfMaterial >= maxPriceValue {
+                            Text("$\(Int(costOfMaterial)) +")
+                                .font(.subheadline)
+                                .foregroundColor(.red)
+                        } else {
+                            Text("$\(Int(costOfMaterial))")
+                                .font(.subheadline)
+                                .foregroundColor(.green)
+                        }
+                    }
+                }
+                .padding(.vertical, 8) // Adds spacing between rows
+            }
             
             if !addNew {
                 Button(action: {
                     materialCost = 0
                     materialName = ""
+                    addCost = false
                     // Clearing out state variables for the addition of a new material
                     addNew = true
                 }) {
                     HStack {
                         Spacer()
-                        Text("Add New Supplies and Equipment")
+                        Text("Add new supplies or costs")
                         Spacer()
                     }
                     .background(Color.cyan)
@@ -86,35 +154,14 @@ struct addMaterials: View {
                 }
             }
             
-            /*List {
-                ForEach(materials) { material in
-                    Text("\(material.material) - $\(Int(material.cost))")
-                        .foregroundColor(Color.black)
-                }
+            if addPlusSymbol {
+                Text("Total Estimated Cost: $\(Int(cost)) +")
             }
-            .listStyle(PlainListStyle())  // Use a plain list style to reduce extra padding
-            .frame(maxHeight: 200)  // Constrain the height of the list to 200 points
-            
-            .padding(.top, addNew ? 0 : 20)  // Add more space only when "Add New Material" button is alone*/
-            
-            ForEach(materials) { material in
-               HStack {
-                   Text(material.material)
-                       .font(.headline)
-                   Spacer()
-                   if material.cost >= maxPriceValue {
-                       Text("$\(Int(material.cost)) +")
-                           .font(.subheadline)
-                   } else {
-                       Text("$\(Int(material.cost))")
-                           .font(.subheadline)
-                   }
-               }
-               .padding()
+            else {
+                Text("Total Estimated Cost: $\(Int(cost))")
             }
-        
+            
         }
-        .padding()
     }
 }
 
@@ -122,7 +169,7 @@ struct addMaterials: View {
 struct addMaterials_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapper(materialsStruc.sampleData) { binding in
-            AnyView(addMaterials(materials: binding))
+            AnyView(addMaterials(materials: binding, cost: .constant(5)))
         }
     }
 }

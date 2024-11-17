@@ -18,7 +18,7 @@ struct SupportingInfoStruc {
     var cost: Double
     //var verifyPhotos: Bool // NOT IN SCOPE FOR FIRST RELEASE
     
-    init(difficulty: Double, distance: Double, recurring: Bool, treasure: Bool, treasureValue: Double, specialInstructions: String, materials: [materialsStruc] = [], cost: Double) {
+    init(difficulty: Double, distance: Double, recurring: Bool, treasure: Bool, treasureValue: Double, specialInstructions: String, materials: [materialsStruc] = [], cost: Double = 0) {
         self.difficulty = difficulty
         self.distance = distance
         self.recurring = recurring

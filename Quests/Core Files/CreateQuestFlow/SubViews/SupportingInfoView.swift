@@ -52,7 +52,7 @@ struct SupportingInfoView: View {
                 }) {
                     HStack {
                         Image(systemName: "plus")
-                        Text("Add Supplies and Equipment Needed")
+                        Text("Add Supplies and Costs")
                             .fontWeight(.bold)
                         Spacer()
                     }
@@ -62,25 +62,8 @@ struct SupportingInfoView: View {
                 }
                 
                 if showAddMaterials {
-                    addMaterials(materials: $supportingInfo.materials)
+                    addMaterials(materials: $supportingInfo.materials, cost: $supportingInfo.cost)
                 }
-                
-                // Cost add flow
-                HStack {
-                    Text("Add an estimate for total Quest cost level")
-                    Button(action: {
-                        costToolTip.toggle()
-                    }) {
-                        Image(systemName: "questionmark.circle")
-                    }
-                }
-                if costToolTip {
-                    Text("What contributes to Quest cost?")
-                        .font(.headline)
-                    Text("Quest cost is influenced by factors such as transportation costs (think transit fares or vehicle fuel), costs associated with equipment and supplies required for the Quest, and potentially even food and accomodation costs.")
-                    
-                }
-                // Then add a display showing a cost estimate. If materials with an associated cost have already been added, factor them into the estimate
                 
                 VStack(alignment: .leading) {
                      Text("Add Special Instructions? (Optional)")
