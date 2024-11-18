@@ -9,12 +9,32 @@ import SwiftUI
 
 struct SupportingInfoView: View {
     @Binding var supportingInfo: SupportingInfoStruc
+    @Binding var title: String
+    @Binding var description: String
     @State private var showAddMaterials = false
     @State private var addTreasureValue = true
     @State private var costToolTip = false
+    
+    @State private var totalLengthHours = 0
+    @State private var totalLengthMinutes = 0
+    
     var body: some View {
         ScrollView {
             VStack {
+                Text("Give a title to your Quest")
+                    .font(.headline)
+                    .padding()
+                TextField("Enter your title", text: $title)
+                    .padding()
+                Text("Describe your Quest")
+                    .font(.headline)
+                    .padding()
+                TextEditor(text: $description)
+                    .padding(4)
+                    .frame(height: 200)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 8)
+                          .stroke(Color.gray.opacity(0.5), lineWidth: 1))
                 Text("Select Difficulty of Objectives")
                     .font(.headline)
                     .padding()
@@ -65,17 +85,40 @@ struct SupportingInfoView: View {
                     addMaterials(materials: $supportingInfo.materials, cost: $supportingInfo.cost)
                 }
                 
-                VStack(alignment: .leading) {
-                     Text("Add Special Instructions? (Optional)")
-                 
-                    TextEditor(text: $supportingInfo.specialInstructions)
-                       .padding(4)
-                       .frame(height: 200)
-                       .overlay(
-                           RoundedRectangle(cornerRadius: 8)
-                               .stroke(Color.gray.opacity(0.5), lineWidth: 1))
+                // Add length flow. This will affect the optional totalLength variable
+                Text("Adjust Quest Length? (Optional)")
+             
+                Text("Current Estimate based on Objectives:")
+                HStack {
+                    Picker("Hours", selection: $totalLengthHours) {
+                        ForEach(0..<24) { hour in
+                            Text("\(hour) h").tag(hour)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 100, height: 100)
+                    .clipped()
+
+                    Picker("Minutes", selection: $totalLengthMinutes) {
+                        ForEach(0..<60) { minute in
+                            Text("\(minute) min").tag(minute)
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    .frame(width: 100, height: 100)
+                    .clipped()
                 }
                 .padding()
+              
+                
+                Text("Add Special Instructions? (Optional)")
+                TextEditor(text: $supportingInfo.specialInstructions)
+                   .padding(4)
+                   .frame(height: 200)
+                   .overlay(
+                       RoundedRectangle(cornerRadius: 8)
+                           .stroke(Color.gray.opacity(0.5), lineWidth: 1))
+         
                 
                 Toggle(isOn: $supportingInfo.treasure) {
                     Text("Treasure to be found?")
@@ -115,12 +158,32 @@ struct SupportingInfoView: View {
                 
             } .padding()
         }
+        .onAppear {
+            if let currentTotalLength = supportingInfo.totalLength {
+               totalLengthHours = currentTotalLength / 60
+               totalLengthMinutes = currentTotalLength % 60
+            }
+        }
+        .onChange(of: totalLengthHours) {
+            // When the hours change, update totalLength in supportingInfo
+            supportingInfo.totalLength = totalLengthHours * 60 + totalLengthMinutes
+            if supportingInfo.totalLength == 0 {
+                supportingInfo.totalLength = nil
+            }
+        }
+        .onChange(of: totalLengthMinutes) {
+            // When the minutes change, update totalLength in supportingInfo
+            supportingInfo.totalLength = totalLengthHours * 60 + totalLengthMinutes
+            if supportingInfo.totalLength == 0 {
+                supportingInfo.totalLength = nil
+            }
+        }
     }
 }
 
 struct SupportingInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        SupportingInfoView(supportingInfo: .constant(SupportingInfoStruc.sampleData))
+        SupportingInfoView(supportingInfo: .constant(SupportingInfoStruc.sampleData), title: .constant("Public Shaming"), description: .constant("A classic take on an age old punishment"))
             //.previewLayout(.fixed(width: 400, height: 700))
     }
 }

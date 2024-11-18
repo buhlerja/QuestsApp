@@ -37,6 +37,7 @@
 		83E9F0812CE26605003595B8 /* SignInEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0802CE26605003595B8 /* SignInEmailViewModel.swift */; };
 		83E9F0852CE26D1D003595B8 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0842CE26D1C003595B8 /* UserManager.swift */; };
 		83E9F0872CE28364003595B8 /* SupportingInfoStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0862CE28364003595B8 /* SupportingInfoStruc.swift */; };
+		83E9F0972CEBCFC7003595B8 /* Macros.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0962CEBCFC7003595B8 /* Macros.swift */; };
 		83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */; };
 		83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FB09C22C4D920900723EBE /* ObjectiveCreateView.swift */; };
 		83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FE5BA92C38B57D0005EA55 /* QuestStruc.swift */; };
@@ -82,6 +83,7 @@
 		83E9F0802CE26605003595B8 /* SignInEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailViewModel.swift; sourceTree = "<group>"; };
 		83E9F0842CE26D1C003595B8 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		83E9F0862CE28364003595B8 /* SupportingInfoStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoStruc.swift; sourceTree = "<group>"; };
+		83E9F0962CEBCFC7003595B8 /* Macros.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Macros.swift; sourceTree = "<group>"; };
 		83FB09C02C4C40EB00723EBE /* CreateQuestContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateQuestContentView.swift; sourceTree = "<group>"; };
 		83FB09C22C4D920900723EBE /* ObjectiveCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveCreateView.swift; sourceTree = "<group>"; };
 		83FE5BA92C38B57D0005EA55 /* QuestStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStruc.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				83E4D75F2C41F14200B8346F /* Info.plist */,
 				83BDD94A2C1498D0001853A3 /* Quests.entitlements */,
 				830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */,
+				83E9F0952CEBCFA6003595B8 /* ConstantsAndMacros */,
 				83E9F0832CE26CE3003595B8 /* FireStore */,
 				83FF50682CD84FCC00F4E3B0 /* Utilities */,
 				83C7D98F2CACC9A10046D553 /* MapViewModel */,
@@ -274,6 +277,14 @@
 			path = SubViews;
 			sourceTree = "<group>";
 		};
+		83E9F0952CEBCFA6003595B8 /* ConstantsAndMacros */ = {
+			isa = PBXGroup;
+			children = (
+				83E9F0962CEBCFC7003595B8 /* Macros.swift */,
+			);
+			path = ConstantsAndMacros;
+			sourceTree = "<group>";
+		};
 		83FE5BA82C38B5430005EA55 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,6 +410,7 @@
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */,
 				83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */,
+				83E9F0972CEBCFC7003595B8 /* Macros.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
 				83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */,
 				83E9F0852CE26D1D003595B8 /* UserManager.swift in Sources */,

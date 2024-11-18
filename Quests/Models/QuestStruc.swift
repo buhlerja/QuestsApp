@@ -4,7 +4,6 @@
 //
 //  Created by Jack Buhler on 2024-07-05.
 //
-let MAX_OBJECTIVES = 20
 
 import Foundation
 import MapKit
@@ -14,18 +13,16 @@ struct QuestStruc: Identifiable {
     var coordinateStart: CLLocationCoordinate2D? = nil
     var title: String
     var description: String
-    var lengthInMinutes: Int
     //var theme: Theme
     var objectiveCount: Int
     var objectives: [ObjectiveStruc] = [] // Initially an empty array
     var supportingInfo: SupportingInfoStruc
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, lengthInMinutes: Int, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
         self.description = description
-        self.lengthInMinutes = lengthInMinutes
         //self.theme = theme
         self.objectiveCount = objectiveCount
         self.objectives = objectives
@@ -47,9 +44,19 @@ struct QuestStruc: Identifiable {
         )
 
         // Append the new instance to the objectives array
-        if permanentObjective.objectiveNumber <= MAX_OBJECTIVES { /* Need to come up with a flow to prevent users from adding more than the max number of objectives in the first place */
+        if permanentObjective.objectiveNumber <= Macros.MAX_OBJECTIVES { /* There is a flow in place to prevent this from happening in the first place */
             objectiveCount = permanentObjective.objectiveNumber
             objectives.append(permanentObjective)
+            if let currentTotalLength = supportingInfo.totalLength {
+                if let objectiveHoursConstraint = permanentObjective.hoursConstraint, let objectiveMinutesConstraint = permanentObjective.minutesConstraint {
+                    supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint)
+                }
+                
+            } else {
+                if let objectiveHoursConstraint = permanentObjective.hoursConstraint, let objectiveMinutesConstraint = permanentObjective.minutesConstraint {
+                    supportingInfo.totalLength = objectiveHoursConstraint * 60 + objectiveMinutesConstraint
+                }
+            }
         } else {
             print("Max number of objectives exceeded")
         }
@@ -62,7 +69,6 @@ extension QuestStruc {
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 42.354528, longitude: -71.068369),
                    title: "Public shaming",
                    description: "A unique take on a classic punishment",
-                   lengthInMinutes: 5,
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData
@@ -70,7 +76,6 @@ extension QuestStruc {
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
                    description: "A fun design challenge using the arts",
-                   lengthInMinutes: 10,
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData

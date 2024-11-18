@@ -21,7 +21,8 @@ struct ActiveQuestView: View {
     @State private var displayHint = false
     @State private var answerIsWrong = false
     @State private var answerIsRight = false
-    @State var timerValue = 60
+    @State var timerValue = 100 // Should be reset to the correct value on appear
+    @State private var showTimer = false
     @State var timerIsUp = false
     
     let quest: QuestStruc
@@ -70,12 +71,15 @@ struct ActiveQuestView: View {
             .fullScreenCover(isPresented: $timerIsUp) {
                 QuestFailedView()
             }
-            
-            VStack {
-                timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
-                    .padding()
-                Spacer()
+            /* Ensures that the objective does have a timer value as a condition for displaying a timer */
+            if showTimer {
+                VStack {
+                    timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
+                        .padding()
+                    Spacer()
+                }
             }
+            
             
             //Overlay for correct answers
             Color(answerIsRight ? .green.opacity(0.2) : .clear)
@@ -265,9 +269,10 @@ struct ActiveQuestView: View {
     }
     
     private func updateTimerValue() {
-        
-        timerValue = currentObjective.hoursConstraint * 3600 + currentObjective.minutesConstraint * 60
-        
+        if let objectiveHoursConstraint = currentObjective.hoursConstraint, let objectiveMinutesConstraint = currentObjective.minutesConstraint {
+            timerValue = objectiveHoursConstraint * 3600 + objectiveMinutesConstraint * 60
+            showTimer = true
+        }
     }
 }
 

@@ -31,8 +31,10 @@ struct CardView: View {
             
             HStack {
                 VStack(alignment: .leading){
-                    Label("\(quest.lengthInMinutes)", systemImage: "clock")
-                        .font(.footnote)
+                    if let totalLength = quest.supportingInfo.totalLength {
+                        Label("\(totalLength)", systemImage: "clock")
+                            .font(.footnote)
+                    }
                     Label("\(Int(quest.supportingInfo.cost))", systemImage: "dollarsign.circle")
                         .font(.footnote)
                 } .padding(20)

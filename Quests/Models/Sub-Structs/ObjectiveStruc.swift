@@ -17,12 +17,12 @@ struct ObjectiveStruc {
     var solutionCombinationAndCode: String // 1234, or any sequence of letters or numbers. Numbers converted to string format
     // Photo will be dealt with in a later release
     var objectiveHint: String
-    var hoursConstraint: Int
-    var minutesConstraint: Int
+    var hoursConstraint: Int? = nil
+    var minutesConstraint: Int? = nil
     var objectiveArea: (CLLocationCoordinate2D, CLLocationDistance)
     var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int, minutesConstraint: Int, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
+    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
     {
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
@@ -46,8 +46,8 @@ extension ObjectiveStruc {
             objectiveType: 3,
             solutionCombinationAndCode: "1234",
             objectiveHint: "The code is 1234",
-            hoursConstraint: 0,
-            minutesConstraint: 1,
+            //hoursConstraint: 0,
+            //minutesConstraint: 2,
             objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
             isEditing: false
         ),
@@ -59,7 +59,7 @@ extension ObjectiveStruc {
             solutionCombinationAndCode: "5678",
             objectiveHint: "Check the statue's plaque",
             hoursConstraint: 0,
-            minutesConstraint: 1,
+            minutesConstraint: 3,
             objectiveArea:(CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
             isEditing: false
         )

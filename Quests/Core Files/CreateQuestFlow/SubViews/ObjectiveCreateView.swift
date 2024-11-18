@@ -10,6 +10,7 @@ import MapKit
 
 struct ObjectiveCreateView: View {
     @Binding var showObjectiveCreateView: Bool
+    @State private var tooManyObjectives: Bool = false
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
     @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
 
@@ -38,7 +39,7 @@ struct ObjectiveCreateView: View {
                     VStack {
                         if objectiveContent.objectiveType == 3 {
                             HStack {
-                                Text("Solution to Objective: ")
+                                Text("Solution: ")
                                 TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 
@@ -53,7 +54,7 @@ struct ObjectiveCreateView: View {
                         }
                         
                         HStack {
-                            Text("Enter Time Constraint? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER THERES A TIME CONSTRAINT OR NOT
+                            Text("Enter Time Constraint? (Optional)")
                             Spacer()
                         }
                         HStack {
@@ -115,20 +116,37 @@ struct ObjectiveCreateView: View {
                         // 1) Objective data is saved in objectiveContent Structure
                         if objectiveContent.isEditing == false {
                             // From the CREATE flow, not the EDIT flow, so append to struc
-                            questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
+                            if questContent.objectiveCount < Macros.MAX_OBJECTIVES {
+                                questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
+                            }
+                            else {
+                                tooManyObjectives = true
+                            }
+                           
                         }  // IF editing, the objective is already saved to the data structure, and it is modified directly by this view
                         
                         objectiveContent.isEditing = false
                         // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
-                        showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. This may mean clearing out variables and setting showObjectiveCreateView to false in the parent view */
+                        showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
                     }) {
-                        HStack {
-                            Spacer()
-                            Text("Save Objective")
-                                .padding()
-                                .background(Color.cyan)
-                                .cornerRadius(8)
-                            Spacer()
+                        VStack {
+                            if tooManyObjectives {
+                                Text("Oops! Maximum number of Objectives reached")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white) // Text color
+                                    .padding()              // Inner padding
+                                    .background(Color.red)  // Red background
+                                    .cornerRadius(8)        // Rounded corners
+                                    .shadow(radius: 4)      // Optional shadow for better visibility
+                            }
+                            HStack {
+                                Spacer()
+                                Text("Save Objective")
+                                    .padding()
+                                    .background(Color.cyan)
+                                    .cornerRadius(8)
+                                Spacer()
+                            }
                         }
                         
                     }
@@ -136,7 +154,18 @@ struct ObjectiveCreateView: View {
                
             }.padding()
         }
-        
+        .onChange(of: objectiveContent.hoursConstraint) {
+            if let hoursConstraint = objectiveContent.hoursConstraint, objectiveContent.minutesConstraint == nil {
+                objectiveContent.minutesConstraint = 0
+                // Prevents only the hours constraint from being set
+            }
+        }
+        .onChange(of: objectiveContent.minutesConstraint) {
+            if let minutesConstraint = objectiveContent.minutesConstraint, objectiveContent.hoursConstraint == nil {
+                objectiveContent.hoursConstraint = 0
+                // Prevents only the minutes constraint from being set
+            }
+        }
     }
     
     // A helper function to display a number as a button
@@ -209,7 +238,6 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     longitude: 0.0),
                                     title: "",
                                     description: "",
-                                    lengthInMinutes: 0,
                                     supportingInfo: SupportingInfoStruc.sampleData
                                     )
                                 ),
@@ -221,8 +249,6 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     objectiveType: 3,
                                     solutionCombinationAndCode: "",
                                     objectiveHint: "",
-                                    hoursConstraint: 0,
-                                    minutesConstraint: 0,
                                     objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
                                     isEditing: false
                                 )

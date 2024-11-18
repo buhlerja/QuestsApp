@@ -13,12 +13,13 @@ struct CreateQuestContentView: View {
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
     @State private var noStartingLocation = false
+    @State private var noTitle = false
+    @State private var noObjectives = false
     @State var questContent = QuestStruc(
         // Starting location is automatically initialized to NIL, but still is a mandatory parameter
         title: "",
         description: "",
-        lengthInMinutes: 0,
-        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0)
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) /* Total length not initialized here, so still has a value of NIL (optional parameter) */
     )
     @State var objectiveContent = ObjectiveStruc(
         objectiveNumber: 0,
@@ -27,8 +28,7 @@ struct CreateQuestContentView: View {
         objectiveType: 3,
         solutionCombinationAndCode: "",
         objectiveHint: "",
-        hoursConstraint: 0,
-        minutesConstraint: 0,
+        // Hours constraint and minutes constraint are initialized as NIL
         objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
         isEditing: false
     )
@@ -96,8 +96,6 @@ struct CreateQuestContentView: View {
                                                 objectiveType: 3,
                                                 solutionCombinationAndCode: "",
                                                 objectiveHint: "",
-                                                hoursConstraint: 0,
-                                                minutesConstraint: 0,
                                                 objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
                                                 isEditing: false
                                             )
@@ -140,7 +138,7 @@ struct CreateQuestContentView: View {
                     }
                    
                     if showSupportingInfoView {
-                        SupportingInfoView(supportingInfo: $questContent.supportingInfo)
+                        SupportingInfoView(supportingInfo: $questContent.supportingInfo, title: $questContent.title, description: $questContent.description)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)
@@ -152,11 +150,19 @@ struct CreateQuestContentView: View {
                     if noStartingLocation {
                         Text("Oops! You must add a Starting Location to your Quest!")
                     }
+                    if noTitle {
+                        Text("Oops! You must add a Title to your Quest!")
+                    }
+                    if noObjectives {
+                        Text("Oops! You must add an Objective to your Quest!")
+                    }
                         
                     Button(action: {
                         // save quest to the databases required
                         noStartingLocation = questContent.coordinateStart == nil
-                        if !noStartingLocation {
+                        noTitle = questContent.title.isEmpty
+                        noObjectives = questContent.objectives.isEmpty
+                        if !noStartingLocation && !noTitle && !noObjectives {
                             print("Proceed to save to database")
                         }
                          

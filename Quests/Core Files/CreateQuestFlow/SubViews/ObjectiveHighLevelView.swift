@@ -17,9 +17,8 @@ struct ObjectiveHighLevelView: View {
             longitude: 0.0),
             title: "",
             description: "",
-            lengthInMinutes: 0,
-                   supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0)
-        ) // Dummy variable which is never filled when ObjectiveCreateView is called from this view
+            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) // Dummy variable which is never filled when ObjectiveCreateView is called from this view
+        )
     
     var body: some View {
         VStack(spacing: 16) {
@@ -47,14 +46,15 @@ struct ObjectiveHighLevelView: View {
                     .foregroundColor(.blue)
 
                 // Status Section
-                HStack {
-                    Text("Hours: \(objective.hoursConstraint)")
-                    Text("Minutes: \(objective.minutesConstraint)")
+                if let hoursConstraint = objective.hoursConstraint, let minutesConstraint = objective.minutesConstraint {
+                    HStack {
+                        Text("Hours: \(hoursConstraint)")
+                        Text("Minutes: \(minutesConstraint)")
+                    }
+                    .font(.headline)
+                    .padding(.top)
                 }
-                .font(.headline)
-                .padding(.top)
-
-
+                
                 // Action Buttons
                 HStack {
                     Button(action: {

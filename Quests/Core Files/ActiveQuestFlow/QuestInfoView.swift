@@ -36,7 +36,9 @@ struct QuestInfoView: View {
                     HStack(spacing: 15) {
                         HStack {
                             Image(systemName: "clock")
-                            Text("\(quest.lengthInMinutes) min")
+                            if let totalLength = quest.supportingInfo.totalLength {
+                                Text("\(totalLength) min")
+                            }
                         }
                         HStack {
                             Image(systemName: "chart.bar.fill")
