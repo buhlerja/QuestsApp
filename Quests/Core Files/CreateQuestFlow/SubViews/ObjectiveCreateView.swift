@@ -11,14 +11,19 @@ import MapKit
 struct ObjectiveCreateView: View {
     @Binding var showObjectiveCreateView: Bool
     @State private var tooManyObjectives: Bool = false
+    @State private var noTitle: Bool = false
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
     @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
+    
+    @State private var hint: String = ""
+    @State private var hrConstraint: Int = 0
+    @State private var minConstraint: Int = 0
 
     var body: some View {
         ScrollView {
             VStack {
                 
-                // Objective Number set in function in QuestStruc file (add objective)
+                // Objective Number set in function in QuestStruc file (during add objective)
                 
                 objectiveDescriptionView(objectiveDescription: $objectiveContent.objectiveDescription, objectiveTitle: $objectiveContent.objectiveTitle)
                              
@@ -58,7 +63,7 @@ struct ObjectiveCreateView: View {
                             Spacer()
                         }
                         HStack {
-                            Picker("Hours", selection: $objectiveContent.hoursConstraint) {
+                            Picker("Hours", selection: $hrConstraint) {
                                 ForEach(0..<24) { hour in
                                     Text("\(hour) h").tag(hour)
                                 }
@@ -67,7 +72,7 @@ struct ObjectiveCreateView: View {
                             .frame(width: 100, height: 100)
                             .clipped()
 
-                            Picker("Minutes", selection: $objectiveContent.minutesConstraint) {
+                            Picker("Minutes", selection: $minConstraint) {
                                 ForEach(0..<60) { minute in
                                     Text("\(minute) min").tag(minute)
                                 }
@@ -79,8 +84,8 @@ struct ObjectiveCreateView: View {
                         .padding()
         
                         HStack {
-                            Text("Add Hint? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER A HINT WAS ADDED OR NOT
-                            TextField("Enter your hint", text: $objectiveContent.objectiveHint)
+                            Text("Add Hint? (Optional)") // Optionality of hint is handled
+                            TextField("Enter your hint", text: $hint)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         } .padding()
                         Text("Users will be able to access your hint after a failed attempt or after half of their time has expired")
@@ -94,6 +99,26 @@ struct ObjectiveCreateView: View {
                             .frame(width: 300, height: 300)
                             .cornerRadius(12)
                     } .padding()
+                }
+                
+                // Cannot save objective
+                if tooManyObjectives {
+                    Text("Oops! Maximum number of Objectives reached")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
+                }
+                if noTitle {
+                    Text("Oops! Add a title to your Objective!")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
                 }
                 
                 HStack {
@@ -111,60 +136,60 @@ struct ObjectiveCreateView: View {
                         }
                         
                     }
+                    
                     Button(action: {
                         
                         // 1) Objective data is saved in objectiveContent Structure
+                        noTitle = objectiveContent.objectiveTitle.isEmpty
                         if objectiveContent.isEditing == false {
                             // From the CREATE flow, not the EDIT flow, so append to struc
-                            if questContent.objectiveCount < Macros.MAX_OBJECTIVES {
+                            tooManyObjectives = questContent.objectiveCount >= Macros.MAX_OBJECTIVES
+                            if !tooManyObjectives, !noTitle {
                                 questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
-                            }
-                            else {
-                                tooManyObjectives = true
+                                // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
+                                showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
                             }
                            
                         }  // IF editing, the objective is already saved to the data structure, and it is modified directly by this view
-                        
-                        objectiveContent.isEditing = false
-                        // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
-                        showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
-                    }) {
-                        VStack {
-                            if tooManyObjectives {
-                                Text("Oops! Maximum number of Objectives reached")
-                                    .font(.subheadline)
-                                    .foregroundColor(.white) // Text color
-                                    .padding()              // Inner padding
-                                    .background(Color.red)  // Red background
-                                    .cornerRadius(8)        // Rounded corners
-                                    .shadow(radius: 4)      // Optional shadow for better visibility
-                            }
-                            HStack {
-                                Spacer()
-                                Text("Save Objective")
-                                    .padding()
-                                    .background(Color.cyan)
-                                    .cornerRadius(8)
-                                Spacer()
+                        else { // isEditing == true
+                            // Editing flow
+                            objectiveContent.isEditing = false
+                            // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
+                            if !noTitle {
+                                showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
                             }
                         }
                         
+                      
+                    }) {
+                          
+                        HStack {
+                            Spacer()
+                            Text("Save Objective")
+                                .padding()
+                                .background(Color.cyan)
+                                .cornerRadius(8)
+                            Spacer()
+                        }
                     }
                 }
                
             }.padding()
         }
-        .onChange(of: objectiveContent.hoursConstraint) {
-            if let hoursConstraint = objectiveContent.hoursConstraint, objectiveContent.minutesConstraint == nil {
-                objectiveContent.minutesConstraint = 0
-                // Prevents only the hours constraint from being set
-            }
+        .onAppear {
+            // Set `hint` to the value of `objectiveContent.objectiveHint` if it exists, otherwise default to an empty string
+            hint = objectiveContent.objectiveHint ?? ""
+            hrConstraint = objectiveContent.hoursConstraint ?? 0
+            minConstraint = objectiveContent.minutesConstraint ?? 0
         }
-        .onChange(of: objectiveContent.minutesConstraint) {
-            if let minutesConstraint = objectiveContent.minutesConstraint, objectiveContent.hoursConstraint == nil {
-                objectiveContent.hoursConstraint = 0
-                // Prevents only the minutes constraint from being set
-            }
+        .onChange(of: hint) {
+            objectiveContent.objectiveHint = hint.isEmpty ? nil : hint
+        }
+        .onChange(of: hrConstraint) {
+            objectiveContent.hoursConstraint = hrConstraint == 0 ? nil : hrConstraint
+        }
+        .onChange(of: minConstraint) {
+            objectiveContent.minutesConstraint = minConstraint == 0 ? nil : minConstraint
         }
     }
     
@@ -244,11 +269,11 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                             objectiveContent: .constant(
                                 ObjectiveStruc(
                                     objectiveNumber: 0,
-                                    objectiveTitle: "",
-                                    objectiveDescription: "",
+                                    objectiveTitle: "Wash me",
+                                    objectiveDescription: "Break into an old folks home and give someone a bath",
                                     objectiveType: 3,
                                     solutionCombinationAndCode: "",
-                                    objectiveHint: "",
+                                    // objectiveHint automatically initialized as nil
                                     objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
                                     isEditing: false
                                 )

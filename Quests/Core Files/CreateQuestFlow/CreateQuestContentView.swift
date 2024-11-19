@@ -19,15 +19,16 @@ struct CreateQuestContentView: View {
         // Starting location is automatically initialized to NIL, but still is a mandatory parameter
         title: "",
         description: "",
+        // objectiveCount is initialized to 0
         supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) /* Total length not initialized here, so still has a value of NIL (optional parameter) */
     )
     @State var objectiveContent = ObjectiveStruc(
-        objectiveNumber: 0,
+        objectiveNumber: 0, // Changed to proper number once the objective is appended to the quest.objectives array
         objectiveTitle: "",
         objectiveDescription: "",
         objectiveType: 3,
         solutionCombinationAndCode: "",
-        objectiveHint: "",
+        // Hint is initialized as NIL
         // Hours constraint and minutes constraint are initialized as NIL
         objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
         isEditing: false
@@ -89,13 +90,16 @@ struct CreateQuestContentView: View {
                     Button(action: {
                         withAnimation {
                             showObjectiveCreateView.toggle()
+                            // I make sure to reset all optionals to NIL
                             objectiveContent = ObjectiveStruc(
                                                 objectiveNumber: 0,
                                                 objectiveTitle: "",
                                                 objectiveDescription: "",
                                                 objectiveType: 3,
                                                 solutionCombinationAndCode: "",
-                                                objectiveHint: "",
+                                                objectiveHint: nil,
+                                                hoursConstraint: nil,
+                                                minutesConstraint: nil,
                                                 objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
                                                 isEditing: false
                                             )

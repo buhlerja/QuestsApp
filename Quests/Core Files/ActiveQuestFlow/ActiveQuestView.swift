@@ -177,10 +177,12 @@ struct ActiveQuestView: View {
                 }
                 
                 if displayHint {
-                    Text(currentObjective.objectiveHint)
-                        .font(.caption)
-                        .foregroundColor(.black)
-                        .padding(.top, 5)
+                    if let hint = currentObjective.objectiveHint {
+                        Text(hint)
+                            .font(.caption)
+                            .foregroundColor(.black)
+                            .padding(.top, 5)
+                    }
                 }
                 
                 // Progress bar
@@ -249,6 +251,7 @@ struct ActiveQuestView: View {
             if currentObjectiveIndex + 1 < quest.objectives.count {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
+                showHintButton = false // reset showHintButton to false
                 updateTimerValue() // Reset the timer for the new objective
             }
             
@@ -261,7 +264,13 @@ struct ActiveQuestView: View {
         } else {
             // Answer is wrong
             answerIsWrong = true
-            showHintButton = true
+            if let hint = currentObjective.objectiveHint {
+                // There is a hint associated with this objective
+                showHintButton = true
+            }
+            else {
+                showHintButton = false
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 answerIsWrong = false
             }
@@ -269,9 +278,15 @@ struct ActiveQuestView: View {
     }
     
     private func updateTimerValue() {
-        if let objectiveHoursConstraint = currentObjective.hoursConstraint, let objectiveMinutesConstraint = currentObjective.minutesConstraint {
+        if !(currentObjective.hoursConstraint == nil && currentObjective.minutesConstraint == nil) {
+            // Both are not nil, so we can show a constraint
+            let objectiveHoursConstraint = currentObjective.hoursConstraint ?? 0
+            let objectiveMinutesConstraint = currentObjective.minutesConstraint ?? 0
             timerValue = objectiveHoursConstraint * 3600 + objectiveMinutesConstraint * 60
             showTimer = true
+        }
+        else {
+            showTimer = false
         }
     }
 }

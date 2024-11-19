@@ -40,13 +40,18 @@ struct ObjectiveHighLevelView: View {
                     .padding(.horizontal)
 
                 // Hint
-                Text("Hint: \(objective.objectiveHint)")
-                    .font(.subheadline)
-                    .italic()
-                    .foregroundColor(.blue)
+                if let hint = objective.objectiveHint {
+                    Text("Hint: \(hint)")
+                        .font(.subheadline)
+                        .italic()
+                        .foregroundColor(.blue)
+                }
 
                 // Status Section
-                if let hoursConstraint = objective.hoursConstraint, let minutesConstraint = objective.minutesConstraint {
+                if !(objective.hoursConstraint == nil && objective.minutesConstraint == nil) {
+                    // Both are not nil, so we can show a constraint
+                    let hoursConstraint = objective.hoursConstraint ?? 0
+                    let minutesConstraint = objective.minutesConstraint ?? 0
                     HStack {
                         Text("Hours: \(hoursConstraint)")
                         Text("Minutes: \(minutesConstraint)")

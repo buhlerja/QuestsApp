@@ -47,16 +47,18 @@ struct QuestStruc: Identifiable {
         if permanentObjective.objectiveNumber <= Macros.MAX_OBJECTIVES { /* There is a flow in place to prevent this from happening in the first place */
             objectiveCount = permanentObjective.objectiveNumber
             objectives.append(permanentObjective)
+            // Code below is to Adjust total length from the objective time constraints
+            let objectiveHoursConstraint = permanentObjective.hoursConstraint ?? 0
+            let objectiveMinutesConstraint = permanentObjective.minutesConstraint ?? 0
+            print(objectiveHoursConstraint) // ALWAYS PRINTS 0
+            print(objectiveMinutesConstraint) // ALWAYS PRINTS 0
+            
             if let currentTotalLength = supportingInfo.totalLength {
-                if let objectiveHoursConstraint = permanentObjective.hoursConstraint, let objectiveMinutesConstraint = permanentObjective.minutesConstraint {
-                    supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint)
-                }
-                
+                supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint)
             } else {
-                if let objectiveHoursConstraint = permanentObjective.hoursConstraint, let objectiveMinutesConstraint = permanentObjective.minutesConstraint {
-                    supportingInfo.totalLength = objectiveHoursConstraint * 60 + objectiveMinutesConstraint
-                }
+                supportingInfo.totalLength = objectiveHoursConstraint * 60 + objectiveMinutesConstraint
             }
+            print(supportingInfo.totalLength ?? 0) // ALWAYS PRINTS 0
         } else {
             print("Max number of objectives exceeded")
         }

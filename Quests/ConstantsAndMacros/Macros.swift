@@ -9,5 +9,5 @@ import Foundation
 
 struct Macros {
     static let APP_VERSION = "1.0.0"
-    static let MAX_OBJECTIVES = 1
+    static let MAX_OBJECTIVES = 20
 }

@@ -10,19 +10,19 @@ import MapKit
 
 struct ObjectiveStruc {
     //let id: UUID // We should assign the same UUID as corresponding quest so we know which quest this objective belongs to?
-    var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high)
+    var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high). Auto-calculated.
     var objectiveTitle: String // Title of the objective
     var objectiveDescription: String // Description given to the objective
     var objectiveType: Int // Code = 3, Combination = 4, Photo, Location, etc...
     var solutionCombinationAndCode: String // 1234, or any sequence of letters or numbers. Numbers converted to string format
     // Photo will be dealt with in a later release
-    var objectiveHint: String
-    var hoursConstraint: Int? = nil
-    var minutesConstraint: Int? = nil
+    var objectiveHint: String? = nil // Optional parameter
+    var hoursConstraint: Int? = nil // Optional parameter
+    var minutesConstraint: Int? = nil // Optional parameter
     var objectiveArea: (CLLocationCoordinate2D, CLLocationDistance)
     var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
+    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
     {
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
@@ -57,7 +57,7 @@ extension ObjectiveStruc {
             objectiveDescription: "The code is 5678",
             objectiveType: 3,
             solutionCombinationAndCode: "5678",
-            objectiveHint: "Check the statue's plaque",
+            //objectiveHint: "Check the statue's plaque",
             hoursConstraint: 0,
             minutesConstraint: 3,
             objectiveArea:(CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
