@@ -9,8 +9,6 @@ import SwiftUI
 
 struct SupportingInfoView: View {
     @Binding var supportingInfo: SupportingInfoStruc
-    @Binding var title: String
-    @Binding var description: String
     @State private var showAddMaterials = false
     @State private var addTreasureValue = true
     @State private var costToolTip = false
@@ -21,20 +19,7 @@ struct SupportingInfoView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text("Give a title to your Quest")
-                    .font(.headline)
-                    .padding()
-                TextField("Enter your title", text: $title)
-                    .padding()
-                Text("Describe your Quest")
-                    .font(.headline)
-                    .padding()
-                TextEditor(text: $description)
-                    .padding(4)
-                    .frame(height: 200)
-                    .overlay(
-                      RoundedRectangle(cornerRadius: 8)
-                          .stroke(Color.gray.opacity(0.5), lineWidth: 1))
+    
                 Text("Select Difficulty of Objectives")
                     .font(.headline)
                     .padding()
@@ -183,7 +168,7 @@ struct SupportingInfoView: View {
 
 struct SupportingInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        SupportingInfoView(supportingInfo: .constant(SupportingInfoStruc.sampleData), title: .constant("Public Shaming"), description: .constant("A classic take on an age old punishment"))
+        SupportingInfoView(supportingInfo: .constant(SupportingInfoStruc.sampleData))
             //.previewLayout(.fixed(width: 400, height: 700))
     }
 }

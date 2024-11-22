@@ -57,6 +57,44 @@ struct CreateQuestContentView: View {
                     .background(Color.white)
                     .cornerRadius(8)
                     
+                    VStack {
+                        HStack {
+                            Text("Add a Title")
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
+                        .padding()
+
+                        TextField("Title", text: $questContent.title)
+                            .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: To add a default TextField style
+                            .padding([.horizontal, .bottom])
+                    }
+                    .padding() // Padding around the entire VStack
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 5) // Optional: Add shadow for depth
+                    )
+                    
+                    VStack {
+                        HStack {
+                            Text("Add a Description")
+                                .fontWeight(.bold)
+                            Spacer()
+                        }
+                        .padding()
+
+                        TextEditor(text: $questContent.description)
+                            .padding(4)
+                            .frame(height: 200)
+                    }
+                    .padding() // Padding around the entire VStack
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 5) // Optional: Add shadow for depth
+                    )
+                    
                     Button(action: { withAnimation { showStartingLocCreateView.toggle()
                         }
                     }) {
@@ -142,7 +180,7 @@ struct CreateQuestContentView: View {
                     }
                    
                     if showSupportingInfoView {
-                        SupportingInfoView(supportingInfo: $questContent.supportingInfo, title: $questContent.title, description: $questContent.description)
+                        SupportingInfoView(supportingInfo: $questContent.supportingInfo)
                             .transition(.move(edge: .top))
                             .padding(.top, 10)
                             .background(Color.white)
