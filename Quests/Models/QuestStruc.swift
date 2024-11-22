@@ -29,6 +29,30 @@ struct QuestStruc: Identifiable {
         self.supportingInfo = supportingInfo
     }
     
+    mutating func editTotalLength(_ objective: ObjectiveStruc, originalHrConstraint: Int = 0, originalMinConstraint: Int = 0) {
+        // Code below is to Adjust total length from the objective time constraints
+        let objectiveHoursConstraint = objective.hoursConstraint ?? 0
+        let objectiveMinutesConstraint = objective.minutesConstraint ?? 0
+
+        if !objective.isEditing {
+            // Straight up add the time to totalLength
+            if let currentTotalLength = supportingInfo.totalLength {
+                supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint)
+            } else {
+                supportingInfo.totalLength = objectiveHoursConstraint * 60 + objectiveMinutesConstraint
+            }
+        } else {
+            // Is editing. Subtract the old length, add the new length
+            if let currentTotalLength = supportingInfo.totalLength {
+                supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint) - (originalHrConstraint * 60 + originalMinConstraint)
+            } else {
+                supportingInfo.totalLength = (objectiveHoursConstraint * 60 + objectiveMinutesConstraint) - (originalHrConstraint * 60 + originalMinConstraint)
+            }
+        }
+       
+
+    }
+    
     mutating func addObjective(_ objective: ObjectiveStruc) {
         let permanentObjective = ObjectiveStruc(
             objectiveNumber: objectives.count + 1, // Set objective number
@@ -47,18 +71,7 @@ struct QuestStruc: Identifiable {
         if permanentObjective.objectiveNumber <= Macros.MAX_OBJECTIVES { /* There is a flow in place to prevent this from happening in the first place */
             objectiveCount = permanentObjective.objectiveNumber
             objectives.append(permanentObjective)
-            // Code below is to Adjust total length from the objective time constraints
-            let objectiveHoursConstraint = permanentObjective.hoursConstraint ?? 0
-            let objectiveMinutesConstraint = permanentObjective.minutesConstraint ?? 0
-            print(objectiveHoursConstraint) // ALWAYS PRINTS 0
-            print(objectiveMinutesConstraint) // ALWAYS PRINTS 0
             
-            if let currentTotalLength = supportingInfo.totalLength {
-                supportingInfo.totalLength = currentTotalLength + (objectiveHoursConstraint * 60 + objectiveMinutesConstraint)
-            } else {
-                supportingInfo.totalLength = objectiveHoursConstraint * 60 + objectiveMinutesConstraint
-            }
-            print(supportingInfo.totalLength ?? 0) // ALWAYS PRINTS 0
         } else {
             print("Max number of objectives exceeded")
         }

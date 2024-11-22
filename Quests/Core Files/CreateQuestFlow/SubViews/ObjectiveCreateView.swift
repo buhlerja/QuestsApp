@@ -18,6 +18,8 @@ struct ObjectiveCreateView: View {
     @State private var hint: String = ""
     @State private var hrConstraint: Int = 0
     @State private var minConstraint: Int = 0
+    @State private var originalHrConstraint: Int = 0
+    @State private var originalMinConstraint: Int = 0
 
     var body: some View {
         ScrollView {
@@ -123,8 +125,8 @@ struct ObjectiveCreateView: View {
                 
                 HStack {
                     Button(action: {
-                        objectiveContent.isEditing = false
                         showObjectiveCreateView = false
+                        objectiveContent.isEditing = false
                     }) {
                         HStack {
                             Spacer()
@@ -146,6 +148,8 @@ struct ObjectiveCreateView: View {
                             tooManyObjectives = questContent.objectiveCount >= Macros.MAX_OBJECTIVES
                             if !tooManyObjectives, !noTitle {
                                 questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
+                                questContent.editTotalLength(objectiveContent) // Adjust the total length of quest based on objective length
+                               
                                 // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
                                 showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
                             }
@@ -153,10 +157,14 @@ struct ObjectiveCreateView: View {
                         }  // IF editing, the objective is already saved to the data structure, and it is modified directly by this view
                         else { // isEditing == true
                             // Editing flow
-                            objectiveContent.isEditing = false
-                            // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
+                            /* Following code is to adjust the total length parameter */
+                            questContent.editTotalLength(objectiveContent, originalHrConstraint: originalHrConstraint, originalMinConstraint: originalMinConstraint) /* Need initial value of the time to SUBTRACT from totalLength before adding the NEW time (for edit only) */
+                            
+                            // Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
                             if !noTitle {
                                 showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
+                                // change editing boolean back to false
+                                objectiveContent.isEditing = false
                             }
                         }
                         
@@ -181,6 +189,10 @@ struct ObjectiveCreateView: View {
             hint = objectiveContent.objectiveHint ?? ""
             hrConstraint = objectiveContent.hoursConstraint ?? 0
             minConstraint = objectiveContent.minutesConstraint ?? 0
+            if objectiveContent.isEditing {
+                originalHrConstraint = hrConstraint
+                originalMinConstraint = minConstraint
+            }
         }
         .onChange(of: hint) {
             objectiveContent.objectiveHint = hint.isEmpty ? nil : hint
@@ -250,6 +262,7 @@ struct ObjectiveCreateView: View {
         }
         .padding()
     }
+    
 }
 
 
@@ -264,8 +277,9 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     title: "",
                                     description: "",
                                     supportingInfo: SupportingInfoStruc.sampleData
-                                    )
-                                ),
+                                
+                                )
+                            ),
                             objectiveContent: .constant(
                                 ObjectiveStruc(
                                     objectiveNumber: 0,

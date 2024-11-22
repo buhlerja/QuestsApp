@@ -11,14 +11,7 @@ import MapKit
 struct ObjectiveHighLevelView: View {
     @Binding var objective: ObjectiveStruc
     @State var showObjectiveCreateView = false
-    @State var questContent =
-        QuestStruc(coordinateStart: CLLocationCoordinate2D(
-            latitude: 0.0,
-            longitude: 0.0),
-            title: "",
-            description: "",
-            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) // Dummy variable which is never filled when ObjectiveCreateView is called from this view
-        )
+    @Binding var questContent: QuestStruc
     
     var body: some View {
         VStack(spacing: 16) {
@@ -87,7 +80,8 @@ struct ObjectiveHighLevelView: View {
 
 struct ObjectiveHighLevelView_Previews: PreviewProvider {
     static var previews: some View {
-        ObjectiveHighLevelView(objective: .constant(
+        ObjectiveHighLevelView(
+            objective: .constant(
                                     ObjectiveStruc(
                                         objectiveNumber: 1,
                                         objectiveTitle: "Wash me",
@@ -100,7 +94,17 @@ struct ObjectiveHighLevelView_Previews: PreviewProvider {
                                         objectiveArea: (CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
                                         isEditing: false
                                     )
+                                ),
+            questContent: .constant(
+                                    QuestStruc(
+                                        // Starting location is automatically initialized to NIL, but still is a mandatory parameter
+                                        title: "",
+                                        description: "",
+                                        // objectiveCount is initialized to 0
+                                        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) /* Total length not initialized here, so still has a value of NIL (optional parameter) */
+                                    )
                                 )
+                                    
         )
     }
 }

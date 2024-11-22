@@ -118,7 +118,7 @@ struct CreateQuestContentView: View {
                     
                     // Display objectives that have been created.
                     ForEach(questContent.objectives.indices, id: \.self) { index in
-                        ObjectiveHighLevelView(objective: $questContent.objectives[index])
+                        ObjectiveHighLevelView(objective: $questContent.objectives[index], questContent: $questContent)
                     }
                     .padding()
                     .background(Color(.systemGray6)) // Added background color

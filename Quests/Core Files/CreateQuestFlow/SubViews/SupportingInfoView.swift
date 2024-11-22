@@ -149,6 +149,12 @@ struct SupportingInfoView: View {
                totalLengthMinutes = currentTotalLength % 60
             }
         }
+        .onChange(of: supportingInfo.totalLength) {
+            if let currentTotalLength = supportingInfo.totalLength {
+               totalLengthHours = currentTotalLength / 60
+               totalLengthMinutes = currentTotalLength % 60
+            }
+        }
         .onChange(of: totalLengthHours) {
             // When the hours change, update totalLength in supportingInfo
             supportingInfo.totalLength = totalLengthHours * 60 + totalLengthMinutes
