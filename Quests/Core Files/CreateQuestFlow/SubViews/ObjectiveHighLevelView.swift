@@ -74,7 +74,7 @@ struct ObjectiveHighLevelView: View {
                 Spacer()
             }
         }
-        .frame(minWidth: 300) // Set a minimum width
+        .frame(minWidth: 300, maxHeight: 200) // Set a frame size
     }
 }
 

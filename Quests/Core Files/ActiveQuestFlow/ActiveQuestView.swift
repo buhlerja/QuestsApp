@@ -11,7 +11,7 @@ import MapKit
 struct ActiveQuestView: View {
     @ObservedObject var viewModel: MapViewModel
     @State private var bottomMenuExpanded = true
-    @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
+    @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic) // Should default to the objectiveArea??
     @Binding var showActiveQuest: Bool
     
     @State private var currentObjectiveIndex = 0
@@ -40,7 +40,10 @@ struct ActiveQuestView: View {
                 // Map view
                 Map(position: $position) {
                     UserAnnotation()
-                    MapCircle(center: currentObjective.objectiveArea.0, radius: currentObjective.objectiveArea.1)
+                    if let center = currentObjective.objectiveArea.0 {
+                        MapCircle(center: center, radius: currentObjective.objectiveArea.1)
+                            .foregroundStyle(Color.cyan.opacity(0.5))
+                    }
                 }
                 .ignoresSafeArea()
                 .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
@@ -227,8 +230,8 @@ struct ActiveQuestView: View {
                 .font(.headline)
             
             Text(currentObjective.objectiveDescription)
-                .font(.subheadline)
-                .foregroundColor(.gray)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
             
             Spacer().frame(height: 20)
         }

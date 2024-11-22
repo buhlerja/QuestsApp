@@ -19,10 +19,10 @@ struct ObjectiveStruc {
     var objectiveHint: String? = nil // Optional parameter
     var hoursConstraint: Int? = nil // Optional parameter
     var minutesConstraint: Int? = nil // Optional parameter
-    var objectiveArea: (CLLocationCoordinate2D, CLLocationDistance)
+    var objectiveArea: (CLLocationCoordinate2D?, CLLocationDistance)
     var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D, range: CLLocationDistance), isEditing: Bool)
+    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D?, range: CLLocationDistance) = (nil, 1000), isEditing: Bool)
     {
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle

@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct areaSelector: View {
-    @Binding var objectiveArea: (CLLocationCoordinate2D, CLLocationDistance)
+    @Binding var objectiveArea: (CLLocationCoordinate2D?, CLLocationDistance)
     @State private var position: MapCameraPosition = .automatic
     @State private var areaChosen = false
     
@@ -19,9 +19,10 @@ struct areaSelector: View {
                 VStack {
                     Map(position: $position) {
                         if areaChosen == true {
-                            MapCircle(center: objectiveArea.0, radius: objectiveArea.1)
-                                .foregroundStyle(Color.cyan.opacity(0.5)) // Fill with cyan color and 50% opacity
-
+                            if let center = objectiveArea.0 {
+                                MapCircle(center: center, radius: objectiveArea.1)
+                                    .foregroundStyle(Color.cyan.opacity(0.5)) // Fill with cyan color and 50% opacity
+                            }
                         }
                     }
                     .edgesIgnoringSafeArea(.all)

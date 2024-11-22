@@ -28,9 +28,9 @@ struct CreateQuestContentView: View {
         objectiveDescription: "",
         objectiveType: 3,
         solutionCombinationAndCode: "",
-        // Hint is initialized as NIL
+        // Hint is optional and is initialized as NIL
         // Hours constraint and minutes constraint are initialized as NIL
-        objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
+        // objectiveArea is initialzied to NIL. OLD: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
         isEditing: false
     )
     
@@ -138,7 +138,7 @@ struct CreateQuestContentView: View {
                                                 objectiveHint: nil,
                                                 hoursConstraint: nil,
                                                 minutesConstraint: nil,
-                                                objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
+                                                objectiveArea: (nil, 1000),
                                                 isEditing: false
                                             )
                             /* Above code resets the dummy struct passed into objectiveCreateView, which this subview then fills up and adds to quest array. This code is to make sure that the struct is not filled with old data. */

@@ -156,19 +156,17 @@ struct SupportingInfoView: View {
             }
         }
         .onChange(of: totalLengthHours) {
-            // When the hours change, update totalLength in supportingInfo
-            supportingInfo.totalLength = totalLengthHours * 60 + totalLengthMinutes
-            if supportingInfo.totalLength == 0 {
-                supportingInfo.totalLength = nil
-            }
+            updateTotalLength()
         }
         .onChange(of: totalLengthMinutes) {
-            // When the minutes change, update totalLength in supportingInfo
-            supportingInfo.totalLength = totalLengthHours * 60 + totalLengthMinutes
-            if supportingInfo.totalLength == 0 {
-                supportingInfo.totalLength = nil
-            }
+            updateTotalLength()
         }
+
+    }
+    
+    private func updateTotalLength() {
+        let newLength = totalLengthHours * 60 + totalLengthMinutes
+        supportingInfo.totalLength = newLength > 0 ? newLength : nil
     }
 }
 

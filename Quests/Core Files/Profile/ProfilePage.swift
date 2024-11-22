@@ -14,6 +14,7 @@ struct ProfilePage: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     @State private var isShowingPopup = false
+    
     var body: some View {
         ZStack {
             List {
@@ -82,7 +83,7 @@ extension ProfilePage {
                 .font(.headline)
                 .padding(.top, 20)
             
-            Text("Deleting your account is permanent and cannot be undone.")
+            Text("Deleting your account is permanent and cannot be undone. You may be required to re-authenticate first.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
@@ -100,6 +101,7 @@ extension ProfilePage {
                             try await viewModel.deleteAccount()
                             showSignInView = true
                         } catch {
+                            // User needs to sign in again. Need to be more specific in case of other errors!
                             print(error)
                         }
                         isShowingPopup = false

@@ -12,6 +12,8 @@ struct ObjectiveCreateView: View {
     @Binding var showObjectiveCreateView: Bool
     @State private var tooManyObjectives: Bool = false
     @State private var noTitle: Bool = false
+    @State private var noSolution: Bool = false
+    @State private var noDescription: Bool = false
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
     @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
     
@@ -122,6 +124,24 @@ struct ObjectiveCreateView: View {
                         .cornerRadius(8)        // Rounded corners
                         .shadow(radius: 4)      // Optional shadow for better visibility
                 }
+                if noDescription {
+                    Text("Oops! Add a description to your Objective!")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
+                }
+                if noSolution {
+                    Text("Oops! Add a solution to your Objective!")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
+                }
                 
                 HStack {
                     Button(action: {
@@ -143,10 +163,12 @@ struct ObjectiveCreateView: View {
                         
                         // 1) Objective data is saved in objectiveContent Structure
                         noTitle = objectiveContent.objectiveTitle.isEmpty
+                        noSolution = objectiveContent.solutionCombinationAndCode.isEmpty
+                        noDescription = objectiveContent.objectiveDescription.isEmpty
                         if objectiveContent.isEditing == false {
                             // From the CREATE flow, not the EDIT flow, so append to struc
                             tooManyObjectives = questContent.objectiveCount >= Macros.MAX_OBJECTIVES
-                            if !tooManyObjectives, !noTitle {
+                            if !tooManyObjectives, !noTitle, !noSolution, !noDescription {
                                 questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
                                 questContent.editTotalLength(objectiveContent) // Adjust the total length of quest based on objective length
                                
@@ -161,7 +183,7 @@ struct ObjectiveCreateView: View {
                             questContent.editTotalLength(objectiveContent, originalHrConstraint: originalHrConstraint, originalMinConstraint: originalMinConstraint) /* Need initial value of the time to SUBTRACT from totalLength before adding the NEW time (for edit only) */
                             
                             // Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
-                            if !noTitle {
+                            if !noTitle, !noSolution, !noDescription {
                                 showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */
                                 // change editing boolean back to false
                                 objectiveContent.isEditing = false
