@@ -19,6 +19,11 @@ struct ProfilePage: View {
             List {
                 if let user = viewModel.user {
                     Text("User ID: \(user.userId)")
+                    Button {
+                        viewModel.togglePremiumStatus()
+                    } label: {
+                        Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
+                    }
                 }
                 Button("Sign Out") {
                     Task {

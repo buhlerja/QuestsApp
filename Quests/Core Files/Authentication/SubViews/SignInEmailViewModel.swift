@@ -20,7 +20,9 @@ final class SignInEmailViewModel: ObservableObject {
         }
         // Do validation here
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
-        try await UserManager.shared.createNewUser(auth: authDataResult) // Create new user in the database!!
+        let user = DBUser(auth: authDataResult)
+        try await UserManager.shared.createNewUser(user: user)
+        // Update database. Don't want to create new user every time
     }
     
     func signIn() async throws {

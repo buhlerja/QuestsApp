@@ -13,6 +13,15 @@ final class ProfileViewModel: ObservableObject {
     @Published var authProviders: [AuthProviderOption] = []
     @Published private(set) var user: DBUser? = nil
     
+    func togglePremiumStatus() {
+        guard let user else { return }
+        let currentValue = user.isPremium ?? false
+        Task {
+            try await UserManager.shared.updateUserPremiumStatus(userId: user.userId, isPremium: !currentValue)
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+        }
+    }
+    
     func loadAuthProviders() {
         if let providers = try? AuthenticationManager.shared.getProviders() {
             authProviders = providers

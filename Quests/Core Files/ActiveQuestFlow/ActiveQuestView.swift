@@ -264,7 +264,7 @@ struct ActiveQuestView: View {
         } else {
             // Answer is wrong
             answerIsWrong = true
-            if let hint = currentObjective.objectiveHint {
+            if let _ = currentObjective.objectiveHint {
                 // There is a hint associated with this objective
                 showHintButton = true
             }
