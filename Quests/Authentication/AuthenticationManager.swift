@@ -31,6 +31,10 @@ final class AuthenticationManager {
     static let shared = AuthenticationManager()
     private init() {} // Bad in larger production apps
     
+    enum AuthError: Error {
+        case requiresRecentLogin
+    }
+    
     func getAuthenticatedUser() throws -> AuthDataResultModel {
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse)
@@ -60,11 +64,22 @@ final class AuthenticationManager {
     
     func delete() async throws {
         guard let user = Auth.auth().currentUser else {
-            throw URLError(.badURL)
+            throw URLError(.badURL) // Or your custom error
         }
-        try await user.delete()
+
+        do {
+            try await user.delete()
+            print("User account deleted successfully.")
+        } catch let error as NSError {
+            if error.code == AuthErrorCode.requiresRecentLogin.rawValue {
+                print("User needs to reauthenticate before deletion.")
+                throw AuthError.requiresRecentLogin
+            } else {
+                print("Error deleting user: \(error.localizedDescription)")
+                throw error
+            }
+        }
     }
-    
 }
 
 // MARK: SIGN IN EMAIL

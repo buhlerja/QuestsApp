@@ -14,6 +14,7 @@ struct ProfilePage: View {
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     @State private var isShowingPopup = false
+    @State private var reAuthRequired = false
     
     var body: some View {
         ZStack {
@@ -46,6 +47,16 @@ struct ProfilePage: View {
                     Text("Delete Account")
                 }
                 
+                if reAuthRequired {
+                    Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
+                }
+                
                 if viewModel.authProviders.contains(.email) {
                     emailSection
                 }
@@ -68,6 +79,7 @@ struct ProfilePage: View {
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
             viewModel.loadAuthProviders()
+            reAuthRequired = false
         }
         .task {
             try? await viewModel.loadCurrentUser()
@@ -100,9 +112,12 @@ extension ProfilePage {
                         do {
                             try await viewModel.deleteAccount()
                             showSignInView = true
+                        } catch AuthenticationManager.AuthError.requiresRecentLogin {
+                            // User needs to sign in again.
+                            reAuthRequired = true
+                            print("Re-Authentication Required")
                         } catch {
-                            // User needs to sign in again. Need to be more specific in case of other errors!
-                            print(error)
+                            print("Failed to delete account: \(error)")
                         }
                         isShowingPopup = false
                     }
