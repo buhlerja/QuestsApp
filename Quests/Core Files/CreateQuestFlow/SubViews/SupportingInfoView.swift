@@ -15,6 +15,7 @@ struct SupportingInfoView: View {
     
     @State private var totalLengthHours = 0
     @State private var totalLengthMinutes = 0
+    @State private var specialInstructions = ""
     
     var body: some View {
         ScrollView {
@@ -69,35 +70,44 @@ struct SupportingInfoView: View {
                 if showAddMaterials {
                     addMaterials(materials: $supportingInfo.materials, cost: $supportingInfo.cost)
                 }
-                
-                // Add length flow. This will affect the optional totalLength variable
-                Text("Adjust Quest Length? (Optional)")
              
-                Text("Current Estimate based on Objectives:")
-                HStack {
-                    Picker("Hours", selection: $totalLengthHours) {
-                        ForEach(0..<24) { hour in
-                            Text("\(hour) h").tag(hour)
-                        }
-                    }
-                    .pickerStyle(.wheel)
-                    .frame(width: 100, height: 100)
-                    .clipped()
-
-                    Picker("Minutes", selection: $totalLengthMinutes) {
-                        ForEach(0..<60) { minute in
-                            Text("\(minute) min").tag(minute)
-                        }
-                    }
-                    .pickerStyle(.wheel)
-                    .frame(width: 100, height: 100)
-                    .clipped()
+                Toggle(isOn: $supportingInfo.lengthEstimate) {
+                    Text("Add Quest Length Estimate? (Optional)")
+                        .fontWeight(.bold)
                 }
                 .padding()
+                .background(Color.cyan)
+                .cornerRadius(8)
+        
+                
+                if supportingInfo.lengthEstimate {
+                    // Add length flow. This will affect the optional totalLength variable
+                    Text("Current Estimate based on Objectives:")
+                    HStack {
+                        Picker("Hours", selection: $totalLengthHours) {
+                            ForEach(0..<24) { hour in
+                                Text("\(hour) h").tag(hour)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: 100, height: 100)
+                        .clipped()
+
+                        Picker("Minutes", selection: $totalLengthMinutes) {
+                            ForEach(0..<60) { minute in
+                                Text("\(minute) min").tag(minute)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: 100, height: 100)
+                        .clipped()
+                    }
+                    .padding()
+                }
               
                 
                 Text("Add Special Instructions? (Optional)")
-                TextEditor(text: $supportingInfo.specialInstructions)
+                TextEditor(text: $specialInstructions)
                    .padding(4)
                    .frame(height: 200)
                    .overlay(
@@ -148,6 +158,7 @@ struct SupportingInfoView: View {
                totalLengthHours = currentTotalLength / 60
                totalLengthMinutes = currentTotalLength % 60
             }
+            specialInstructions = supportingInfo.specialInstructions ?? ""
         }
         .onChange(of: supportingInfo.totalLength) {
             if let currentTotalLength = supportingInfo.totalLength {
@@ -160,6 +171,9 @@ struct SupportingInfoView: View {
         }
         .onChange(of: totalLengthMinutes) {
             updateTotalLength()
+        }
+        .onChange(of: specialInstructions) {
+            supportingInfo.specialInstructions = specialInstructions
         }
 
     }

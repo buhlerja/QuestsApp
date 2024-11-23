@@ -101,7 +101,7 @@ struct ObjectiveHighLevelView_Previews: PreviewProvider {
                                         title: "",
                                         description: "",
                                         // objectiveCount is initialized to 0
-                                        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, specialInstructions: "", materials: [], cost: 0) /* Total length not initialized here, so still has a value of NIL (optional parameter) */
+                                        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: true, treasureValue: 5, materials: [], cost: 10) /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions also auto-initialized as nil */
                                     )
                                 )
                                     

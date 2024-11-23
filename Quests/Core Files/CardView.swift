@@ -31,12 +31,18 @@ struct CardView: View {
             
             HStack {
                 VStack(alignment: .leading){
-                    if let totalLength = quest.supportingInfo.totalLength {
+                    if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
                         Label("\(totalLength)", systemImage: "clock")
                             .font(.footnote)
                     }
-                    Label("\(Int(quest.supportingInfo.cost))", systemImage: "dollarsign.circle")
-                        .font(.footnote)
+                    if let tempCost = quest.supportingInfo.cost {
+                        Label("\(Int(tempCost))", systemImage: "dollarsign.circle")
+                            .font(.footnote)
+                    } else {
+                        Label("Unspecified",  systemImage: "dollarsign.circle")
+                            .font(.footnote)
+                    }
+                    
                 } .padding(20)
                 VStack(alignment: .leading) {
                     Gauge(value: quest.supportingInfo.difficulty, in: 1.0...10.0) {

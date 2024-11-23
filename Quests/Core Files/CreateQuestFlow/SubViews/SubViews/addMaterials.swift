@@ -20,7 +20,7 @@ struct addMaterials: View {
     @State private var addPlusSymbol = false
     @State private var selectedCategory: materialsStruc.CategoryType = .equipment
     @Binding var materials: [materialsStruc]
-    @Binding var cost: Double 
+    @Binding var cost: Double?
     
     let minPriceValue: Double = 0
     let maxPriceValue: Double = 250
@@ -85,16 +85,20 @@ struct addMaterials: View {
                         if nameError { return }
                         
                         var anotherMaterial: materialsStruc
-                        if materialCost != 0 {
+                        if materialCost >= 0, addCost {
                             anotherMaterial = materialsStruc(material: materialName, cost: materialCost, category: selectedCategory)
                             if materialCost >= maxPriceValue {
                                 addPlusSymbol = true
+                            }
+                            if let tempCost = cost {
+                                cost = tempCost + materialCost
+                            } else {
+                                cost = materialCost
                             }
                         } else {
                             anotherMaterial = materialsStruc(material: materialName, category: selectedCategory)
                         }
                         materials.append(anotherMaterial)
-                        cost += materialCost
                         addNew = false
 
                     }) {
@@ -141,6 +145,7 @@ struct addMaterials: View {
                     materialCost = 0
                     materialName = ""
                     addCost = false
+                    selectedCategory = .equipment
                     // Clearing out state variables for the addition of a new material
                     addNew = true
                 }) {
@@ -154,12 +159,17 @@ struct addMaterials: View {
                 }
             }
             
-            if addPlusSymbol {
-                Text("Total Estimated Cost: $\(Int(cost)) +")
+            if let tempCostTwo = cost {
+                if addPlusSymbol {
+                    Text("Total Estimated Cost: $\(Int(tempCostTwo)) +")
+                }
+                else {
+                    Text("Total Estimated Cost: $\(Int(tempCostTwo))")
+                }
+            } else {
+                Text("Total Estimated Cost: Unspecified")
             }
-            else {
-                Text("Total Estimated Cost: $\(Int(cost))")
-            }
+
             
         }
     }

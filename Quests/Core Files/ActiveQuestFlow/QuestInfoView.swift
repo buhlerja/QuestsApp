@@ -34,9 +34,9 @@ struct QuestInfoView: View {
                         .foregroundColor(.white.opacity(0.8))
                     
                     HStack(spacing: 15) {
-                        HStack {
-                            Image(systemName: "clock")
-                            if let totalLength = quest.supportingInfo.totalLength {
+                        if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
+                            HStack {
+                                Image(systemName: "clock")
                                 Text("\(totalLength) min")
                             }
                         }
@@ -46,7 +46,12 @@ struct QuestInfoView: View {
                         }
                         HStack {
                             Image(systemName: "dollarsign.circle")
-                            Text("\(Int(quest.supportingInfo.cost))")
+                            if let tempCost = quest.supportingInfo.cost {
+                                Text("\(Int(tempCost))")
+                            } else {
+                                Text("Unspecified")
+                            }
+                            
                         }
                     }
                     .font(.footnote)
