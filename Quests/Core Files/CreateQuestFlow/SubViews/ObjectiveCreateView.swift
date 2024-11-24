@@ -310,7 +310,7 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     objectiveType: 3,
                                     solutionCombinationAndCode: "",
                                     // objectiveHint automatically initialized as nil
-                                    objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
+                                    objectiveArea: ObjectiveArea(center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), range: CLLocationDistance(1000)),
                                     isEditing: false
                                 )
                             )

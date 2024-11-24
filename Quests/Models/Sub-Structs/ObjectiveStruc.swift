@@ -8,8 +8,9 @@
 import Foundation
 import MapKit
 
-struct ObjectiveStruc {
-    //let id: UUID // We should assign the same UUID as corresponding quest so we know which quest this objective belongs to?
+struct ObjectiveStruc: Codable {
+    let id: UUID // Unique ID for every objective
+    //let questID: UUID// ID of the objective's corresponding quest
     var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high). Auto-calculated.
     var objectiveTitle: String // Title of the objective
     var objectiveDescription: String // Description given to the objective
@@ -19,11 +20,12 @@ struct ObjectiveStruc {
     var objectiveHint: String? = nil // Optional parameter
     var hoursConstraint: Int? = nil // Optional parameter
     var minutesConstraint: Int? = nil // Optional parameter
-    var objectiveArea: (CLLocationCoordinate2D?, CLLocationDistance)
+    var objectiveArea: ObjectiveArea
     var isEditing: Bool
     
-    init(objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: (center: CLLocationCoordinate2D?, range: CLLocationDistance) = (nil, 1000), isEditing: Bool)
+    init(id: UUID = UUID(), objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: ObjectiveArea = ObjectiveArea(center: nil, range: 1000), isEditing: Bool)
     {
+        self.id = id
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
         self.objectiveDescription = objectiveDescription
@@ -35,6 +37,54 @@ struct ObjectiveStruc {
         self.objectiveArea = objectiveArea
         self.isEditing = isEditing
     }
+    
+    // Custom encoding
+    enum CodingKeys: String, CodingKey {
+        case id
+        case objectiveNumber = "objective_number"
+        case objectiveTitle = "objective_title"
+        case objectiveDescription = "objective_description"
+        case objectiveType = "objective_type"
+        case solutionCombinationAndCode = "solution_combination_and_code"
+        case objectiveHint = "objective_hint"
+        case hoursConstraint = "hours_constraint"
+        case minutesConstraint = "minutes_constraint"
+        case objectiveArea = "objective_area"
+        case isEditing = "is_editing"
+    }
+    
+    // Conforming to Codable using custom encode/decode
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.objectiveNumber = try container.decode(Int.self, forKey: .objectiveNumber)
+        self.objectiveTitle = try container.decode(String.self, forKey: .objectiveTitle)
+        self.objectiveDescription = try container.decode(String.self, forKey: .objectiveDescription)
+        self.objectiveType = try container.decode(Int.self, forKey: .objectiveType)
+        self.solutionCombinationAndCode = try container.decode(String.self, forKey: .solutionCombinationAndCode)
+        self.objectiveHint = try container.decodeIfPresent(String.self, forKey: .objectiveHint)
+        self.hoursConstraint = try container.decodeIfPresent(Int.self, forKey: .hoursConstraint)
+        self.minutesConstraint = try container.decodeIfPresent(Int.self, forKey: .minutesConstraint)
+        self.objectiveArea = try container.decodeIfPresent(ObjectiveArea.self, forKey: .objectiveArea) ?? ObjectiveArea(center: nil, range: 1000)
+        self.isEditing = try container.decode(Bool.self, forKey: .isEditing)
+    }
+    
+    // Custom encoding
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.objectiveNumber, forKey: .objectiveNumber)
+        try container.encode(self.objectiveTitle, forKey: .objectiveTitle)
+        try container.encode(self.objectiveDescription, forKey: .objectiveDescription)
+        try container.encode(self.objectiveType, forKey: .objectiveType)
+        try container.encode(self.solutionCombinationAndCode, forKey: .solutionCombinationAndCode)
+        try container.encodeIfPresent(self.objectiveHint, forKey: .objectiveHint)
+        try container.encodeIfPresent(self.hoursConstraint, forKey: .hoursConstraint)
+        try container.encodeIfPresent(self.minutesConstraint, forKey: .minutesConstraint)
+        try container.encodeIfPresent(self.objectiveArea, forKey: .objectiveArea)
+        try container.encode(self.isEditing, forKey: .isEditing)
+    }
+    
 }
 
 extension ObjectiveStruc {
@@ -48,7 +98,7 @@ extension ObjectiveStruc {
             objectiveHint: "The code is 1234",
             //hoursConstraint: 0,
             //minutesConstraint: 2,
-            objectiveArea: (CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), CLLocationDistance(1000)),
+            objectiveArea: ObjectiveArea(center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), range: CLLocationDistance(1000)),
             isEditing: false
         ),
         ObjectiveStruc(
@@ -60,7 +110,7 @@ extension ObjectiveStruc {
             //objectiveHint: "Check the statue's plaque",
             hoursConstraint: 0,
             minutesConstraint: 3,
-            objectiveArea:(CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
+            objectiveArea: ObjectiveArea(center: CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), range: CLLocationDistance(1000)),
             isEditing: false
         )
     ]

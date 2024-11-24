@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct materialsStruc: Identifiable {
+struct materialsStruc: Identifiable, Codable {
     let id: UUID
     var material: String
     var cost: Double? = nil
     var category: CategoryType? = nil
     
-    enum CategoryType: String, CaseIterable, Identifiable {
+    enum CategoryType: String, CaseIterable, Identifiable, Codable {
         case equipment
         case transit
         case lodging
@@ -29,6 +29,29 @@ struct materialsStruc: Identifiable {
         self.material = material
         self.cost = cost
         self.category = category
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.material, forKey: .material)
+        try container.encodeIfPresent(self.cost, forKey: .cost)
+        try container.encodeIfPresent(self.category, forKey: .category)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case id 
+        case material = "material"
+        case cost = "cost"
+        case category = "category"
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.material = try container.decode(String.self, forKey: .material)
+        self.cost = try container.decodeIfPresent(Double.self, forKey: .cost)
+        self.category = try container.decodeIfPresent(materialsStruc.CategoryType.self, forKey: .category)
     }
 }
 

@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct QuestStruc: Identifiable {
+struct QuestStruc: Identifiable, Codable {
     let id: UUID
     var coordinateStart: CLLocationCoordinate2D? = nil
     var title: String
@@ -27,6 +27,53 @@ struct QuestStruc: Identifiable {
         self.objectiveCount = objectiveCount
         self.objectives = objectives
         self.supportingInfo = supportingInfo
+    }
+    
+    // Custom encoding and decoding
+    enum CodingKeys: String, CodingKey {
+        case id
+        case startingLocLatitude = "starting_loc_latitude"
+        case startingLocLongitude = "starting_loc_longitude"
+        case title
+        case description
+        case objectiveCount = "objective_count"
+        case objectives
+        case supportingInfo = "supporting_info"
+    }
+    
+    // Custom decoder to handle decoding of optional CLLocationCoordinate2D
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        // Starting location
+        // Decode latitude and longitude into a CLLocationCoordinate2D
+        if let latitude = try container.decodeIfPresent(Double.self, forKey: .startingLocLatitude),
+           let longitude = try container.decodeIfPresent(Double.self, forKey: .startingLocLongitude) {
+            self.coordinateStart = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        } else {
+            self.coordinateStart = nil
+        }
+        self.title = try container.decode(String.self, forKey: .title)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.objectiveCount = try container.decode(Int.self, forKey: .objectiveCount)
+        self.objectives = try container.decode([ObjectiveStruc].self, forKey: .objectives)
+        self.supportingInfo = try container.decode(SupportingInfoStruc.self, forKey: .supportingInfo)
+    }
+    
+    // Custom encoder to handle encoding of optional CLLocationCoordinate2D
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.id, forKey: .id)
+        // starting location
+        if let coordinateStartTemp = coordinateStart {
+            try container.encode(coordinateStartTemp.latitude, forKey: .startingLocLatitude)
+            try container.encode(coordinateStartTemp.longitude, forKey: .startingLocLongitude)
+        }
+        try container.encode(self.title, forKey: .title)
+        try container.encode(self.description, forKey: .description)
+        try container.encode(self.objectiveCount, forKey: .objectiveCount)
+        try container.encode(self.objectives, forKey: .objectives)
+        try container.encode(self.supportingInfo, forKey: .supportingInfo)
     }
     
     mutating func editTotalLength(_ objective: ObjectiveStruc, originalHrConstraint: Int = 0, originalMinConstraint: Int = 0) {
@@ -76,6 +123,7 @@ struct QuestStruc: Identifiable {
             print("Max number of objectives exceeded")
         }
     }
+    
 }
 
 extension QuestStruc {

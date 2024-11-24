@@ -29,6 +29,7 @@
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
+		83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
@@ -73,6 +74,7 @@
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
+		83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objectiveArea.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				8344B7062C7263EC00B9216A /* materialsStruc.swift */,
+				83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */,
 			);
 			path = "Sub-Structs";
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				8344B7052C7263B000B9216A /* addMaterials.swift in Sources */,
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,
 				830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */,
+				83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */,
 				83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */,
 				8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,

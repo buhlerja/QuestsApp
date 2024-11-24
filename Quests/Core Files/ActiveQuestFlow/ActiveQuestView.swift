@@ -40,8 +40,8 @@ struct ActiveQuestView: View {
                 // Map view
                 Map(position: $position) {
                     UserAnnotation()
-                    if let center = currentObjective.objectiveArea.0 {
-                        MapCircle(center: center, radius: currentObjective.objectiveArea.1)
+                    if let center = currentObjective.objectiveArea.center {
+                        MapCircle(center: center, radius: currentObjective.objectiveArea.range)
                             .foregroundStyle(Color.cyan.opacity(0.5))
                     }
                 }

@@ -91,7 +91,7 @@ struct ObjectiveHighLevelView_Previews: PreviewProvider {
                                         objectiveHint: "BATH____",
                                         hoursConstraint: 10,
                                         minutesConstraint: 0,
-                                        objectiveArea: (CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), CLLocationDistance(1000)),
+                                        objectiveArea: ObjectiveArea(center: CLLocationCoordinate2D(latitude: 44.3601, longitude: -71.0589), range: CLLocationDistance(1000)),
                                         isEditing: false
                                     )
                                 ),
