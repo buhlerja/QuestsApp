@@ -21,9 +21,11 @@ struct CreateQuestContentView: View {
         title: "",
         description: "",
         // objectiveCount is initialized to 0
-        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []) /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
+        metaData: QuestMetaData() // Has appropriate default values in its initializer
     )
     @State var objectiveContent = ObjectiveStruc(
+        questID: nil,
         objectiveNumber: 0, // Changed to proper number once the objective is appended to the quest.objectives array
         objectiveTitle: "",
         objectiveDescription: "",
@@ -131,6 +133,7 @@ struct CreateQuestContentView: View {
                             showObjectiveCreateView.toggle()
                             // I make sure to reset all optionals to NIL
                             objectiveContent = ObjectiveStruc(
+                                                questID: nil,
                                                 objectiveNumber: 0,
                                                 objectiveTitle: "",
                                                 objectiveDescription: "",

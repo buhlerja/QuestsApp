@@ -17,8 +17,9 @@ struct QuestStruc: Identifiable, Codable {
     var objectiveCount: Int
     var objectives: [ObjectiveStruc] = [] // Initially an empty array
     var supportingInfo: SupportingInfoStruc
+    var metaData: QuestMetaData 
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc) {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc, metaData: QuestMetaData) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
@@ -27,6 +28,7 @@ struct QuestStruc: Identifiable, Codable {
         self.objectiveCount = objectiveCount
         self.objectives = objectives
         self.supportingInfo = supportingInfo
+        self.metaData = metaData // Has default values in its initializer, so don't need to explicitly pass values on setup
     }
     
     // Custom encoding and decoding
@@ -39,6 +41,7 @@ struct QuestStruc: Identifiable, Codable {
         case objectiveCount = "objective_count"
         case objectives
         case supportingInfo = "supporting_info"
+        case metaData = "meta_data"
     }
     
     // Custom decoder to handle decoding of optional CLLocationCoordinate2D
@@ -58,6 +61,7 @@ struct QuestStruc: Identifiable, Codable {
         self.objectiveCount = try container.decode(Int.self, forKey: .objectiveCount)
         self.objectives = try container.decode([ObjectiveStruc].self, forKey: .objectives)
         self.supportingInfo = try container.decode(SupportingInfoStruc.self, forKey: .supportingInfo)
+        self.metaData = try container.decode(QuestMetaData.self, forKey: .metaData)
     }
     
     // Custom encoder to handle encoding of optional CLLocationCoordinate2D
@@ -74,6 +78,7 @@ struct QuestStruc: Identifiable, Codable {
         try container.encode(self.objectiveCount, forKey: .objectiveCount)
         try container.encode(self.objectives, forKey: .objectives)
         try container.encode(self.supportingInfo, forKey: .supportingInfo)
+        try container.encode(self.metaData, forKey: .metaData)
     }
     
     mutating func editTotalLength(_ objective: ObjectiveStruc, originalHrConstraint: Int = 0, originalMinConstraint: Int = 0) {
@@ -102,6 +107,7 @@ struct QuestStruc: Identifiable, Codable {
     
     mutating func addObjective(_ objective: ObjectiveStruc) {
         let permanentObjective = ObjectiveStruc(
+            questID: id, // Assign it the Quest's UUID
             objectiveNumber: objectives.count + 1, // Set objective number
             objectiveTitle: objective.objectiveTitle,
             objectiveDescription: objective.objectiveDescription,
@@ -134,14 +140,16 @@ extension QuestStruc {
                    description: "A unique take on a classic punishment",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
-                   supportingInfo: SupportingInfoStruc.sampleData
+                   supportingInfo: SupportingInfoStruc.sampleData,
+                   metaData: QuestMetaData()
                    /*theme: .orange*/),
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
                    description: "A fun design challenge using the arts",
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
-                   supportingInfo: SupportingInfoStruc.sampleData
+                   supportingInfo: SupportingInfoStruc.sampleData,
+                   metaData: QuestMetaData()
                    /*theme: .yellow*/)
     ]
 }

@@ -298,12 +298,14 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     longitude: 0.0),
                                     title: "",
                                     description: "",
-                                    supportingInfo: SupportingInfoStruc.sampleData
+                                    supportingInfo: SupportingInfoStruc.sampleData,
+                                    metaData: QuestMetaData()
                                 
                                 )
                             ),
                             objectiveContent: .constant(
                                 ObjectiveStruc(
+                                    questID: nil,
                                     objectiveNumber: 0,
                                     objectiveTitle: "Wash me",
                                     objectiveDescription: "Break into an old folks home and give someone a bath",

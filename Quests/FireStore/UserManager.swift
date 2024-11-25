@@ -14,7 +14,14 @@ struct DBUser: Codable {
     let photoUrl: String? // Optional
     let dateCreated: Date? // Optional (but isn't really optional)
     let isPremium: Bool?
-    let quests: [QuestStruc]? // Stores all the quests a user has created
+    let questsCreatedList: [QuestStruc]? // Stores all the quests a user has created
+    let numQuestsCreated: Int? // The number of quests a user has created
+    let numQuestsCompleted: Int? // Optional (but isn't really optional)
+    let questsCompletedList: [QuestStruc]? // The list of quests a user has successfully completed
+    let numWatchlistQuests: Int?
+    let watchlistQuestsList: [QuestStruc]? // All the quests the user might want to eventually play
+    let numQuestsFailed: Int?
+    let failedQuestsList: [QuestStruc]? // All the quests a user has failed
     
     init(auth: AuthDataResultModel) {
         self.userId = auth.uid
@@ -22,7 +29,14 @@ struct DBUser: Codable {
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
         self.isPremium = false
-        self.quests = nil
+        self.questsCreatedList = nil
+        self.numQuestsCreated = 0
+        self.numQuestsCompleted = 0
+        self.questsCompletedList = nil
+        self.numWatchlistQuests = 0
+        self.watchlistQuestsList = nil
+        self.numQuestsFailed = 0
+        self.failedQuestsList = nil
     }
     
     init(
@@ -31,14 +45,28 @@ struct DBUser: Codable {
         photoUrl: String? = nil,
         dateCreated: Date? = nil,
         isPremium: Bool? = nil,
-        quests: [QuestStruc]? = nil
+        questsCreatedList: [QuestStruc]? = nil,
+        numQuestsCreated: Int? = 0,
+        numQuestsCompleted: Int? = 0,
+        questsCompletedList: [QuestStruc]? = nil,
+        numWatchlistQuests: Int? = 0,
+        watchlistQuestsList: [QuestStruc]? = nil,
+        numQuestsFailed: Int? = 0,
+        failedQuestsList: [QuestStruc]? = nil
     ) {
         self.userId = userId
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
         self.isPremium = isPremium
-        self.quests = quests
+        self.questsCreatedList = questsCreatedList
+        self.numQuestsCreated = numQuestsCreated
+        self.numQuestsCompleted = numQuestsCompleted
+        self.questsCompletedList = questsCompletedList
+        self.numWatchlistQuests = numWatchlistQuests
+        self.watchlistQuestsList = watchlistQuestsList
+        self.numQuestsFailed = numQuestsFailed
+        self.failedQuestsList = failedQuestsList
     }
     
     /*mutating func togglePremiumStatus() {
@@ -52,7 +80,14 @@ struct DBUser: Codable {
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
         case isPremium = "is_premium"
-        case quests = "quests"
+        case questsCreatedList = "quests_created_list"
+        case numQuestsCreated = "num_quests_created"
+        case numQuestsCompleted = "num_quests_completed"
+        case questsCompletedList = "quests_completed_list"
+        case numWatchlistQuests = "num_watchlist_quests"
+        case watchlistQuestsList = "watchlist_quests_list"
+        case numQuestsFailed = "num_quests_failed"
+        case failedQuestsList = "failed_quests_list"
     }
     
     init(from decoder: any Decoder) throws {
@@ -62,9 +97,16 @@ struct DBUser: Codable {
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium)
-        self.quests = try container.decodeIfPresent([QuestStruc].self, forKey: .quests)
+        self.questsCreatedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCreatedList)
+        self.numQuestsCreated = try container.decodeIfPresent(Int.self, forKey: .numQuestsCreated)
+        self.numQuestsCompleted = try container.decodeIfPresent(Int.self, forKey: .numQuestsCompleted)
+        self.questsCompletedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCompletedList)
+        self.numWatchlistQuests = try container.decodeIfPresent(Int.self, forKey: .numWatchlistQuests)
+        self.watchlistQuestsList = try container.decodeIfPresent([QuestStruc].self, forKey: .watchlistQuestsList)
+        self.numQuestsFailed = try container.decodeIfPresent(Int.self, forKey: .numQuestsFailed)
+        self.failedQuestsList = try container.decodeIfPresent([QuestStruc].self, forKey: .failedQuestsList)
     }
-    
+
     func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.userId, forKey: .userId)
@@ -72,7 +114,14 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.isPremium, forKey: .isPremium)
-        try container.encodeIfPresent(self.quests, forKey: .quests)
+        try container.encodeIfPresent(self.questsCreatedList, forKey: .questsCreatedList)
+        try container.encodeIfPresent(self.numQuestsCreated, forKey: .numQuestsCreated)
+        try container.encodeIfPresent(self.numQuestsCompleted, forKey: .numQuestsCompleted)
+        try container.encodeIfPresent(self.questsCompletedList, forKey: .questsCompletedList)
+        try container.encodeIfPresent(self.numWatchlistQuests, forKey: .numWatchlistQuests)
+        try container.encodeIfPresent(self.watchlistQuestsList, forKey: .watchlistQuestsList)
+        try container.encodeIfPresent(self.numQuestsFailed, forKey: .numQuestsFailed)
+        try container.encodeIfPresent(self.failedQuestsList, forKey: .failedQuestsList)
     }
     
 }
@@ -147,7 +196,7 @@ final class UserManager {
     
     func addUserQuest(userId: String, quest: QuestStruc) async throws {
         let data: [String:Any] = [
-            DBUser.CodingKeys.quests.rawValue : FieldValue.arrayUnion([quest])
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([quest])
         ]
         
         try await userDocument(userId: userId).updateData(data)
@@ -155,7 +204,7 @@ final class UserManager {
     
     func removeUserQuest(userId: String, quest: QuestStruc) async throws {
         let data: [String:Any] = [
-            DBUser.CodingKeys.quests.rawValue : FieldValue.arrayRemove([quest])
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([quest])
         ]
         
         try await userDocument(userId: userId).updateData(data)

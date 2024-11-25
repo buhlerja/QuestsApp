@@ -10,7 +10,7 @@ import MapKit
 
 struct ObjectiveStruc: Codable {
     let id: UUID // Unique ID for every objective
-    //let questID: UUID// ID of the objective's corresponding quest
+    let questID: UUID? // ID of the objective's corresponding quest
     var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high). Auto-calculated.
     var objectiveTitle: String // Title of the objective
     var objectiveDescription: String // Description given to the objective
@@ -23,9 +23,10 @@ struct ObjectiveStruc: Codable {
     var objectiveArea: ObjectiveArea
     var isEditing: Bool
     
-    init(id: UUID = UUID(), objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: ObjectiveArea = ObjectiveArea(center: nil, range: 1000), isEditing: Bool)
+    init(id: UUID = UUID(), questID: UUID?, objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: ObjectiveArea = ObjectiveArea(center: nil, range: 1000), isEditing: Bool)
     {
         self.id = id
+        self.questID = questID
         self.objectiveNumber = objectiveNumber
         self.objectiveTitle = objectiveTitle
         self.objectiveDescription = objectiveDescription
@@ -41,6 +42,7 @@ struct ObjectiveStruc: Codable {
     // Custom encoding
     enum CodingKeys: String, CodingKey {
         case id
+        case questID = "quest_id"
         case objectiveNumber = "objective_number"
         case objectiveTitle = "objective_title"
         case objectiveDescription = "objective_description"
@@ -57,6 +59,7 @@ struct ObjectiveStruc: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
+        self.questID = try container.decode(UUID.self, forKey: .questID)
         self.objectiveNumber = try container.decode(Int.self, forKey: .objectiveNumber)
         self.objectiveTitle = try container.decode(String.self, forKey: .objectiveTitle)
         self.objectiveDescription = try container.decode(String.self, forKey: .objectiveDescription)
@@ -73,6 +76,7 @@ struct ObjectiveStruc: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.id, forKey: .id)
+        try container.encode(self.questID, forKey: .questID)
         try container.encode(self.objectiveNumber, forKey: .objectiveNumber)
         try container.encode(self.objectiveTitle, forKey: .objectiveTitle)
         try container.encode(self.objectiveDescription, forKey: .objectiveDescription)
@@ -90,6 +94,7 @@ struct ObjectiveStruc: Codable {
 extension ObjectiveStruc {
     static let objectiveSampleData: [ObjectiveStruc] = [
         ObjectiveStruc(
+            questID: nil,
             objectiveNumber: 1,
             objectiveTitle: "Find the secret code under the rock",
             objectiveDescription: "The code is 1234",
@@ -102,6 +107,7 @@ extension ObjectiveStruc {
             isEditing: false
         ),
         ObjectiveStruc(
+            questID: nil,
             objectiveNumber: 2,
             objectiveTitle: "Pet that dog",
             objectiveDescription: "The code is 5678",
