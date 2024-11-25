@@ -145,4 +145,20 @@ final class UserManager {
         try await userDocument(userId: userId).updateData(data)
     }
     
+    func addUserQuest(userId: String, quest: QuestStruc) async throws {
+        let data: [String:Any] = [
+            DBUser.CodingKeys.quests.rawValue : FieldValue.arrayUnion([quest])
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func removeUserQuest(userId: String, quest: QuestStruc) async throws {
+        let data: [String:Any] = [
+            DBUser.CodingKeys.quests.rawValue : FieldValue.arrayRemove([quest])
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
 }

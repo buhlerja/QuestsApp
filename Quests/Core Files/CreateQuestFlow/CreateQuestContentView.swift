@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct CreateQuestContentView: View {
+    @StateObject private var viewModel = QuestCreateViewModel()
     @State private var showObjectiveCreateView = false
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
@@ -206,8 +207,12 @@ struct CreateQuestContentView: View {
                         noObjectives = questContent.objectives.isEmpty
                         if !noStartingLocation && !noTitle && !noObjectives {
                             print("Proceed to save to database")
+                            // 1st database: user database
+                            viewModel.addUserQuest(quest: questContent)
                         }
-                         
+                        else {
+                            print("Error: Could not save Quest")
+                        }
                         
                     }) {
                         HStack {
@@ -223,6 +228,9 @@ struct CreateQuestContentView: View {
                 }
                 .padding()
             }
+        }
+        .task {
+            try? await viewModel.loadCurrentUser()
         }
     }
 }
