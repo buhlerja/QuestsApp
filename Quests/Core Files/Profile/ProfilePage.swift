@@ -18,49 +18,80 @@ struct ProfilePage: View {
     
     var body: some View {
         ZStack {
-            List {
-                if let user = viewModel.user {
-                    Text("User ID: \(user.userId)")
-                    Button {
-                        viewModel.togglePremiumStatus()
-                    } label: {
-                        Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
-                    }
-                }
-                Button("Sign Out") {
-                    Task {
-                        do {
-                            try viewModel.signOut()
-                            showSignInView = true
-                        } catch {
-                            print(error)
+            VStack {
+                HStack {
+                    ScrollView(.horizontal) {
+                        if let createdQuests = viewModel.user?.questsCreatedList, !createdQuests.isEmpty {
+                            ForEach(createdQuests, id: \.id) { createdQuest in
+                                VStack {
+                                    NavigationLink(destination: QuestCreatorView()) {
+                                        CardView(quest: createdQuest)
+                                    }
+                                    Button(action: {
+                                        viewModel.removeUserQuest(quest: createdQuest)
+                                    }, label: {
+                                        Text("Delete")
+                                            .font(.headline)
+                                            .foregroundColor(.red)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                }
+                                
+                            }
+                        } else {
+                            Text("No created quests")
+                                .foregroundColor(.gray)
+                                .italic()
                         }
                     }
                 }
-                
-                Button(role: .destructive) {
-                    Task {
-                        isShowingPopup = true
+                List {
+                    if let user = viewModel.user {
+                        Text("User ID: \(user.userId)")
+                        Button {
+                            viewModel.togglePremiumStatus()
+                        } label: {
+                            Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
+                        }
                     }
-                } label: {
-                    // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
-                    Text("Delete Account")
+                    Button("Sign Out") {
+                        Task {
+                            do {
+                                try viewModel.signOut()
+                                showSignInView = true
+                            } catch {
+                                print(error)
+                            }
+                        }
+                    }
+                    
+                    Button(role: .destructive) {
+                        Task {
+                            isShowingPopup = true
+                        }
+                    } label: {
+                        // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
+                        Text("Delete Account")
+                    }
+                    
+                    if reAuthRequired {
+                        Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
+                            .font(.subheadline)
+                            .foregroundColor(.white) // Text color
+                            .padding()              // Inner padding
+                            .background(Color.red)  // Red background
+                            .cornerRadius(8)        // Rounded corners
+                            .shadow(radius: 4)      // Optional shadow for better visibility
+                    }
+                    
+                    if viewModel.authProviders.contains(.email) {
+                        emailSection
+                    }
+              
                 }
-                
-                if reAuthRequired {
-                    Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
-                        .font(.subheadline)
-                        .foregroundColor(.white) // Text color
-                        .padding()              // Inner padding
-                        .background(Color.red)  // Red background
-                        .cornerRadius(8)        // Rounded corners
-                        .shadow(radius: 4)      // Optional shadow for better visibility
-                }
-                
-                if viewModel.authProviders.contains(.email) {
-                    emailSection
-                }
-          
             }
 
             if isShowingPopup {
@@ -135,15 +166,6 @@ extension ProfilePage {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            ProfilePage(showSignInView: .constant(false))
-        }
-       
-    }
-}
-
 extension ProfilePage {
     private var emailSection: some View {
         Section {
@@ -180,5 +202,14 @@ extension ProfilePage {
         } header: {
             Text("Email Settings")
         }
+    }
+}
+
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ProfilePage(showSignInView: .constant(false))
+        }
+       
     }
 }

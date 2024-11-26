@@ -137,17 +137,17 @@ final class UserManager {
         userCollection.document(userId)
     }
     
-    /* private let encoder: Firestore.Encoder = {
+    private let encoder: Firestore.Encoder = {
         let encoder = Firestore.Encoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
+        //encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
     } ()
     
     private let decoder: Firestore.Decoder = {
         let decoder = Firestore.Decoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        //decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
-    } () */
+    } ()
     
     func createNewUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(from: user, merge: false) // No need to merge any data since we're creating a brand new database entry
@@ -195,19 +195,26 @@ final class UserManager {
     }
     
     func addUserQuest(userId: String, quest: QuestStruc) async throws {
-        let data: [String:Any] = [
-            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([quest])
+        guard let data = try? encoder.encode(quest) else {
+            throw URLError(.badURL)
+        }
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([data])
         ]
         
-        try await userDocument(userId: userId).updateData(data)
+        try await userDocument(userId: userId).updateData(dict)
+        print("Added Quest successfully!")
     }
     
     func removeUserQuest(userId: String, quest: QuestStruc) async throws {
-        let data: [String:Any] = [
-            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([quest])
+        guard let data = try? encoder.encode(quest) else {
+            throw URLError(.badURL)
+        }
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([data])
         ]
         
-        try await userDocument(userId: userId).updateData(data)
+        try await userDocument(userId: userId).updateData(dict)
     }
     
 }

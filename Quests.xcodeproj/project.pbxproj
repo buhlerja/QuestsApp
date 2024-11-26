@@ -32,6 +32,7 @@
 		83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */; };
 		83B5DA0D2CF4EA30000F3444 /* QuestCreateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */; };
 		83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */; };
+		83B5DA122CF5F37B000F3444 /* QuestCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA112CF5F37B000F3444 /* QuestCreatorView.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
@@ -79,6 +80,7 @@
 		83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objectiveArea.swift; sourceTree = "<group>"; };
 		83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCreateViewModel.swift; sourceTree = "<group>"; };
 		83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestMetaData.swift; sourceTree = "<group>"; };
+		83B5DA112CF5F37B000F3444 /* QuestCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCreatorView.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
@@ -171,6 +173,14 @@
 			path = Authentication;
 			sourceTree = "<group>";
 		};
+		83B5DA102CF5F35F000F3444 /* Sub-Views */ = {
+			isa = PBXGroup;
+			children = (
+				83B5DA112CF5F37B000F3444 /* QuestCreatorView.swift */,
+			);
+			path = "Sub-Views";
+			sourceTree = "<group>";
+		};
 		83C7D98F2CACC9A10046D553 /* MapViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,6 +194,7 @@
 			children = (
 				8315E1F12CA21D580079E403 /* ProfilePage.swift */,
 				83E9F0792CE26450003595B8 /* ProfilePageModel.swift */,
+				83B5DA102CF5F35F000F3444 /* Sub-Views */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -441,6 +452,7 @@
 				830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */,
 				83E9F0812CE26605003595B8 /* SignInEmailViewModel.swift in Sources */,
 				83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */,
+				83B5DA122CF5F37B000F3444 /* QuestCreatorView.swift in Sources */,
 				8344B7052C7263B000B9216A /* addMaterials.swift in Sources */,
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,
 				830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */,

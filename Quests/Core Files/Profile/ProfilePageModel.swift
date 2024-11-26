@@ -13,6 +13,14 @@ final class ProfileViewModel: ObservableObject {
     @Published var authProviders: [AuthProviderOption] = []
     @Published private(set) var user: DBUser? = nil
     
+    func removeUserQuest(quest: QuestStruc) {
+        guard let user else { return } // Make sure the user is logged in or authenticated
+        Task {
+            try await UserManager.shared.removeUserQuest(userId: user.userId, quest: quest)
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+        }
+    }
+    
     func togglePremiumStatus() {
         guard let user else { return }
         let currentValue = user.isPremium ?? false
