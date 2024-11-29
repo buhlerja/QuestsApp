@@ -24,7 +24,7 @@ struct ProfilePage: View {
                         HStack { // Use HStack to align the items horizontally
                             ForEach(createdQuests, id: \.id) { createdQuest in
                                 VStack {
-                                    NavigationLink(destination: QuestCreatorView()) {
+                                    NavigationLink(destination: QuestInfoView(quest: createdQuest)) {
                                         CardView(quest: createdQuest)
                                             .frame(width: 200) // Set a fixed width for each card, adjust as needed
                                     }

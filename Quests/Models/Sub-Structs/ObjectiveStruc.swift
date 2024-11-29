@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct ObjectiveStruc: Codable {
+struct ObjectiveStruc: Identifiable, Codable {
     let id: UUID // Unique ID for every objective
     let questID: UUID? // ID of the objective's corresponding quest
     var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high). Auto-calculated.
