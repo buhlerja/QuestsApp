@@ -8,7 +8,7 @@
 import Foundation
 
 struct QuestMetaData: Codable {
-    let dateCreated: Date?
+    //let dateCreated: Date? //WILL OMIT FOR NOW AS IT IS CAUSING DB PROBLEMS WITH DATE TYPE
     var numTimesPlayed: Int
     var numSuccesses: Int
     var numFails: Int
@@ -16,8 +16,8 @@ struct QuestMetaData: Codable {
     var rating: Double? // Will not show until at least one rating has been given
     var isPremiumQuest: Bool 
     
-    init(dateCreated: Date? = Date(), numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, isPremiumQuest: Bool = false) {
-        self.dateCreated = dateCreated
+    init(/*dateCreated: Date? = Date(),*/ numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, isPremiumQuest: Bool = false) {
+        //self.dateCreated = dateCreated
         self.numTimesPlayed = numTimesPlayed
         self.numSuccesses = numSuccesses
         self.numFails = numFails
@@ -27,7 +27,7 @@ struct QuestMetaData: Codable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case dateCreated = "date_created"
+        //case dateCreated = "date_created"
         case numTimesPlayed = "num_times_played"
         case numSuccesses = "num_successes"
         case numFails = "num_fails"
@@ -38,7 +38,7 @@ struct QuestMetaData: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
+        //self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.numTimesPlayed = try container.decode(Int.self, forKey: .numTimesPlayed)
         self.numSuccesses = try container.decode(Int.self, forKey: .numSuccesses)
         self.numFails = try container.decode(Int.self, forKey: .numFails)
@@ -49,7 +49,7 @@ struct QuestMetaData: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
+        //try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encode(self.numTimesPlayed, forKey: .numTimesPlayed)
         try container.encode(self.numSuccesses, forKey: .numSuccesses)
         try container.encode(self.numFails, forKey: .numFails)

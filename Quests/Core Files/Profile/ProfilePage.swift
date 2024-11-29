@@ -18,14 +18,15 @@ struct ProfilePage: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                HStack {
-                    ScrollView(.horizontal) {
-                        if let createdQuests = viewModel.user?.questsCreatedList, !createdQuests.isEmpty {
+            List {
+                if let createdQuests = viewModel.user?.questsCreatedList, !createdQuests.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack { // Use HStack to align the items horizontally
                             ForEach(createdQuests, id: \.id) { createdQuest in
                                 VStack {
                                     NavigationLink(destination: QuestCreatorView()) {
                                         CardView(quest: createdQuest)
+                                            .frame(width: 200) // Set a fixed width for each card, adjust as needed
                                     }
                                     Button(action: {
                                         viewModel.removeUserQuest(quest: createdQuest)
@@ -39,60 +40,60 @@ struct ProfilePage: View {
                                             .cornerRadius(8)
                                     })
                                 }
-                                
+                                .padding(.horizontal) // Add padding between cards
                             }
-                        } else {
-                            Text("No created quests")
-                                .foregroundColor(.gray)
-                                .italic()
                         }
                     }
+                } else {
+                    Text("No created quests")
+                        .foregroundColor(.gray)
+                        .italic()
                 }
-                List {
-                    if let user = viewModel.user {
-                        Text("User ID: \(user.userId)")
-                        Button {
-                            viewModel.togglePremiumStatus()
-                        } label: {
-                            Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
-                        }
-                    }
-                    Button("Sign Out") {
-                        Task {
-                            do {
-                                try viewModel.signOut()
-                                showSignInView = true
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }
-                    
-                    Button(role: .destructive) {
-                        Task {
-                            isShowingPopup = true
-                        }
+                
+                if let user = viewModel.user {
+                    Text("User ID: \(user.userId)")
+                    Button {
+                        viewModel.togglePremiumStatus()
                     } label: {
-                        // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
-                        Text("Delete Account")
+                        Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
                     }
-                    
-                    if reAuthRequired {
-                        Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
-                            .font(.subheadline)
-                            .foregroundColor(.white) // Text color
-                            .padding()              // Inner padding
-                            .background(Color.red)  // Red background
-                            .cornerRadius(8)        // Rounded corners
-                            .shadow(radius: 4)      // Optional shadow for better visibility
-                    }
-                    
-                    if viewModel.authProviders.contains(.email) {
-                        emailSection
-                    }
-              
                 }
+                Button("Sign Out") {
+                    Task {
+                        do {
+                            try viewModel.signOut()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+                
+                Button(role: .destructive) {
+                    Task {
+                        isShowingPopup = true
+                    }
+                } label: {
+                    // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
+                    Text("Delete Account")
+                }
+                
+                if reAuthRequired {
+                    Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Optional shadow for better visibility
+                }
+                
+                if viewModel.authProviders.contains(.email) {
+                    emailSection
+                }
+          
             }
+            
 
             if isShowingPopup {
                 Color.black.opacity(0.4) // Dimmed background
@@ -105,6 +106,7 @@ struct ProfilePage: View {
                    .transition(.scale) // Add a smooth transition
                    .zIndex(1) // Make sure the pop-up is on top
             }
+
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
