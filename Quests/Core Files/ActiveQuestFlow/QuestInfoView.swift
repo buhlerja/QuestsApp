@@ -5,81 +5,203 @@
 //  Created by Jack Buhler on 2024-07-09.
 //
 
-// TODO: MISSING FIELDS FROM SUPPORTING INFO FOR SURE
-
 import SwiftUI
 import MapKit
 
 struct QuestInfoView: View {
     @StateObject private var viewModel = MapViewModel()
     @State private var showActiveQuest = false
+    @State private var completionRateDroppedDown = false
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     
     // For directions search results
     @State private var route: MKRoute?
     
     let quest: QuestStruc
+    let creatorView: Bool
+    
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [.blue, .cyan]), startPoint: .top, endPoint: .bottom)
+            Color(.systemCyan)
                 .ignoresSafeArea()
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 10) {
-                    // Quest title and information
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(quest.title)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                   
+                    HStack {
+                        // Premium Quest Badge (If applicable)
+                        if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
+                            HStack {
+                                Image(systemName: "bolt.fill")
+                                Text("Premium")
+                                    .font(.caption2)
+                                    .fontWeight(.bold)
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.green))
                             .foregroundColor(.white)
-                        Text(quest.description)
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.8))
+                            .shadow(radius: 3)
+                            //Spacer()
+                        }
+                       
                         
-                        Section {
-                            Text("Objectives: \(quest.objectiveCount)")
-                            ScrollView(.horizontal) {
-                                if !quest.objectives.isEmpty {
-                                    ForEach(quest.objectives, id: \.id) { objective in
-                                        VStack(alignment: .leading) {
-                                            // Need to include a better high level view of each objective
-                                            Text(objective.objectiveTitle)
-                                                .font(.headline)
-                                                .foregroundColor(.white)
-                                            Text(objective.objectiveDescription)
-                                                .font(.subheadline)
-                                                .foregroundColor(.white.opacity(0.8))
-                                        }
-                                        .padding(.horizontal)
-                                    }
-                                }
+                        // Recurring Quest Section (If applicable)
+                        if quest.supportingInfo.recurring {
+                            HStack {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Text("Recurring")
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
                             }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.blue))
+                            .foregroundColor(.white)
+                            .shadow(radius: 5)
+                            //Spacer()
+                        } else {
+                            HStack {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                Text("Non-Recurring!")
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.red))
+                            .foregroundColor(.white)
+                            .shadow(radius: 5)
+                            //Spacer()
+                        }
+
+                        // Treasure Available Section (If applicable)
+                        if quest.supportingInfo.treasure {  // Replace with the actual condition for treasure
+                            HStack {
+                                Image(systemName: "bag.fill")
+                                Text("Treasure!")
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
+                            }
+                            .padding()
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.purple))
+                            .foregroundColor(.white)
+                            .shadow(radius: 5)
+                            //Spacer()
                         }
                         
-                        HStack(spacing: 15) {
-                            if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
-                                HStack {
-                                    Image(systemName: "clock")
-                                    Text("\(totalLength) min")
-                                }
-                            }
-                            HStack {
-                                Image(systemName: "chart.bar.fill")
-                                Text("Difficulty: \(quest.supportingInfo.difficulty, specifier: "%.1f")")
-                            }
-                            HStack {
-                                Image(systemName: "dollarsign.circle")
-                                if let tempCost = quest.supportingInfo.cost {
-                                    Text("\(Int(tempCost))")
-                                } else {
-                                    Text("Unspecified")
-                                }
-                                
-                            }
-                        }
-                        .font(.footnote)
-                        .foregroundColor(.white.opacity(0.8))
+                        Spacer()
+                        
                     }
                     .padding()
+                    
+                    // Rating Section (If applicable)
+                    if let rating = quest.metaData.rating {
+                        StarRatingView(rating: rating)
+                            .padding([.leading, .trailing])
+                            //.background(RoundedRectangle(cornerRadius: 12).fill(Color.yellow))
+                            .foregroundColor(.black)
+                            .shadow(radius: 5)
+                    }
+
+                    // Quest description
+                    Text(quest.description)
+                        .font(.headline)
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding([.leading, .trailing])
+                    
+                    HStack {
+                        Image(systemName: "pin.circle")
+                            .foregroundColor(.white.opacity(0.8))
+                        Text("Objectives: \(quest.objectiveCount)")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding([.leading, .trailing])
+
+                    // Total Length Section
+                    if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
+                        HStack {
+                            Image(systemName: "clock")
+                                .foregroundColor(.white.opacity(0.8))
+                            Text("\(totalLength) min")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding([.leading, .trailing])
+                    }
+
+                    // Difficulty Section
+                    HStack {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundColor(.white.opacity(0.8))
+                        Text("Difficulty: \(quest.supportingInfo.difficulty, specifier: "%.1f")")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding([.leading, .trailing])
+
+                    // Cost Section
+                    HStack {
+                        Image(systemName: "dollarsign.circle")
+                            .foregroundColor(.white.opacity(0.8))
+                        if let tempCost = quest.supportingInfo.cost {
+                            Text("\(Int(tempCost))")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        } else {
+                            Text("Unspecified")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                    }
+                    .padding([.leading, .trailing])
+                    
+                    if creatorView {
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.cyan) // Fill with blue color
+                                .frame(height: 250) // Fix height for the banner
+                                .ignoresSafeArea(edges: .horizontal) // Extend the rectangle to screen edges
+                                .shadow(radius: 5) // Add a shadow for better depth
+                            VStack {
+                                HStack {
+                                    Text("Objective List (Creator View Only)")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                    Spacer()
+                                }
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 16) { // Ensure spacing between cards
+                                        if !quest.objectives.isEmpty {
+                                            ForEach(quest.objectives, id: \.id) { objective in
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    Text("Objective \(objective.objectiveNumber)")
+                                                        .font(.headline)
+                                                        .foregroundColor(.black)
+                                                    Text(objective.objectiveTitle)
+                                                        .font(.headline)
+                                                        .foregroundColor(.black)
+                                                    Text(objective.objectiveDescription)
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.black.opacity(0.8))
+                                                }
+                                                .padding()
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 12)
+                                                        .fill(Color.white) // Change the color as needed
+                                                        .shadow(radius: 4) // Add a subtle shadow
+                                                )
+                                                .padding(.vertical)
+                                                .frame(width: 250, height: 200)
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal) // Add padding for the horizontal scroll view
+                                }
+                            }
+                            .padding(.top, 20) // Adjust spacing between banner and cards
+                        }
+                    }
+                    
                     
                     // Quest metadata information
                     VStack(alignment: .leading, spacing: 10) {
@@ -87,30 +209,32 @@ struct QuestInfoView: View {
                             Image(systemName: "play.circle.fill")
                             Text("Played: \(quest.metaData.numTimesPlayed) times")
                         }
-                        HStack {
-                            Image(systemName: "checkmark.circle.fill")
-                            Text("Successes: \(quest.metaData.numSuccesses)")
-                        }
-                        HStack {
-                            Image(systemName: "xmark.circle.fill")
-                            Text("Failures: \(quest.metaData.numFails)")
-                        }
                         if let completionRate = quest.metaData.completionRate {
-                            HStack {
-                                Image(systemName: "star.circle.fill")
-                                Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
-                            }
-                        }
-                        if let rating = quest.metaData.rating {
-                            HStack {
-                                Image(systemName: "star.fill")
-                                Text("Rating: \(rating, specifier: "%.1f")/5")
-                            }
-                        }
-                        if quest.metaData.isPremiumQuest {
-                            HStack {
-                                Image(systemName: "star.lefthalf.fill")
-                                Text("Premium Quest")
+                            Button( action: {
+                                completionRateDroppedDown.toggle()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "trophy.circle.fill")
+                                    Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
+                                    if completionRateDroppedDown {
+                                        Image(systemName: "chevron.down")
+                                    }
+                                    else {
+                                        Image(systemName: "chevron.right")
+                                    }
+                                }
+                            })
+                            if completionRateDroppedDown {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                    Text("Successes: \(quest.metaData.numSuccesses)")
+                                }
+                                .padding([.leading, .trailing])
+                                HStack {
+                                    Image(systemName: "xmark.circle.fill")
+                                    Text("Failures: \(quest.metaData.numFails)")
+                                }
+                                .padding([.leading, .trailing])
                             }
                         }
                     }
@@ -196,6 +320,7 @@ struct QuestInfoView: View {
                 .fullScreenCover(isPresented: $showActiveQuest) {
                     ActiveQuestView(viewModel: viewModel, showActiveQuest: $showActiveQuest, quest: quest)
                 }
+                //.padding()
             }
         }
     }
@@ -241,10 +366,40 @@ struct QuestInfoView: View {
 
 }
 
+struct StarRatingView: View {
+    var rating: Double // Parameter passed to the view
+    var adjustedRating: Double {
+        ((rating * 2).rounded()) / 2
+    }
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<5) { index in
+                // Determine how much of the star is filled
+                if Double(index + 1) <= adjustedRating {
+                    // Full star
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.title)
+                } else if Double(index) < adjustedRating {
+                    // Half star
+                    Image(systemName: "star.leadinghalf.fill")
+                        .foregroundColor(.yellow)
+                        .font(.title)
+                } else {
+                    // Empty star
+                    Image(systemName: "star")
+                        .foregroundColor(.yellow)
+                        .font(.title)
+                }
+            }
+        }
+    }
+}
+
 struct QuestInfoView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            QuestInfoView(quest: QuestStruc.sampleData[0])
+            QuestInfoView(quest: QuestStruc.sampleData[0], creatorView: true)
         }
     }
 }

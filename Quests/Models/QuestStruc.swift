@@ -141,7 +141,7 @@ extension QuestStruc {
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData,
-                   metaData: QuestMetaData()
+                   metaData: QuestMetaData(numTimesPlayed: 2, numSuccesses: 1, numFails: 1, completionRate: 50, rating: 4.6, isPremiumQuest: true)
                    /*theme: .orange*/),
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",

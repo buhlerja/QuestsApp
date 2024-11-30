@@ -49,7 +49,7 @@ struct QuestView: View {
                         .padding()
                         
                         ForEach(quests) { quest in
-                            NavigationLink(destination: QuestInfoView(quest: quest)) {
+                            NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
                                 CardView(quest: quest)
                                     .background(Color.cyan)
                                     .cornerRadius(10)
