@@ -16,14 +16,16 @@ struct CreateQuestContentView: View {
     @State private var noStartingLocation = false
     @State private var noTitle = false
     @State private var noObjectives = false
-    @State var questContent = QuestStruc(
+    
+    @Binding var questContent: QuestStruc // Passed in as a parameter to enable an edit flow
+    /*@State var questContent = QuestStruc(
         // Starting location is automatically initialized to NIL, but still is a mandatory parameter
         title: "",
         description: "",
         // objectiveCount is initialized to 0
         supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
         metaData: QuestMetaData() // Has appropriate default values in its initializer
-    )
+    )*/
     @State var objectiveContent = ObjectiveStruc(
         questID: nil,
         objectiveNumber: 0, // Changed to proper number once the objective is appended to the quest.objectives array
@@ -36,6 +38,8 @@ struct CreateQuestContentView: View {
         // objectiveArea is initialzied to (NIL, 1000).
         isEditing: false
     )
+    
+    let isEditing: Bool // Parameter to determine whether the view is being called to edit or not
     
     var body: some View {
         ZStack {
@@ -211,7 +215,17 @@ struct CreateQuestContentView: View {
                         if !noStartingLocation && !noTitle && !noObjectives {
                             print("Proceed to save to database")
                             // 1st database: user database
-                            viewModel.addUserQuest(quest: questContent)
+                            // If the quest is from the editing flow vs the net new flow, handle differently
+                            if isEditing == false {
+                                // The net new quest creation flow
+                                viewModel.addUserQuest(quest: questContent)
+                            }
+                            else {
+                                // The quest editing flow. Adjust a quest that is currently in the database
+                                print("CreateQuestViewModel Called")
+                                viewModel.editUserQuest(quest: questContent)
+                            }
+                            
                         }
                         else {
                             print("Error: Could not save Quest")
@@ -241,7 +255,7 @@ struct CreateQuestContentView: View {
 struct CreateQuestContentView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            CreateQuestContentView()
+            CreateQuestContentView(questContent: .constant(QuestStruc.sampleData[0]), isEditing: true)
         }
     }
 }

@@ -28,7 +28,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         }
     }*/
     
-    func checkIfLocationServicesIsEnabled() {
+    /*func checkIfLocationServicesIsEnabled() {
         if CLLocationManager.locationServicesEnabled() {
             locationManager = CLLocationManager() // Delegate method for authorization updates is automatically called here
             locationManager!.delegate = self
@@ -37,7 +37,29 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         } else {
             print("Go turn on location services")
         }
+    }*/
+    
+    func checkIfLocationServicesIsEnabled() {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            if CLLocationManager.locationServicesEnabled() {
+                DispatchQueue.main.async {
+                    self.locationManager = CLLocationManager()
+                    self.locationManager?.delegate = self
+                    self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+                    // You can also start updating the location here if needed
+                    self.locationManager?.startUpdatingLocation()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    print("Go turn on location services")
+                    // You can also present an alert to the user here if you wish
+                }
+            }
+        }
     }
+
     
     private func checkLocationAuthorization() {
         guard let locationManager = locationManager else { return } // Confused about this statement. Unwraps the optional

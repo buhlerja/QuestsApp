@@ -25,4 +25,13 @@ final class QuestCreateViewModel: ObservableObject {
         }
     }
     
+    func editUserQuest(quest: QuestStruc) {
+        guard let user else { return }
+        Task {
+            print("User Manager editUserQuest called")
+            try await UserManager.shared.editUserQuest(userId: user.userId, quest: quest)
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+        }
+    }
+    
 }

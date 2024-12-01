@@ -217,4 +217,43 @@ final class UserManager {
         try await userDocument(userId: userId).updateData(dict)
     }
     
+    func editUserQuest(userId: String, quest: QuestStruc) async throws {
+        // Search for the UUID in the current database. Remove this member and replace with quest. If UUID not found: Error.
+        let user = try await userDocument(userId: userId).getDocument(as: DBUser.self)
+        print("Got the user")
+        guard let questsCreatedList = user.questsCreatedList else {
+           throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "No quests found in user data."])
+        }
+        print("Quests list exists")
+        // Find the quest with the same UUID as the quest we're trying to edit
+        if let index = questsCreatedList.firstIndex(where: { $0.id == quest.id }) {
+            // Found the matching index
+            var updatedQuests = questsCreatedList
+            updatedQuests[index] = quest
+            print("Found the matching index")
+           
+            // ERROR IS HAPPENING WITH THE ENCODING :((((
+            // Encode the updated quests list
+            guard let encodedQuests = try? encoder.encode(updatedQuests) else {
+                print("Failed to encode")
+                throw URLError(.badURL)
+            }
+            print("Encoded the quest list")
+           
+            // Create the data dictionary to update the Firestore document
+            let dict: [String: Any] = [
+                DBUser.CodingKeys.questsCreatedList.rawValue: FieldValue.arrayUnion([encodedQuests])
+            ]
+            print("Created a data dictionary")
+           
+            // Update the user document with the new quest list
+            try await userDocument(userId: userId).updateData(dict)
+            print("Quest successfully updated!")
+        } else {
+            // Quest not found
+            print("Matching ID not found")
+            throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Quest with this UUID not found."])
+        }
+    }
+    
 }

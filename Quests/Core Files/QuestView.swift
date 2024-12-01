@@ -11,6 +11,15 @@ struct QuestView: View {
     
     @Binding var showSignInView: Bool
     
+    @State var questContent = QuestStruc(
+        // Starting location is automatically initialized to NIL, but still is a mandatory parameter
+        title: "",
+        description: "",
+        // objectiveCount is initialized to 0
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
+        metaData: QuestMetaData() // Has appropriate default values in its initializer
+    )
+    
     let quests: [QuestStruc]
     
     var body: some View {
@@ -61,18 +70,23 @@ struct QuestView: View {
                     }
                     .background(Color.cyan)
                 }
-                
-                /*// pop-up for quest creation
-                if showCreateQuest {
-                    CreateQuestContentView(showCreateQuest: $showCreateQuest)
-                }*/
-                                       
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: CreateQuestContentView()) {
-                        Image(systemName: "plus")
+                    NavigationLink(destination: CreateQuestContentView(questContent: $questContent, isEditing: false)) {
+                        Button(action: {
+                            // Reset the quest content navigation. Might be an issue with the timing of naviation vs reset. Something to test 
+                            questContent = QuestStruc(
+                                title: "",
+                                description: "",
+                                supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []),
+                                metaData: QuestMetaData()
+                            )
+                        }) {
+                            Image(systemName: "plus")
+                        }
                     }
+
                     Button(action: {}) {
                         Image(systemName: "gear")
                     }

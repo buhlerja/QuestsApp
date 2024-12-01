@@ -16,6 +16,18 @@ struct ProfilePage: View {
     @State private var isShowingPopup = false
     @State private var reAuthRequired = false
     
+    // For the edit flow
+    /*@State private var editQuest = QuestStruc(
+        // Starting location is automatically initialized to NIL, but still is a mandatory parameter
+        title: "",
+        description: "",
+        // objectiveCount is initialized to 0
+        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
+        metaData: QuestMetaData() // Has appropriate default values in its initializer
+    ) */
+    @State private var editQuest: QuestStruc? = nil
+    @State private var isEditing = false
+    
     var body: some View {
         ZStack {
             List {
@@ -28,17 +40,34 @@ struct ProfilePage: View {
                                         CardView(quest: createdQuest)
                                             .frame(width: 200) // Set a fixed width for each card, adjust as needed
                                     }
-                                    Button(action: {
-                                        viewModel.removeUserQuest(quest: createdQuest)
-                                    }, label: {
-                                        Text("Delete")
-                                            .font(.headline)
-                                            .foregroundColor(.red)
-                                            .padding()
-                                            .frame(maxWidth: .infinity)
-                                            .background(Color.clear)
-                                            .cornerRadius(8)
-                                    })
+                                    HStack {
+                                        Button(action: {
+                                            // Trigger the edit flow
+                                            editQuest = createdQuest
+                                            isEditing = true
+                                            
+                                        }, label: {
+                                            Text("Edit")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                        Button(action: {
+                                            viewModel.removeUserQuest(quest: createdQuest)
+                                        }, label: {
+                                            Text("Delete")
+                                                .font(.headline)
+                                                .foregroundColor(.red)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                    }
+                                    
                                 }
                                 .padding(.horizontal) // Add padding between cards
                             }
@@ -93,7 +122,6 @@ struct ProfilePage: View {
                 }
           
             }
-            
 
             if isShowingPopup {
                 Color.black.opacity(0.4) // Dimmed background
@@ -106,13 +134,41 @@ struct ProfilePage: View {
                    .transition(.scale) // Add a smooth transition
                    .zIndex(1) // Make sure the pop-up is on top
             }
-
+            
         }
+        .navigationDestination(isPresented: $isEditing) {
+            if let editQuestCheck = editQuest {
+                CreateQuestContentView(
+                    questContent: Binding(
+                        get: { editQuest ?? QuestStruc(
+                            title: "",
+                            description: "",
+                            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: false, treasure: false, treasureValue: 0, materials: []),
+                            metaData: QuestMetaData()
+                        ) },
+                        set: { editQuest = $0 }
+                    ),
+                    isEditing: isEditing
+                )
+            } else {
+               Text("Error: Quest Retrieval Error")
+            }
+        }
+
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
             viewModel.loadAuthProviders()
             reAuthRequired = false
+            isEditing = false
+            editQuest = nil /*QuestStruc(
+                // Starting location is automatically initialized to NIL, but still is a mandatory parameter
+                title: "",
+                description: "",
+                // objectiveCount is initialized to 0
+                supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
+                metaData: QuestMetaData() // Has appropriate default values in its initializer
+            ) */
         }
         .task {
             try? await viewModel.loadCurrentUser()
