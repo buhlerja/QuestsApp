@@ -215,6 +215,7 @@ final class UserManager {
         ]
         
         try await userDocument(userId: userId).updateData(dict)
+        print("Removed Quest successfully!")
     }
     
     func editUserQuest(userId: String, quest: QuestStruc) async throws {
@@ -228,27 +229,13 @@ final class UserManager {
         // Find the quest with the same UUID as the quest we're trying to edit
         if let index = questsCreatedList.firstIndex(where: { $0.id == quest.id }) {
             // Found the matching index
-            var updatedQuests = questsCreatedList
-            updatedQuests[index] = quest
+            var questToDelete = questsCreatedList[index]
             print("Found the matching index")
-           
-            // ERROR IS HAPPENING WITH THE ENCODING :((((
-            // Encode the updated quests list
-            guard let encodedQuests = try? encoder.encode(updatedQuests) else {
-                print("Failed to encode")
-                throw URLError(.badURL)
-            }
-            print("Encoded the quest list")
-           
-            // Create the data dictionary to update the Firestore document
-            let dict: [String: Any] = [
-                DBUser.CodingKeys.questsCreatedList.rawValue: FieldValue.arrayUnion([encodedQuests])
-            ]
-            print("Created a data dictionary")
-           
-            // Update the user document with the new quest list
-            try await userDocument(userId: userId).updateData(dict)
-            print("Quest successfully updated!")
+            
+            try await removeUserQuest(userId: userId, quest: questToDelete)
+            
+            try await addUserQuest(userId: userId, quest: quest)
+            
         } else {
             // Quest not found
             print("Matching ID not found")
