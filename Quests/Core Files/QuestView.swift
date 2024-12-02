@@ -11,6 +11,7 @@ struct QuestView: View {
     
     @Binding var showSignInView: Bool
     
+    @State var showCreateQuestView = false
     @State var questContent = QuestStruc(
         // Starting location is automatically initialized to NIL, but still is a mandatory parameter
         title: "",
@@ -60,6 +61,7 @@ struct QuestView: View {
                         ForEach(quests) { quest in
                             NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
                                 CardView(quest: quest)
+                                    .navigationBarTitleDisplayMode(.large)
                                     .background(Color.cyan)
                                     .cornerRadius(10)
                                     .shadow(radius: 5)
@@ -73,20 +75,18 @@ struct QuestView: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: CreateQuestContentView(questContent: $questContent, isEditing: false)) {
-                        Button(action: {
-                            // Reset the quest content navigation. Might be an issue with the timing of naviation vs reset. Something to test 
-                            questContent = QuestStruc(
-                                title: "",
-                                description: "",
-                                supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []),
-                                metaData: QuestMetaData()
-                            )
-                        }) {
-                            Image(systemName: "plus")
-                        }
+                    Button(action: {
+                        // Reset the quest content and flip boolean indicating to take navigationLink to quest creation flow
+                        questContent = QuestStruc(
+                            title: "",
+                            description: "",
+                            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []),
+                            metaData: QuestMetaData()
+                        )
+                        showCreateQuestView = true
+                    }) {
+                        Image(systemName: "plus")
                     }
-
                     Button(action: {}) {
                         Image(systemName: "gear")
                     }
@@ -94,6 +94,12 @@ struct QuestView: View {
                         Image(systemName: "person")
                     }
                 }
+            }
+            .onAppear {
+                showCreateQuestView = false
+            }
+            .navigationDestination(isPresented: $showCreateQuestView) {
+                CreateQuestContentView(questContent: $questContent, isEditing: false)
             }
         }
     }

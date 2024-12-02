@@ -38,7 +38,8 @@ struct ProfilePage: View {
                                 VStack {
                                     NavigationLink(destination: QuestInfoView(quest: createdQuest, creatorView: true)) {
                                         CardView(quest: createdQuest)
-                                            .frame(width: 200) // Set a fixed width for each card, adjust as needed
+                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                            .navigationBarTitleDisplayMode(.large)
                                     }
                                     HStack {
                                         Button(action: {
@@ -154,7 +155,6 @@ struct ProfilePage: View {
                Text("Error: Quest Retrieval Error")
             }
         }
-
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
