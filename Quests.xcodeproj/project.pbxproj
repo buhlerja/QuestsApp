@@ -32,6 +32,7 @@
 		83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */; };
 		83B5DA0D2CF4EA30000F3444 /* QuestCreateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */; };
 		83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */; };
+		83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
@@ -79,6 +80,7 @@
 		83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objectiveArea.swift; sourceTree = "<group>"; };
 		83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCreateViewModel.swift; sourceTree = "<group>"; };
 		83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestMetaData.swift; sourceTree = "<group>"; };
+		83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialsDisplayView.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
+				83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */,
 				832A938D2CCD3CB200324719 /* QuestFailedView.swift */,
 				832A938B2CCD323D00324719 /* timerView.swift */,
 			);
@@ -423,6 +426,7 @@
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
 				83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */,
 				83E9F0852CE26D1D003595B8 /* UserManager.swift in Sources */,
+				83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */,
 				83E9F07E2CE26592003595B8 /* AuthenticationViewModel.swift in Sources */,
 				83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */,
 				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,

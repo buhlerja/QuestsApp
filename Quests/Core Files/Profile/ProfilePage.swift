@@ -138,7 +138,7 @@ struct ProfilePage: View {
             
         }
         .navigationDestination(isPresented: $isEditing) {
-            if let editQuestCheck = editQuest {
+            if (editQuest != nil) {
                 CreateQuestContentView(
                     questContent: Binding(
                         get: { editQuest ?? QuestStruc(

@@ -229,7 +229,7 @@ final class UserManager {
         // Find the quest with the same UUID as the quest we're trying to edit
         if let index = questsCreatedList.firstIndex(where: { $0.id == quest.id }) {
             // Found the matching index
-            var questToDelete = questsCreatedList[index]
+            let questToDelete = questsCreatedList[index]
             print("Found the matching index")
             
             try await removeUserQuest(userId: userId, quest: questToDelete)

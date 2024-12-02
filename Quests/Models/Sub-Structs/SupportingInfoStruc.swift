@@ -76,5 +76,5 @@ struct SupportingInfoStruc: Codable {
 }
 
 extension SupportingInfoStruc {
-    static let sampleData = SupportingInfoStruc(difficulty: 5, distance: 9, recurring: true, treasure: false, treasureValue: 8, specialInstructions: "Be very careful while on the slippery slope in objective 5!!", materials: materialsStruc.sampleData, /*cost: 25.6,*/ totalLength: 250)
+    static let sampleData = SupportingInfoStruc(difficulty: 5, distance: 9, recurring: false, treasure: true, treasureValue: 8, specialInstructions: "Be very careful while on the slippery slope in objective 5!!", materials: materialsStruc.sampleData, /*cost: 25.6,*/ totalLength: 250)
 }

@@ -58,7 +58,41 @@ struct materialsStruc: Identifiable, Codable {
 extension materialsStruc {
     static let sampleData: [materialsStruc] =
     [
-        materialsStruc(material: "Wood", cost: 5, category: .equipment),
-        materialsStruc(material: "Steel", cost: 10, category: .equipment)
+        materialsStruc(
+            id: UUID(),
+            material: "Tent",
+            cost: 100.0,
+            category: .equipment
+        ),
+        materialsStruc(
+            id: UUID(),
+            material: "Bus Ticket",
+            cost: 15.0,
+            category: .transit
+        ),
+        materialsStruc(
+            id: UUID(),
+            material: "Hotel Stay",
+            cost: 200.0,
+            category: .lodging
+        ),
+        materialsStruc(
+            id: UUID(),
+            material: "Snacks",
+            cost: 10.0,
+            category: .food
+        ),
+        materialsStruc(
+            id: UUID(),
+            material: "Flashlight",
+            cost: 25.0,
+            category: .equipment
+        ),
+        materialsStruc(
+            id: UUID(),
+            material: "Map",
+            cost: nil,
+            category: .other
+        )
     ]
 }

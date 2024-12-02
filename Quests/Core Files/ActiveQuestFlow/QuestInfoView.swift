@@ -91,6 +91,45 @@ struct QuestInfoView: View {
                     }
                     .padding()
                     
+                    // Quest metadata information
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Image(systemName: "play.circle.fill")
+                            Text("Played: \(quest.metaData.numTimesPlayed) times")
+                        }
+                        if let completionRate = quest.metaData.completionRate {
+                            Button( action: {
+                                completionRateDroppedDown.toggle()
+                            }, label: {
+                                HStack {
+                                    Image(systemName: "trophy.circle.fill")
+                                    Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
+                                    if completionRateDroppedDown {
+                                        Image(systemName: "chevron.down")
+                                    }
+                                    else {
+                                        Image(systemName: "chevron.right")
+                                    }
+                                }
+                            })
+                            if completionRateDroppedDown {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                    Text("Successes: \(quest.metaData.numSuccesses)")
+                                }
+                                .padding([.leading, .trailing])
+                                HStack {
+                                    Image(systemName: "xmark.circle.fill")
+                                    Text("Failures: \(quest.metaData.numFails)")
+                                }
+                                .padding([.leading, .trailing])
+                            }
+                        }
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.horizontal)
+                    
                     // Rating Section (If applicable)
                     if let rating = quest.metaData.rating {
                         StarRatingView(rating: rating)
@@ -114,6 +153,18 @@ struct QuestInfoView: View {
                             .foregroundColor(.white.opacity(0.8))
                     }
                     .padding([.leading, .trailing])
+                    
+                    // Treasure value section
+                    if quest.supportingInfo.treasure {
+                        HStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .foregroundColor(.white.opacity(0.8))
+                            Text("Treasure value: \(quest.supportingInfo.treasureValue, specifier: "%.1f")")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding([.leading, .trailing])
+                    }
 
                     // Total Length Section
                     if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
@@ -136,13 +187,23 @@ struct QuestInfoView: View {
                             .foregroundColor(.white.opacity(0.8))
                     }
                     .padding([.leading, .trailing])
+                    
+                    // Distance section
+                    HStack {
+                        Image(systemName: "figure.walk.circle.fill")
+                            .foregroundColor(.white.opacity(0.8))
+                        Text("Travel distance: \(quest.supportingInfo.distance, specifier: "%.1f")")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    .padding([.leading, .trailing])
 
                     // Cost Section
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.white.opacity(0.8))
-                        if let tempCost = quest.supportingInfo.cost {
-                            Text("\(Int(tempCost))")
+                        if let cost = quest.supportingInfo.cost {
+                            Text("\(Int(cost))")
                                 .font(.headline)
                                 .foregroundColor(.white.opacity(0.8))
                         } else {
@@ -201,46 +262,6 @@ struct QuestInfoView: View {
                             .padding(.top, 20) // Adjust spacing between banner and cards
                         }
                     }
-                    
-                    
-                    // Quest metadata information
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                            Text("Played: \(quest.metaData.numTimesPlayed) times")
-                        }
-                        if let completionRate = quest.metaData.completionRate {
-                            Button( action: {
-                                completionRateDroppedDown.toggle()
-                            }, label: {
-                                HStack {
-                                    Image(systemName: "trophy.circle.fill")
-                                    Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
-                                    if completionRateDroppedDown {
-                                        Image(systemName: "chevron.down")
-                                    }
-                                    else {
-                                        Image(systemName: "chevron.right")
-                                    }
-                                }
-                            })
-                            if completionRateDroppedDown {
-                                HStack {
-                                    Image(systemName: "checkmark.circle.fill")
-                                    Text("Successes: \(quest.metaData.numSuccesses)")
-                                }
-                                .padding([.leading, .trailing])
-                                HStack {
-                                    Image(systemName: "xmark.circle.fill")
-                                    Text("Failures: \(quest.metaData.numFails)")
-                                }
-                                .padding([.leading, .trailing])
-                            }
-                        }
-                    }
-                    .font(.footnote)
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.horizontal)
 
                     // Map and directions button
                     if let startingLocation = quest.coordinateStart {
@@ -298,8 +319,22 @@ struct QuestInfoView: View {
                             MapScaleView()
                         }
                     }
+                    
+                    // List the required materials!
+                    if !quest.supportingInfo.materials.isEmpty {
+                        MaterialsDisplayView(materials: quest.supportingInfo.materials)
+                    }
 
-                    //Spacer()
+                    
+                    // List the special instructions!
+                    if let specialInstructions = quest.supportingInfo.specialInstructions {
+                        Text("Special instructions: \(specialInstructions)")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding([.leading, .trailing])
+                    }
+                    
+                    Spacer()
 
                     // Start challenge button
                     Button(action: { showActiveQuest = true }) {
