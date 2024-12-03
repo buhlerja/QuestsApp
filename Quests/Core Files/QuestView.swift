@@ -9,6 +9,8 @@ import SwiftUI
 
 struct QuestView: View {
     
+    @StateObject private var viewModel = QuestViewModel()
+    
     @Binding var showSignInView: Bool
     
     @State var showCreateQuestView = false
@@ -21,7 +23,7 @@ struct QuestView: View {
         metaData: QuestMetaData() // Has appropriate default values in its initializer
     )
     
-    let quests: [QuestStruc]
+    //let quests: [QuestStruc] TEST CODE
     
     var body: some View {
         NavigationStack {
@@ -58,7 +60,21 @@ struct QuestView: View {
                         .shadow(radius: 15)
                         .padding()
                         
-                        ForEach(quests) { quest in
+                        // TEST CODE
+                        /*ForEach(quests) { quest in
+                            NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
+                                CardView(quest: quest)
+                                    .navigationBarTitleDisplayMode(.large)
+                                    .background(Color.cyan)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                    .padding(.horizontal)
+                                    .padding(.top, 5)
+                            }
+                        }*/
+                        // TEST CODE END
+                        
+                        ForEach(viewModel.quests) { quest in
                             NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
                                 CardView(quest: quest)
                                     .navigationBarTitleDisplayMode(.large)
@@ -69,6 +85,7 @@ struct QuestView: View {
                                     .padding(.top, 5)
                             }
                         }
+                        
                     }
                     .background(Color.cyan)
                 }
@@ -95,6 +112,9 @@ struct QuestView: View {
                     }
                 }
             }
+            .task {
+                try? await viewModel.getAllQuests()
+            }
             .onAppear {
                 showCreateQuestView = false
             }
@@ -107,7 +127,7 @@ struct QuestView: View {
 
 struct QuestView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestView(showSignInView: .constant(false), quests: QuestStruc.sampleData)
+        QuestView(showSignInView: .constant(false)/*, quests: QuestStruc.sampleData*/)
     }
 }
 

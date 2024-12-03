@@ -33,6 +33,8 @@
 		83B5DA0D2CF4EA30000F3444 /* QuestCreateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */; };
 		83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */; };
 		83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */; };
+		83B5DA192CFE94BD000F3444 /* QuestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA182CFE94BC000F3444 /* QuestManager.swift */; };
+		83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
@@ -81,6 +83,8 @@
 		83B5DA0C2CF4EA30000F3444 /* QuestCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCreateViewModel.swift; sourceTree = "<group>"; };
 		83B5DA0E2CF53044000F3444 /* QuestMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestMetaData.swift; sourceTree = "<group>"; };
 		83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialsDisplayView.swift; sourceTree = "<group>"; };
+		83B5DA182CFE94BC000F3444 /* QuestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestManager.swift; sourceTree = "<group>"; };
+		83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModel.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
@@ -213,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				83E9F0842CE26D1C003595B8 /* UserManager.swift */,
+				83B5DA182CFE94BC000F3444 /* QuestManager.swift */,
 			);
 			path = FireStore;
 			sourceTree = "<group>";
@@ -330,6 +335,7 @@
 				83E9F07C2CE26551003595B8 /* Authentication */,
 				83E9F08D2CE2B95B003595B8 /* ActiveQuestFlow */,
 				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
+				83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */,
 				83E9F0762CE2639E003595B8 /* CardView.swift */,
 				8315E1EF2CA2176A0079E403 /* RootView.swift */,
 			);
@@ -431,6 +437,7 @@
 				83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */,
 				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,
 				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,
+				83B5DA192CFE94BD000F3444 /* QuestManager.swift in Sources */,
 				83E9F0872CE28364003595B8 /* SupportingInfoStruc.swift in Sources */,
 				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
 				8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */,
@@ -454,6 +461,7 @@
 				83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,
 				83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */,
+				83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */,
 				832A938C2CCD323D00324719 /* timerView.swift in Sources */,
 				83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */,
 			);

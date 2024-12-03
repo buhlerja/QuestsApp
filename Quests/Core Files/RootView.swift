@@ -15,7 +15,7 @@ struct RootView: View {
         ZStack {
             if !showSignInView {
                 NavigationStack {
-                    QuestView(showSignInView: $showSignInView, quests: QuestStruc.sampleData) // Eventually need to call by loading local quests from user data structure
+                    QuestView(showSignInView: $showSignInView/*, quests: QuestStruc.sampleData*/) // Eventually need to call by loading local quests from user data structure
                 }
             }
         }

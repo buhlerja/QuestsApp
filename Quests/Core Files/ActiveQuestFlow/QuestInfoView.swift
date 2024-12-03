@@ -13,6 +13,7 @@ struct QuestInfoView: View {
     @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
+    @State private var showProgressView = false
     
     // For directions search results
     @State private var route: MKRoute?
@@ -289,14 +290,24 @@ struct QuestInfoView: View {
                         
                         // Directions button
                         Button(action: {
+                            showProgressView = true
                             getDirections()
                         }) {
-                            Text("Get directions to starting location")
-                                .fontWeight(.medium)
-                                .padding()
-                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                                .shadow(radius: 5)
-                                .foregroundColor(.blue)
+                            HStack {
+                                Text("Get directions to starting location")
+                                    .fontWeight(.medium)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                    .shadow(radius: 5)
+                                    .foregroundColor(.blue)
+                                if showProgressView {
+                                    ProgressView()
+                                        .padding()
+                                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                        .shadow(radius: 5)
+                                        .foregroundColor(.blue)
+                                }
+                            }
                         }
                         .padding()
 
@@ -373,6 +384,7 @@ struct QuestInfoView: View {
                     print("User Coordinate: \(userCoordinate)")
                     request.source = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
                 } else {
+                    showProgressView = false
                     print("No user location available.")
                     return // Exit if no user location is available
                 }
@@ -385,6 +397,7 @@ struct QuestInfoView: View {
                     let directions = MKDirections(request: request)
                     let response = try await directions.calculate()
                     route = response.routes.first
+                    showProgressView = false
                     print("Route calculation completed successfully.")
                     if let route = route {
                         print("Route details: \(route.name) with distance \(route.distance) meters.")
@@ -392,9 +405,12 @@ struct QuestInfoView: View {
                         print("No routes found.")
                     }
                 } catch {
+                    showProgressView = false
                     print("Error calculating directions: \(error.localizedDescription)")
                 }
             }
+        } else {
+            showProgressView = false
         }
    
     }
