@@ -75,14 +75,31 @@ struct QuestView: View {
                         // TEST CODE END
                         
                         ForEach(viewModel.quests) { quest in
-                            NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
-                                CardView(quest: quest)
-                                    .navigationBarTitleDisplayMode(.large)
-                                    .background(Color.cyan)
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                                    .padding(.horizontal)
-                                    .padding(.top, 5)
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
+                                    CardView(quest: quest)
+                                        .navigationBarTitleDisplayMode(.large)
+                                        .background(Color.cyan)
+                                        .cornerRadius(10)
+                                        .shadow(radius: 5)
+                                        .padding(.horizontal)
+                                        .padding(.top, 5)
+                                }
+                                HStack {
+                                    Button(action: {
+                                        // Add to watchlist
+                                        
+                                    }, label: {
+                                        Text("+ Add to Watchlist")
+                                            .font(.headline)
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                    Spacer()
+                                }
                             }
                         }
                         
@@ -109,6 +126,24 @@ struct QuestView: View {
                     }
                     NavigationLink(destination: ProfilePage(showSignInView: $showSignInView)) {
                         Image(systemName: "person")
+                    }
+                    Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
+                        ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
+                            Button(filterOption.rawValue) {
+                                Task {
+                                    try? await viewModel.filterSelected(option: filterOption)
+                                }
+                            }
+                        }
+                    }
+                    Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
+                        ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
+                            Button(recurringOption.rawValue) {
+                                Task {
+                                    try? await viewModel.recurringOptionSelected(option: recurringOption)
+                                }
+                            }
+                        }
                     }
                 }
             }

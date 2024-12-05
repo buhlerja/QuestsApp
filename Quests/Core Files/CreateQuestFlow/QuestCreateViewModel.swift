@@ -19,9 +19,14 @@ final class QuestCreateViewModel: ObservableObject {
     
     func addUserQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
+        // Add the quest to the USER database AND to the QUESTS database
         Task {
+            // Add to user database
             try await UserManager.shared.addUserQuest(userId: user.userId, quest: quest)
             self.user = try await UserManager.shared.getUser(userId: user.userId)
+            
+            // Add to quest database
+            try await QuestManager.shared.uploadQuest(quest: quest)
         }
     }
     

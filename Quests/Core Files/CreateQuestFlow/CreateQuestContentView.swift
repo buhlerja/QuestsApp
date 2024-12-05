@@ -214,7 +214,6 @@ struct CreateQuestContentView: View {
                         noObjectives = questContent.objectives.isEmpty
                         if !noStartingLocation && !noTitle && !noObjectives {
                             print("Proceed to save to database")
-                            // 1st database: user database
                             // If the quest is from the editing flow vs the net new flow, handle differently
                             if isEditing == false {
                                 // The net new quest creation flow

@@ -34,6 +34,14 @@ final class QuestManager {
         try await questCollection.getDocuments(as: QuestStruc.self)
     }
     
+    func getAllQuestsSortedByCost(ascending: Bool) async throws -> [QuestStruc] {
+        try await questCollection.order(by: "supporting_info.cost", descending: !ascending).getDocuments(as: QuestStruc.self)
+    }
+    
+    func getAllQuestsByRecurring(recurring: Bool) async throws -> [QuestStruc] {
+        try await questCollection.whereField("supporting_info.recurring", isEqualTo: recurring).getDocuments(as: QuestStruc.self)
+    }
+    
 }
 
 extension Query { // Extension of questCollection's parent type (Collection Reference) (self == questCollection)
