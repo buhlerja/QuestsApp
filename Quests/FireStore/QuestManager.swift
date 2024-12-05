@@ -29,18 +29,43 @@ final class QuestManager {
         try await questDocument(questId: questId).getDocument(as: QuestStruc.self)
     }
     
-    func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 200 quests.
+    private func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 100-200 quests.
         // Access the entire quests collection
         try await questCollection.getDocuments(as: QuestStruc.self)
     }
     
-    func getAllQuestsSortedByCost(ascending: Bool) async throws -> [QuestStruc] {
-        try await questCollection.order(by: "supporting_info.cost", descending: !ascending).getDocuments(as: QuestStruc.self)
+    private func getAllQuestsSortedByCost(ascending: Bool) async throws -> [QuestStruc] {
+        try await questCollection
+            .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
+            .getDocuments(as: QuestStruc.self)
     }
     
-    func getAllQuestsByRecurring(recurring: Bool) async throws -> [QuestStruc] {
-        try await questCollection.whereField("supporting_info.recurring", isEqualTo: recurring).getDocuments(as: QuestStruc.self)
+    private func getAllQuestsByRecurring(recurring: Bool) async throws -> [QuestStruc] {
+        try await questCollection
+            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
+            .getDocuments(as: QuestStruc.self)
     }
+    
+    private func getAllQuestsByCostAndRecurring(ascending: Bool, recurring: Bool) async throws -> [QuestStruc] {
+        try await questCollection
+            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
+            .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
+            .getDocuments(as: QuestStruc.self)
+    }
+    
+    func getAllQuests(costAscending: Bool?, recurring: Bool?) async throws -> [QuestStruc] {
+        if let costAscending, let recurring {
+            return try await getAllQuestsByCostAndRecurring(ascending: costAscending, recurring: recurring)
+        }
+        else if let costAscending {
+            return try await getAllQuestsSortedByCost(ascending: costAscending)
+        }
+        else if let recurring {
+            return try await getAllQuestsByRecurring(recurring: recurring)
+        } else {
+            return try await getAllQuests()
+        }
+   }
     
 }
 

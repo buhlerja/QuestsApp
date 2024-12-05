@@ -147,11 +147,9 @@ struct QuestView: View {
                     }
                 }
             }
-            .task {
-                try? await viewModel.getAllQuests()
-            }
             .onAppear {
                 showCreateQuestView = false
+                viewModel.getQuests()
             }
             .navigationDestination(isPresented: $showCreateQuestView) {
                 CreateQuestContentView(questContent: $questContent, isEditing: false)

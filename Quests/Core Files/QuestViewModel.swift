@@ -18,12 +18,23 @@ final class QuestViewModel: ObservableObject {
         case noFilter
         case costHigh
         case costLow
-        case durationHigh
-        case durationLow
+        //case durationHigh
+        //case durationLow
+        
+        var costAscending: Bool? {
+            switch self {
+            case .noFilter: return nil
+            case .costLow: return true
+            case .costHigh: return false
+            }
+        }
     }
     
     func filterSelected(option: FilterOption) async throws {
-        switch option {
+        
+        self.selectedFilter = option
+        self.getQuests()
+       /* switch option {
         case .noFilter:
             self.quests = try await QuestManager.shared.getAllQuests()
         case .costHigh:
@@ -31,37 +42,49 @@ final class QuestViewModel: ObservableObject {
             break
         case .costLow:
             self.quests = try await QuestManager.shared.getAllQuestsSortedByCost(ascending: true)
-            break
-        case .durationHigh:
+            break */
+        /*case .durationHigh:
             break
         case .durationLow:
-            break
-        }
+            break*/
         
-        self.selectedFilter = option
     }
     
     enum RecurringOption: String, CaseIterable {
         case none
         case recurring
         case nonRecurring
+        
+        var recurringBool: Bool? {
+            switch self {
+            case .recurring: return true
+            case .none: return nil
+            case .nonRecurring: return false
+            }
+        }
     }
     
     func recurringOptionSelected(option: RecurringOption) async throws {
-        switch option {
+        self.recurringOption = option
+        self.getQuests()
+        /*switch option {
         case .none:
             self.quests = try await QuestManager.shared.getAllQuests()
         case .recurring:
             self.quests = try await QuestManager.shared.getAllQuestsByRecurring(recurring: true)
         case .nonRecurring:
             self.quests = try await QuestManager.shared.getAllQuestsByRecurring(recurring: false)
-        }
+        }*/
+    }
         
-        self.recurringOption = option
+    func getQuests() {
+        Task {
+            self.quests = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool)
+        }
     }
     
-    func getAllQuests() async throws {
+    /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
-    }
+    }*/
     
 }
