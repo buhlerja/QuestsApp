@@ -74,7 +74,7 @@ struct ObjectiveCreateView: View {
                                 }
                             }
                             .pickerStyle(.wheel)
-                            .frame(width: 100, height: 100)
+                            .frame(/*width: 100,*/ height: 100)
                             .clipped()
 
                             Picker("Minutes", selection: $minConstraint) {
@@ -83,7 +83,7 @@ struct ObjectiveCreateView: View {
                                 }
                             }
                             .pickerStyle(.wheel)
-                            .frame(width: 100, height: 100)
+                            .frame(/*width: 100,*/ height: 100)
                             .clipped()
                         }
                         .padding()
@@ -101,7 +101,7 @@ struct ObjectiveCreateView: View {
                             // Followed by an AREA selector which appears below.
                         } .padding()
                         areaSelector(objectiveArea: $objectiveContent.objectiveArea)
-                            .frame(width: 300, height: 300)
+                            .frame(/*width: 300,*/ height: 300)
                             .cornerRadius(12)
                     } .padding()
                 }
@@ -205,7 +205,8 @@ struct ObjectiveCreateView: View {
                     }
                 }
                
-            }.padding()
+            }
+            .padding()
         }
         .onAppear {
             // Set `hint` to the value of `objectiveContent.objectiveHint` if it exists, otherwise default to an empty string

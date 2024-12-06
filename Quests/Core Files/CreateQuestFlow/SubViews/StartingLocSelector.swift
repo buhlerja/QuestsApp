@@ -24,22 +24,22 @@ struct StartingLocSelector: View {
                     }
                 }
             }
-                .onTapGesture {
-                    if locChosen == false {
-                        locChosen = true
-                        selectedStartingLoc = region.center
-                        print("Selected Location: \(region.center.latitude), \(region.center.longitude)")
-                    }
+            .onTapGesture {
+                if locChosen == false {
+                    locChosen = true
+                    selectedStartingLoc = region.center
+                    print("Selected Location: \(region.center.latitude), \(region.center.longitude)")
                 }
-                .edgesIgnoringSafeArea(.all)
-                .frame(width: 350, height: 300)
-                .cornerRadius(12)
-                .onMapCameraChange { context in
-                    region = context.region
-                    if locChosen == true {
-                        locChosen = false
-                    }
+            }
+            .edgesIgnoringSafeArea(.all)
+            .frame(/*width: 350,*/ height: 300)
+            .cornerRadius(12)
+            .onMapCameraChange { context in
+                region = context.region
+                if locChosen == true {
+                    locChosen = false
                 }
+            }
             
             if locChosen == false {
                 Image(systemName: "circle.circle")

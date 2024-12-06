@@ -19,6 +19,7 @@ struct CreateQuestContentView: View {
     @State private var showToolTip = false
     @State private var titleSection = false
     @State private var descriptionSection = false
+    @State private var showCreatedObjectives = false
     
     @Binding var questContent: QuestStruc // Passed in as a parameter to enable an edit flow
     /*@State var questContent = QuestStruc(
@@ -49,7 +50,7 @@ struct CreateQuestContentView: View {
             Color(.systemCyan)
                 .ignoresSafeArea()
             
-            ScrollView {
+            ScrollView(.vertical) {
                 VStack(spacing: 20) {
                     VStack {
                         HStack {
@@ -73,7 +74,7 @@ struct CreateQuestContentView: View {
                         .padding()
                         
                         if showToolTip {
-                            Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each step you meet criteria to proceed. Objectives can be codes or combinations. Quests may lead to treasure, but do not have to.")
+                            Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each objective you enter a solution to proceed. Objective solutions can be codes or combinations. Quests may lead to treasure, but do not have to.")
                         }
                         
                     }
@@ -88,6 +89,7 @@ struct CreateQuestContentView: View {
                             HStack {
                                 Image(systemName: "1.circle")
                                 Text("Add a Title")
+                                    .font(.title2)
                                     .fontWeight(.bold)
                                 Image(systemName: titleSection ? "chevron.down" : "chevron.right")
                                 Spacer()
@@ -105,6 +107,7 @@ struct CreateQuestContentView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white)
                             .shadow(radius: 5) // Optional: Add shadow for depth
+                            .frame(maxWidth: .infinity) // Ensure background matches the constrained width
                     )
                     
                     VStack {
@@ -114,6 +117,7 @@ struct CreateQuestContentView: View {
                             HStack {
                                 Image(systemName: "2.circle")
                                 Text("Add a Description")
+                                    .font(.title2)
                                     .fontWeight(.bold)
                                 Image(systemName: descriptionSection ? "chevron.down" : "chevron.right")
                                 Spacer()
@@ -122,7 +126,7 @@ struct CreateQuestContentView: View {
                         }
                         if descriptionSection {
                             TextEditor(text: $questContent.description)
-                                .padding(4)
+                                .padding(.horizontal)
                                 .frame(height: 200)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 10)
@@ -135,100 +139,140 @@ struct CreateQuestContentView: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.white)
                             .shadow(radius: 5) // Optional: Add shadow for depth
+                            .frame(maxWidth: .infinity) // Ensure background matches the constrained width
                     )
                     
-                    Button(action: { withAnimation { showStartingLocCreateView.toggle()
+                    VStack {
+                        Button(action: {
+                            showStartingLocCreateView.toggle()
+                        }) {
+                            HStack {
+                                Image(systemName: "3.circle")
+                                Text("Add Starting Location")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                Image(systemName: showStartingLocCreateView ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
                         }
-                    }) {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text("Add Starting Location")
-                                .fontWeight(.bold)
-                            Spacer()
-                        }
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(8)
-                    
-                    if showStartingLocCreateView {
-                        StartingLocSelector(selectedStartingLoc: $questContent.coordinateStart)
-                            .transition(.move(edge: .top))
-                            .padding(.top, 10)
-                            .zIndex(1)
-                    }
-                    
-                    // Display objectives that have been created.
-                    ForEach(questContent.objectives.indices, id: \.self) { index in
-                        ObjectiveHighLevelView(objective: $questContent.objectives[index], questContent: $questContent)
-                    }
-                    .padding()
-                    .background(Color(.systemGray6)) // Added background color
-                    .cornerRadius(10) // Rounded corners
-                    .shadow(radius: 5) // Added shadow
-                    
-                    Button(action: {
-                        withAnimation {
-                            showObjectiveCreateView.toggle()
-                            // I make sure to reset all optionals to NIL
-                            objectiveContent = ObjectiveStruc(
-                                                questID: nil,
-                                                objectiveNumber: 0,
-                                                objectiveTitle: "",
-                                                objectiveDescription: "",
-                                                objectiveType: .code,
-                                                solutionCombinationAndCode: "",
-                                                objectiveHint: nil,
-                                                hoursConstraint: nil,
-                                                minutesConstraint: nil,
-                                                objectiveArea: ObjectiveArea(center: nil, range: 1000),
-                                                isEditing: false
-                                            )
-                            /* Above code resets the dummy struct passed into objectiveCreateView, which this subview then fills up and adds to quest array. This code is to make sure that the struct is not filled with old data. */
-                        }
-                    }) {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text("Add Objective")
-                                .fontWeight(.bold)
-                            Spacer()
+                        if showStartingLocCreateView {
+                            StartingLocSelector(selectedStartingLoc: $questContent.coordinateStart)
+                                //.transition(.move(edge: .top))
+                                .padding(.horizontal)
+                                .zIndex(1)
                         }
                     }
                     .padding()
-                    .background(Color.white)
-                    .cornerRadius(8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 5) // Optional: Add shadow for depth
+                            .frame(maxWidth: .infinity) // Ensure background matches the constrained width
+                    )
                     
-                    if showObjectiveCreateView {
-                        ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent, objectiveContent: $objectiveContent)
-                            .transition(.move(edge: .top))
-                            .padding(.top, 10)
-                            .background(Color.white)
-                            .cornerRadius(8)
+                    if !questContent.objectives.isEmpty {
+                        Button(action: {
+                            showCreatedObjectives.toggle()
+                        }) {
+                            HStack {
+                                Text("View Created Objectives")
+                                    .fontWeight(.bold)
+                                Image(systemName: showCreatedObjectives ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                        if showCreatedObjectives {
+                            // Display objectives that have been created.
+                            ForEach(questContent.objectives.indices, id: \.self) { index in
+                                ObjectiveHighLevelView(objective: $questContent.objectives[index], questContent: $questContent)
+                            }
+                            .padding(.horizontal)
+                            .background(Color(.white)) // Added background color
+                            .cornerRadius(10) // Rounded corners
+                            .shadow(radius: 5) // Added shadow
+                        }
                     }
                     
-                    Button(action: {
-                        withAnimation {
-                            showSupportingInfoView.toggle()
+                    VStack {
+                        Button(action: {
+                            withAnimation {
+                                showObjectiveCreateView.toggle()
+                                // I make sure to reset all optionals to NIL
+                                objectiveContent = ObjectiveStruc(
+                                                    questID: nil,
+                                                    objectiveNumber: 0,
+                                                    objectiveTitle: "",
+                                                    objectiveDescription: "",
+                                                    objectiveType: .code,
+                                                    solutionCombinationAndCode: "",
+                                                    objectiveHint: nil,
+                                                    hoursConstraint: nil,
+                                                    minutesConstraint: nil,
+                                                    objectiveArea: ObjectiveArea(center: nil, range: 1000),
+                                                    isEditing: false
+                                                )
+                                /* Above code resets the dummy struct passed into objectiveCreateView, which this subview then fills up and adds to quest array. This code is to make sure that the struct is not filled with old data. */
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "4.circle")
+                                Text("Add Objective")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                Image(systemName: showObjectiveCreateView ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
                         }
-                    }) {
-                        HStack {
-                            Image(systemName: "plus")
-                            Text("Add Supporting Information")
-                                .fontWeight(.bold)
-                            Spacer()
+                        if showObjectiveCreateView {
+                            ObjectiveCreateView(showObjectiveCreateView: $showObjectiveCreateView, questContent: $questContent, objectiveContent: $objectiveContent)
+                                //.transition(.move(edge: .top))
+                                //.padding(.horizontal)
+                                //.background(Color.white)
+                                //.cornerRadius(8)
                         }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(8)
+                    } 
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 5) // Optional: Add shadow for depth
+                            .frame(maxWidth: .infinity) // Ensure background matches the constrained width
+                    )
+                    
+                    VStack {
+                        Button(action: {
+                            withAnimation {
+                                showSupportingInfoView.toggle()
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "5.circle")
+                                Text("Add Supporting Information")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                Image(systemName: showSupportingInfoView ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                        if showSupportingInfoView {
+                            SupportingInfoView(supportingInfo: $questContent.supportingInfo)
+                                //.transition(.move(edge: .top))
+                                .padding(.horizontal)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                        }
                     }
-                   
-                    if showSupportingInfoView {
-                        SupportingInfoView(supportingInfo: $questContent.supportingInfo)
-                            .transition(.move(edge: .top))
-                            .padding(.top, 10)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.white)
+                            .shadow(radius: 5) // Optional: Add shadow for depth
+                            .frame(maxWidth: .infinity) // Ensure background matches the constrained width
+                    )
                     
                     Spacer()
                     
@@ -277,7 +321,8 @@ struct CreateQuestContentView: View {
                         
                     }
                 }
-                .padding()
+                .frame(maxWidth: .infinity) // Constrain width to parent bounds
+                .padding()       // Add consistent padding for content
             }
         }
         .task {

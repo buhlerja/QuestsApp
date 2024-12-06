@@ -33,13 +33,16 @@ struct ObjectiveHighLevelView: View {
                 }
 
                 // Objective Description
-                Text(objective.objectiveDescription)
-                    .font(.body)
-                    .padding(.horizontal)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .multilineTextAlignment(.leading)
-                    //.fontWeight(.bold)
+                HStack {
+                    Text(objective.objectiveDescription)
+                        .font(.body)
+                        .padding(.horizontal)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
+                        //.fontWeight(.bold)
+                    Spacer()
+                }
                 
                 // Objective Type Section
                 HStack {
