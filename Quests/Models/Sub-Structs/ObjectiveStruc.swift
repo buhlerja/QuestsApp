@@ -40,10 +40,12 @@ struct ObjectiveStruc: Identifiable, Codable {
     }
     
     // solution types
-    enum SolutionType: String, Codable, CaseIterable {
+    enum SolutionType: String, Codable, CaseIterable, Identifiable {
         case combination = "Combination"
         case code = "Code"
         // Add more types here if needed
+        
+        var id: String { rawValue } // For Identifiable conformance
     }
 
     

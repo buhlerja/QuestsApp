@@ -16,6 +16,9 @@ struct CreateQuestContentView: View {
     @State private var noStartingLocation = false
     @State private var noTitle = false
     @State private var noObjectives = false
+    @State private var showToolTip = false
+    @State private var titleSection = false
+    @State private var descriptionSection = false
     
     @Binding var questContent: QuestStruc // Passed in as a parameter to enable an edit flow
     /*@State var questContent = QuestStruc(
@@ -54,10 +57,24 @@ struct CreateQuestContentView: View {
                                 .font(.title)
                                 .fontWeight(.bold)
                             Spacer()
+                            Button(action: {
+                                // Your action here
+                                showToolTip.toggle()
+                            }) {
+                                Image(systemName: "questionmark.circle") // Use SF Symbols for a question mark icon
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30) // Adjust size
+                                    .foregroundColor(.blue) // Set the color of the icon
+                            }
+                            .accessibilityLabel("Help")
+
                         }
                         .padding()
                         
-                        Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each step you meet criteria to proceed. Objectives can be locations, photos, codes, or combinations. Quests may lead to treasure, but do not have to.")
+                        if showToolTip {
+                            Text("A Quest is a challenge done in your local area. It is broken down into objectives, where in each step you meet criteria to proceed. Objectives can be codes or combinations. Quests may lead to treasure, but do not have to.")
+                        }
                         
                     }
                     .padding()
@@ -65,16 +82,23 @@ struct CreateQuestContentView: View {
                     .cornerRadius(8)
                     
                     VStack {
-                        HStack {
-                            Text("Add a Title")
-                                .fontWeight(.bold)
-                            Spacer()
+                        Button(action: {
+                            titleSection.toggle()
+                        }) {
+                            HStack {
+                                Image(systemName: "1.circle")
+                                Text("Add a Title")
+                                    .fontWeight(.bold)
+                                Image(systemName: titleSection ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
                         }
-                        .padding()
-
-                        TextField("Title", text: $questContent.title)
-                            .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: To add a default TextField style
-                            .padding([.horizontal, .bottom])
+                        if titleSection {
+                            TextField("Title", text: $questContent.title)
+                                .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: To add a default TextField style
+                                .padding([.horizontal, .bottom])
+                        }
                     }
                     .padding() // Padding around the entire VStack
                     .background(
@@ -84,16 +108,27 @@ struct CreateQuestContentView: View {
                     )
                     
                     VStack {
-                        HStack {
-                            Text("Add a Description")
-                                .fontWeight(.bold)
-                            Spacer()
+                        Button(action: {
+                            descriptionSection.toggle()
+                        }) {
+                            HStack {
+                                Image(systemName: "2.circle")
+                                Text("Add a Description")
+                                    .fontWeight(.bold)
+                                Image(systemName: descriptionSection ? "chevron.down" : "chevron.right")
+                                Spacer()
+                            }
+                            .padding()
                         }
-                        .padding()
-
-                        TextEditor(text: $questContent.description)
-                            .padding(4)
-                            .frame(height: 200)
+                        if descriptionSection {
+                            TextEditor(text: $questContent.description)
+                                .padding(4)
+                                .frame(height: 200)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray, lineWidth: 1)
+                                )
+                        }
                     }
                     .padding() // Padding around the entire VStack
                     .background(

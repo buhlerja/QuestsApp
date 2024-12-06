@@ -31,29 +31,30 @@ final class QuestManager {
     
     private func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 100-200 quests.
         // Access the entire quests collection
-        try await questCollection.getDocuments(as: QuestStruc.self)
+        return try await questCollection.getDocuments(as: QuestStruc.self)
     }
     
     private func getAllQuestsSortedByCost(ascending: Bool) async throws -> [QuestStruc] {
-        try await questCollection
+        return try await questCollection
             .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
             .getDocuments(as: QuestStruc.self)
     }
     
     private func getAllQuestsByRecurring(recurring: Bool) async throws -> [QuestStruc] {
-        try await questCollection
+        return try await questCollection
             .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
             .getDocuments(as: QuestStruc.self)
     }
     
     private func getAllQuestsByCostAndRecurring(ascending: Bool, recurring: Bool) async throws -> [QuestStruc] {
-        try await questCollection
+        return try await questCollection
             .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
             .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
             .getDocuments(as: QuestStruc.self)
     }
     
     func getAllQuests(costAscending: Bool?, recurring: Bool?) async throws -> [QuestStruc] {
+        print("Getting quests")
         if let costAscending, let recurring {
             return try await getAllQuestsByCostAndRecurring(ascending: costAscending, recurring: recurring)
         }
@@ -63,6 +64,7 @@ final class QuestManager {
         else if let recurring {
             return try await getAllQuestsByRecurring(recurring: recurring)
         } else {
+            print("Successfully retrieved quests: No filters")
             return try await getAllQuests()
         }
    }
@@ -74,9 +76,24 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
     func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable { // T is a "generic" that can represent any type
         // Access the entire quests collection
         let snapshot = try await self.getDocuments()
-        return try snapshot.documents.map({ document in
+        print("Snapshot contains \(snapshot.documents.count) documents.")
+        // ORIGINAL CODE:
+        /*return try snapshot.documents.map({ document in
             try document.data(as: T.self)
-        })
+        }) */
+        return try snapshot.documents.map { document in
+             do {
+                 let decodedData = try document.data(as: T.self)
+                 // Debug: Print successfully decoded data
+                 print("Successfully decoded document with ID \(document.documentID): \(decodedData)")
+                 return decodedData
+             } catch {
+                 // Debug: Print error and document details
+                 print("Error decoding document with ID \(document.documentID): \(error.localizedDescription)")
+                 throw error
+             }
+         }
+
     }
     
 }

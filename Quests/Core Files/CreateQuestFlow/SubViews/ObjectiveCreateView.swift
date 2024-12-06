@@ -36,9 +36,10 @@ struct ObjectiveCreateView: View {
                     Text("Objective Type: ")
                     Picker(selection: $objectiveContent.objectiveType, label: Text("Picker")) {
                         //Text("Location").tag(1) // ONLY COMBINATION AND CODE FOR RELEASE 1
-                        //Text("Photo").tag(2)
-                        Text("Code").tag(3)
-                        Text("Combination").tag(4)
+                        //T`ext("Photo").tag(2)
+                        ForEach(ObjectiveStruc.SolutionType.allCases) { type in
+                           Text(type.rawValue).tag(type)
+                       }
                     }
                     .pickerStyle(MenuPickerStyle())
                     Spacer()

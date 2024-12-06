@@ -79,7 +79,9 @@ final class QuestViewModel: ObservableObject {
         
     func getQuests() {
         Task {
+            print("Getting quests")
             self.quests = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool)
+            print("Got quests")
         }
     }
     
