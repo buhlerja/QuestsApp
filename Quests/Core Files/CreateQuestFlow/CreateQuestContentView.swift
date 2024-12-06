@@ -31,7 +31,7 @@ struct CreateQuestContentView: View {
         objectiveNumber: 0, // Changed to proper number once the objective is appended to the quest.objectives array
         objectiveTitle: "",
         objectiveDescription: "",
-        objectiveType: 3,
+        objectiveType: .code,
         solutionCombinationAndCode: "",
         // Hint is optional and is initialized as NIL
         // Hours constraint and minutes constraint are initialized as NIL
@@ -141,7 +141,7 @@ struct CreateQuestContentView: View {
                                                 objectiveNumber: 0,
                                                 objectiveTitle: "",
                                                 objectiveDescription: "",
-                                                objectiveType: 3,
+                                                objectiveType: .code,
                                                 solutionCombinationAndCode: "",
                                                 objectiveHint: nil,
                                                 hoursConstraint: nil,

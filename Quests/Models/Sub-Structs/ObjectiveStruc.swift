@@ -14,7 +14,7 @@ struct ObjectiveStruc: Identifiable, Codable {
     var objectiveNumber: Int // Order of objective in quest from 1 (low) to 20 (high). Auto-calculated.
     var objectiveTitle: String // Title of the objective
     var objectiveDescription: String // Description given to the objective
-    var objectiveType: Int // Code = 3, Combination = 4, Photo, Location, etc...
+    var objectiveType: SolutionType
     var solutionCombinationAndCode: String // 1234, or any sequence of letters or numbers. Numbers converted to string format
     // Photo will be dealt with in a later release
     var objectiveHint: String? = nil // Optional parameter
@@ -23,7 +23,7 @@ struct ObjectiveStruc: Identifiable, Codable {
     var objectiveArea: ObjectiveArea
     var isEditing: Bool
     
-    init(id: UUID = UUID(), questID: UUID?, objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: Int, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: ObjectiveArea = ObjectiveArea(center: nil, range: 1000), isEditing: Bool)
+    init(id: UUID = UUID(), questID: UUID?, objectiveNumber: Int, objectiveTitle: String, objectiveDescription: String, objectiveType: SolutionType, solutionCombinationAndCode: String, objectiveHint: String? = nil, hoursConstraint: Int? = nil, minutesConstraint: Int? = nil, objectiveArea: ObjectiveArea = ObjectiveArea(center: nil, range: 1000), isEditing: Bool)
     {
         self.id = id
         self.questID = questID
@@ -38,6 +38,14 @@ struct ObjectiveStruc: Identifiable, Codable {
         self.objectiveArea = objectiveArea
         self.isEditing = isEditing
     }
+    
+    // solution types
+    enum SolutionType: String, Codable, CaseIterable {
+        case combination = "Combination"
+        case code = "Code"
+        // Add more types here if needed
+    }
+
     
     // Custom encoding
     enum CodingKeys: String, CodingKey {
@@ -63,7 +71,7 @@ struct ObjectiveStruc: Identifiable, Codable {
         self.objectiveNumber = try container.decode(Int.self, forKey: .objectiveNumber)
         self.objectiveTitle = try container.decode(String.self, forKey: .objectiveTitle)
         self.objectiveDescription = try container.decode(String.self, forKey: .objectiveDescription)
-        self.objectiveType = try container.decode(Int.self, forKey: .objectiveType)
+        self.objectiveType = try container.decode(SolutionType.self, forKey: .objectiveType)
         self.solutionCombinationAndCode = try container.decode(String.self, forKey: .solutionCombinationAndCode)
         self.objectiveHint = try container.decodeIfPresent(String.self, forKey: .objectiveHint)
         self.hoursConstraint = try container.decodeIfPresent(Int.self, forKey: .hoursConstraint)
@@ -98,7 +106,7 @@ extension ObjectiveStruc {
             objectiveNumber: 1,
             objectiveTitle: "Find the secret code under the rock",
             objectiveDescription: "The code is 1234",
-            objectiveType: 3,
+            objectiveType: .code,
             solutionCombinationAndCode: "1234",
             objectiveHint: "The code is 1234",
             //hoursConstraint: 0,
@@ -111,7 +119,7 @@ extension ObjectiveStruc {
             objectiveNumber: 2,
             objectiveTitle: "Pet that dog",
             objectiveDescription: "The code is 5678",
-            objectiveType: 3,
+            objectiveType: .combination,
             solutionCombinationAndCode: "5678",
             //objectiveHint: "Check the statue's plaque",
             hoursConstraint: 0,

@@ -44,9 +44,9 @@ struct ObjectiveCreateView: View {
                     Spacer()
                 }
                 .padding()
-                if objectiveContent.objectiveType == 3  || objectiveContent.objectiveType == 4 {
+                if objectiveContent.objectiveType == .code  || objectiveContent.objectiveType == .combination {
                     VStack {
-                        if objectiveContent.objectiveType == 3 {
+                        if objectiveContent.objectiveType == .code {
                             HStack {
                                 Text("Solution: ")
                                 TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
@@ -309,7 +309,7 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                     objectiveNumber: 0,
                                     objectiveTitle: "Wash me",
                                     objectiveDescription: "Break into an old folks home and give someone a bath",
-                                    objectiveType: 3,
+                                    objectiveType: .code,
                                     solutionCombinationAndCode: "",
                                     // objectiveHint automatically initialized as nil
                                     objectiveArea: ObjectiveArea(center: CLLocationCoordinate2D(latitude: 42.3601, longitude: -71.0589), range: CLLocationDistance(1000)),

@@ -13,6 +13,8 @@ struct ObjectiveHighLevelView: View {
     @State var showObjectiveCreateView = false
     @Binding var questContent: QuestStruc
     
+    @State private var position: MapCameraPosition = .automatic
+    
     var body: some View {
         VStack(spacing: 16) {
             
@@ -22,35 +24,77 @@ struct ObjectiveHighLevelView: View {
             }
             else {
                 // Title
-                Text(objective.objectiveTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
+                HStack {
+                    Text(objective.objectiveTitle)
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .padding([.top, .horizontal])
+                    Spacer()
+                }
 
                 // Objective Description
                 Text(objective.objectiveDescription)
                     .font(.body)
                     .padding(.horizontal)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
+                    //.fontWeight(.bold)
+                
+                // Objective Type Section
+                HStack {
+                    Text("Solution Type: \(objective.objectiveType.rawValue)")
+                        .font(.body)
+                        .padding(.horizontal)
+                        .fontWeight(.bold)
+                    Spacer()
+                }
+                
+                // Objective Solution Section
+                HStack {
+                    Text("Solution: \(objective.solutionCombinationAndCode)")
+                        .font(.body)
+                        .padding(.horizontal)
+                        .fontWeight(.bold)
+                    Spacer()
+                }
 
                 // Hint
                 if let hint = objective.objectiveHint {
-                    Text("Hint: \(hint)")
-                        .font(.subheadline)
-                        .italic()
-                        .foregroundColor(.blue)
+                    HStack {
+                        Text("Hint: \(hint)")
+                            .font(.subheadline)
+                            .italic()
+                            .foregroundColor(.blue)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
                 }
 
-                // Status Section
+                // Time Constraint Section
                 if !(objective.hoursConstraint == nil && objective.minutesConstraint == nil) {
                     // Both are not nil, so we can show a constraint
                     let hoursConstraint = objective.hoursConstraint ?? 0
                     let minutesConstraint = objective.minutesConstraint ?? 0
                     HStack {
-                        Text("Hours: \(hoursConstraint)")
-                        Text("Minutes: \(minutesConstraint)")
+                        Text("Time Constraint: \(hoursConstraint) Hours,")
+                        Text("\(minutesConstraint) Minutes")
+                        Spacer()
                     }
                     .font(.headline)
-                    .padding(.top)
+                    .padding(.horizontal)
+                }
+                
+                // Objective Area
+                if let center = objective.objectiveArea.center {
+                    Map(position: $position) {
+                        MapCircle(center: center, radius: objective.objectiveArea.range)
+                            .foregroundStyle(Color.cyan.opacity(0.5))
+                    }
+                    .frame(height: 200) // Set height only, let width adjust to padding
+                    .padding(.horizontal) // Add horizontal padding
+                    .cornerRadius(15) // Round the corners
+                    .accentColor(Color.cyan)
                 }
                 
                 // Action Buttons
@@ -67,14 +111,13 @@ struct ObjectiveHighLevelView: View {
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-
                 }
-                .padding(.top)
+                .padding()
 
                 Spacer()
             }
         }
-        .frame(minWidth: 300, maxHeight: 200) // Set a frame size
+        .frame(minWidth: 300/*, maxHeight: 400*/) // Set a frame size
     }
 }
 
@@ -87,7 +130,7 @@ struct ObjectiveHighLevelView_Previews: PreviewProvider {
                                         objectiveNumber: 1,
                                         objectiveTitle: "Wash me",
                                         objectiveDescription: "Break into an old folks home and give a senior citizen a bath",
-                                        objectiveType: 3,
+                                        objectiveType: .code,
                                         solutionCombinationAndCode: "BATHTIME",
                                         objectiveHint: "BATH____",
                                         hoursConstraint: 10,
