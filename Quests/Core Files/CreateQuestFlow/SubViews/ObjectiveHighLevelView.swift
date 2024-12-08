@@ -80,11 +80,13 @@ struct ObjectiveHighLevelView: View {
                     let hoursConstraint = objective.hoursConstraint ?? 0
                     let minutesConstraint = objective.minutesConstraint ?? 0
                     HStack {
-                        Text("Time Constraint: \(hoursConstraint) Hours,")
-                        Text("\(minutesConstraint) Minutes")
+                        Text("Time Constraint: \(hoursConstraint) Hours, \(minutesConstraint) Minutes")
                         Spacer()
                     }
                     .font(.headline)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
                     .padding(.horizontal)
                 }
                 

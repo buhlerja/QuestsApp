@@ -11,6 +11,8 @@ struct QuestView: View {
     
     @StateObject private var viewModel = QuestViewModel()
     
+    @StateObject private var mapViewModel = MapViewModel()
+    
     @Binding var showSignInView: Bool
     
     @State var showCreateQuestView = false
@@ -76,7 +78,7 @@ struct QuestView: View {
                         
                         ForEach(viewModel.quests) { quest in
                             VStack {
-                                NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
+                                NavigationLink(destination: QuestInfoView(viewModel: mapViewModel, quest: quest, creatorView: false)) {
                                     CardView(quest: quest)
                                         .navigationBarTitleDisplayMode(.large)
                                         .background(Color.cyan)
@@ -124,7 +126,7 @@ struct QuestView: View {
                     Button(action: {}) {
                         Image(systemName: "gear")
                     }
-                    NavigationLink(destination: ProfilePage(showSignInView: $showSignInView)) {
+                    NavigationLink(destination: ProfilePage(mapViewModel: mapViewModel, showSignInView: $showSignInView)) {
                         Image(systemName: "person")
                     }
                     Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
@@ -150,6 +152,7 @@ struct QuestView: View {
             .onAppear {
                 showCreateQuestView = false
                 viewModel.getQuests()
+                mapViewModel.checkIfLocationServicesIsEnabled()
             }
             .navigationDestination(isPresented: $showCreateQuestView) {
                 CreateQuestContentView(questContent: $questContent, isEditing: false)

@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct ActiveQuestView: View {
-    @ObservedObject var viewModel: MapViewModel
+    @ObservedObject var viewModel: MapViewModel // RIGHT NOW I PASS THIS MODEL BUT DON"T USE IT FOR ANYTHING. IF NOT NEEDED, REMOVE. DOESNT APPEAR TO BE NEEDED AS WE CHECK FOR LOCATION SERVICES ENABLEMENT IN AN EARLIER VIEW
     @State private var bottomMenuExpanded = true
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic) // Should default to the objectiveArea??
     @Binding var showActiveQuest: Bool

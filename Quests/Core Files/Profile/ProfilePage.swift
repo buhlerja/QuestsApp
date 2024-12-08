@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct ProfilePage: View {
-    
+    @ObservedObject var mapViewModel: MapViewModel
     @StateObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     @State private var isShowingPopup = false
@@ -36,7 +36,7 @@ struct ProfilePage: View {
                         HStack { // Use HStack to align the items horizontally
                             ForEach(createdQuests, id: \.id) { createdQuest in
                                 VStack {
-                                    NavigationLink(destination: QuestInfoView(quest: createdQuest, creatorView: true)) {
+                                    NavigationLink(destination: QuestInfoView(viewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
                                         CardView(quest: createdQuest)
                                             .frame(width: 250) // Set a fixed width for each card, adjust as needed
                                             .navigationBarTitleDisplayMode(.large)
@@ -266,8 +266,10 @@ extension ProfilePage {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            ProfilePage(showSignInView: .constant(false))
+            ProfilePage(mapViewModel: sampleViewModel, showSignInView: .constant(false))
         }
-       
+        
     }
+    
+    static var sampleViewModel = MapViewModel()
 }

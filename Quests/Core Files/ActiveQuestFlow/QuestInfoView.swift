@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct QuestInfoView: View {
-    @StateObject private var viewModel = MapViewModel()
+    @ObservedObject var viewModel: MapViewModel
     @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
@@ -17,6 +17,7 @@ struct QuestInfoView: View {
     
     // For directions search results
     @State private var route: MKRoute?
+    @State private var directionsErrorMessage: String?
     
     let quest: QuestStruc
     let creatorView: Bool
@@ -279,9 +280,9 @@ struct QuestInfoView: View {
                         .cornerRadius(15)
                         .shadow(radius: 10)
                         .padding(.horizontal)
-                        .onAppear {
+                        /*.onAppear {
                             viewModel.checkIfLocationServicesIsEnabled()
-                        }
+                        }*/ // Done in questView
                         .mapControls {
                             MapUserLocationButton()
                             MapCompass()
@@ -310,6 +311,17 @@ struct QuestInfoView: View {
                             }
                         }
                         .padding()
+                        
+                        if let errorMessage = directionsErrorMessage {
+                            Text(errorMessage)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.red) // Red background
+                                )
+                                .padding(.horizontal)
+                        }
 
                         
                     } else {
@@ -321,9 +333,9 @@ struct QuestInfoView: View {
                         .cornerRadius(15)
                         .shadow(radius: 10)
                         .padding(.horizontal)
-                        .onAppear {
+                        /*.onAppear {
                             viewModel.checkIfLocationServicesIsEnabled()
-                        }
+                        }*/ // Done in questView
                         .mapControls {
                             MapUserLocationButton()
                             MapCompass()
@@ -390,6 +402,7 @@ struct QuestInfoView: View {
                 }
 
                 // Set the destination as the quest's starting location
+                print("Start Coordinate: \(startCoordinate)")
                 request.destination = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinate))
 
                 // Calculate directions now that both source and destination are set
@@ -403,13 +416,16 @@ struct QuestInfoView: View {
                         print("Route details: \(route.name) with distance \(route.distance) meters.")
                     } else {
                         print("No routes found.")
+                        directionsErrorMessage = "No routes found."
                     }
                 } catch {
                     showProgressView = false
                     print("Error calculating directions: \(error.localizedDescription)")
+                    directionsErrorMessage = error.localizedDescription // Assign the detailed error message
                 }
             }
         } else {
+            directionsErrorMessage = "Quest starting location is missing."
             showProgressView = false
         }
    
@@ -450,7 +466,9 @@ struct StarRatingView: View {
 struct QuestInfoView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            QuestInfoView(quest: QuestStruc.sampleData[0], creatorView: true)
+            QuestInfoView(viewModel: sampleViewModel, quest: QuestStruc.sampleData[0], creatorView: true)
         }
     }
+    
+    static var sampleViewModel = MapViewModel()
 }

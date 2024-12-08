@@ -253,6 +253,9 @@ struct CreateQuestContentView: View {
                                 Text("Add Supporting Information")
                                     .font(.title2)
                                     .fontWeight(.bold)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .multilineTextAlignment(.leading)
                                 Image(systemName: showSupportingInfoView ? "chevron.down" : "chevron.right")
                                 Spacer()
                             }
