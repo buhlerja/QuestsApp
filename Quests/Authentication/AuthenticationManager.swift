@@ -35,7 +35,7 @@ final class AuthenticationManager {
         case requiresRecentLogin
     }
     
-    func getAuthenticatedUser() throws -> AuthDataResultModel {
+    func getAuthenticatedUser() throws -> AuthDataResultModel { // DONE REDUNDANTLY IN QUESTVIEW, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse)
         }

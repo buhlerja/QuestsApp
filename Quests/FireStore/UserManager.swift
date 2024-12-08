@@ -19,7 +19,7 @@ struct DBUser: Codable {
     let numQuestsCompleted: Int? // Optional (but isn't really optional)
     let questsCompletedList: [QuestStruc]? // The list of quests a user has successfully completed
     let numWatchlistQuests: Int?
-    let watchlistQuestsList: [QuestStruc]? // All the quests the user might want to eventually play
+    let watchlistQuestsList: [String]? // All the quests the user might want to eventually play. Convert from quest UUID's to String
     let numQuestsFailed: Int?
     let failedQuestsList: [QuestStruc]? // All the quests a user has failed
     
@@ -50,7 +50,7 @@ struct DBUser: Codable {
         numQuestsCompleted: Int? = 0,
         questsCompletedList: [QuestStruc]? = nil,
         numWatchlistQuests: Int? = 0,
-        watchlistQuestsList: [QuestStruc]? = nil,
+        watchlistQuestsList: [String]? = nil,
         numQuestsFailed: Int? = 0,
         failedQuestsList: [QuestStruc]? = nil
     ) {
@@ -102,7 +102,7 @@ struct DBUser: Codable {
         self.numQuestsCompleted = try container.decodeIfPresent(Int.self, forKey: .numQuestsCompleted)
         self.questsCompletedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCompletedList)
         self.numWatchlistQuests = try container.decodeIfPresent(Int.self, forKey: .numWatchlistQuests)
-        self.watchlistQuestsList = try container.decodeIfPresent([QuestStruc].self, forKey: .watchlistQuestsList)
+        self.watchlistQuestsList = try container.decodeIfPresent([String].self, forKey: .watchlistQuestsList)
         self.numQuestsFailed = try container.decodeIfPresent(Int.self, forKey: .numQuestsFailed)
         self.failedQuestsList = try container.decodeIfPresent([QuestStruc].self, forKey: .failedQuestsList)
     }
@@ -241,6 +241,43 @@ final class UserManager {
             print("Matching ID not found")
             throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Quest with this UUID not found."])
         }
+    }
+    
+    func getUserWatchlistQuestIds(userId: String) async throws -> [String]? {
+        let user = try await self.getUser(userId: userId)
+        if let watchlistQuestsList = user.watchlistQuestsList {
+            return watchlistQuestsList
+        } else {
+            return nil
+        }
+    }
+    
+    func getUserWatchlistQuestsFromIds(userId: String) -> [QuestStruc]? {
+        
+    }
+    
+    func addUserWatchlistQuest(userId: String, questId: String) async throws {
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.watchlistQuestsList.rawValue : FieldValue.arrayUnion([questId])
+        ]
+        // Update the watchlistQuestsList with the appended questID
+        try await userDocument(userId: userId).updateData(dict)
+        
+        // Update the count of quests in the list
+        /*try await userDocument(userId: userId).updateData([
+            DBUser.CodingKeys.numWatchlistQuests.rawValue: FieldValue.increment(Int64(1))
+        ]) */ // Doesn't work since it increments even for duplicates
+        
+        if let watchlistQuestsList = try await getUserWatchlistQuestIds(userId: userId) {
+            let numWatchlistQuests = watchlistQuestsList.count
+            
+            // Update the numWatchlistQuests field
+            try await userDocument(userId: userId).updateData([
+                DBUser.CodingKeys.numWatchlistQuests.rawValue : numWatchlistQuests
+            ])
+        }
+        
+        print("Added Quest to watchlist successfully!")
     }
     
 }

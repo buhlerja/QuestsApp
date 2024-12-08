@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct ActiveQuestView: View {
-    @ObservedObject var viewModel: MapViewModel // RIGHT NOW I PASS THIS MODEL BUT DON"T USE IT FOR ANYTHING. IF NOT NEEDED, REMOVE. DOESNT APPEAR TO BE NEEDED AS WE CHECK FOR LOCATION SERVICES ENABLEMENT IN AN EARLIER VIEW
+    //@ObservedObject var viewModel: MapViewModel // RIGHT NOW I PASS THIS MODEL BUT DON"T USE IT FOR ANYTHING. IF NOT NEEDED, REMOVE. DOESNT APPEAR TO BE NEEDED AS WE CHECK FOR LOCATION SERVICES ENABLEMENT IN AN EARLIER VIEW
     @State private var bottomMenuExpanded = true
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic) // Should default to the objectiveArea??
     @Binding var showActiveQuest: Bool
@@ -297,11 +297,11 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(viewModel: sampleViewModel, showActiveQuest: showActiveQuest, quest: QuestStruc.sampleData[0])
+            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, quest: QuestStruc.sampleData[0])
         }
     }
     
-    static var sampleViewModel = MapViewModel()
+    //static var sampleViewModel = MapViewModel()
 }
 
 // Helper to provide a Binding in the preview

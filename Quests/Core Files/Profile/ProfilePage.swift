@@ -36,7 +36,7 @@ struct ProfilePage: View {
                         HStack { // Use HStack to align the items horizontally
                             ForEach(createdQuests, id: \.id) { createdQuest in
                                 VStack {
-                                    NavigationLink(destination: QuestInfoView(viewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
+                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
                                         CardView(quest: createdQuest)
                                             .frame(width: 250) // Set a fixed width for each card, adjust as needed
                                             .navigationBarTitleDisplayMode(.large)
@@ -76,6 +76,28 @@ struct ProfilePage: View {
                     }
                 } else {
                     Text("No created quests")
+                        .foregroundColor(.gray)
+                        .italic()
+                }
+                
+                // Watchlist quests view
+                if let watchlistQuests = viewModel.watchlistQuestStrucs, !watchlistQuests.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack { // Use HStack to align the items horizontally
+                            ForEach(watchlistQuests, id: \.id) { watchlistQuest in
+                                VStack {
+                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
+                                        CardView(quest: watchlistQuest)
+                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                            .navigationBarTitleDisplayMode(.large)
+                                    }
+                                }
+                                .padding(.horizontal) // Add padding between cards
+                            }
+                        }
+                    }
+                } else {
+                    Text("No quests in watchlist")
                         .foregroundColor(.gray)
                         .italic()
                 }
@@ -172,6 +194,7 @@ struct ProfilePage: View {
         }
         .task {
             try? await viewModel.loadCurrentUser()
+            try? await viewModel.getWatchlistQuests()
         }
         .animation(.easeInOut, value: isShowingPopup)
     }

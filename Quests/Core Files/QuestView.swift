@@ -78,7 +78,7 @@ struct QuestView: View {
                         
                         ForEach(viewModel.quests) { quest in
                             VStack {
-                                NavigationLink(destination: QuestInfoView(viewModel: mapViewModel, quest: quest, creatorView: false)) {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
                                     CardView(quest: quest)
                                         .navigationBarTitleDisplayMode(.large)
                                         .background(Color.cyan)
@@ -90,7 +90,7 @@ struct QuestView: View {
                                 HStack {
                                     Button(action: {
                                         // Add to watchlist
-                                        
+                                        viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
                                     }, label: {
                                         Text("+ Add to Watchlist")
                                             .font(.headline)
@@ -148,6 +148,9 @@ struct QuestView: View {
                         }
                     }
                 }
+            }
+            .task {
+                try? await viewModel.loadCurrentUser() 
             }
             .onAppear {
                 showCreateQuestView = false

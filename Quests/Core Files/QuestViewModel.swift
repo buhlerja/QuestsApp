@@ -10,9 +10,15 @@ import Foundation
 @MainActor
 final class QuestViewModel: ObservableObject {
     
+    @Published private(set) var user: DBUser? = nil
     @Published private(set) var quests: [QuestStruc] = []
     @Published var selectedFilter: FilterOption? = nil
     @Published var recurringOption: RecurringOption? = nil
+    
+    func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
     
     enum FilterOption: String, CaseIterable {
         case noFilter
@@ -88,5 +94,16 @@ final class QuestViewModel: ObservableObject {
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
     }*/
+    
+    func addUserWatchlistQuest(questId: String) {
+        guard let user else { return } // Make sure the user is logged in or authenticated
+        // Add the quest to the USER database AND to the QUESTS database
+        Task {
+            // Add to user database
+            try await UserManager.shared.addUserWatchlistQuest(userId: user.userId, questId: questId)
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            print("Successfully added to watchlist")
+        }
+    }
     
 }

@@ -12,12 +12,20 @@ final class ProfileViewModel: ObservableObject {
     
     @Published var authProviders: [AuthProviderOption] = []
     @Published private(set) var user: DBUser? = nil
+    @Published private(set) var watchlistQuestStrucs: [QuestStruc]? = nil
     
     func removeUserQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
             try await UserManager.shared.removeUserQuest(userId: user.userId, quest: quest)
             self.user = try await UserManager.shared.getUser(userId: user.userId)
+        }
+    }
+    
+    func getWatchlistQuests() async throws {
+        guard let user else { return }
+        Task {
+            self.watchlistQuestStrucs = try await UserManager.shared.getUserWatchlistQuestsFromIds(userId: user.userId)
         }
     }
     
@@ -40,7 +48,7 @@ final class ProfileViewModel: ObservableObject {
         try AuthenticationManager.shared.signOut()
     }
     
-    func loadCurrentUser() async throws {
+    func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }

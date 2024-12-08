@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct QuestInfoView: View {
-    @ObservedObject var viewModel: MapViewModel
+    @ObservedObject var mapViewModel: MapViewModel
     @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
@@ -376,7 +376,7 @@ struct QuestInfoView: View {
                 }
                 .navigationTitle(quest.title)
                 .fullScreenCover(isPresented: $showActiveQuest) {
-                    ActiveQuestView(viewModel: viewModel, showActiveQuest: $showActiveQuest, quest: quest)
+                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, quest: quest)
                 }
                 //.padding()
             }
@@ -391,7 +391,7 @@ struct QuestInfoView: View {
             // Create a source item with the current user location
             Task {
                 // Get the user's current location asynchronously
-                if let userLocation = try? await viewModel.getLiveLocationUpdates() {
+                if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
                     let userCoordinate = userLocation.coordinate
                     print("User Coordinate: \(userCoordinate)")
                     request.source = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
@@ -414,6 +414,7 @@ struct QuestInfoView: View {
                     print("Route calculation completed successfully.")
                     if let route = route {
                         print("Route details: \(route.name) with distance \(route.distance) meters.")
+                        directionsErrorMessage = nil
                     } else {
                         print("No routes found.")
                         directionsErrorMessage = "No routes found."
@@ -466,7 +467,7 @@ struct StarRatingView: View {
 struct QuestInfoView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            QuestInfoView(viewModel: sampleViewModel, quest: QuestStruc.sampleData[0], creatorView: true)
+            QuestInfoView(mapViewModel: sampleViewModel, quest: QuestStruc.sampleData[0], creatorView: true)
         }
     }
     

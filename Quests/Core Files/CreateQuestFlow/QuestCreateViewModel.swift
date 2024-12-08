@@ -12,7 +12,7 @@ final class QuestCreateViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
     
-    func loadCurrentUser() async throws {
+    func loadCurrentUser() async throws { // DONE REDUNDANTLY IN QUESTVIEW, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
