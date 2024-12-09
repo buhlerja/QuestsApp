@@ -252,9 +252,35 @@ final class UserManager {
         }
     }
     
-    func getUserWatchlistQuestsFromIds(userId: String) -> [QuestStruc]? {
+    /*func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
+        // 1. Get the user from the DB
+        let user = try await self.getUser(userId: userId)
+       
+        // 2. Check if the user has a watchlist
+        guard let watchlistQuestsList = user.watchlistQuestsList else {
+            // No watchlist quests, return nil
+            return nil
+        }
         
+        var watchlistQuestStrucs: [QuestStruc] = [] // Empty array to store the matching quests in
+        
+        // 4. Iterate through the IDs in the watchlist
+        for questId in watchlistQuestsList {
+            // 5. Fetch the corresponding QuestStruc from the database
+            let quest = try await QuestManager.shared.getQuest(questId: questId)
+            watchlistQuestStrucs.append(quest)
+        }
+        
+        return watchlistQuestStrucs.isEmpty ? nil : watchlistQuestStrucs
+    }*/
+    
+    func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
+        // Get the user object
+        let watchlistQuestsList = try await getUserWatchlistQuestIds(userId: userId)
+        // Query Firestore for all quests with IDs in the watchlist
+        return try await QuestManager.shared.getUserWatchlistQuestsFromIds(watchlistQuestsList: watchlistQuestsList)
     }
+
     
     func addUserWatchlistQuest(userId: String, questId: String) async throws {
         let dict: [String:Any] = [

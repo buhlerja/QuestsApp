@@ -69,6 +69,13 @@ final class QuestManager {
         }
    }
     
+    func getUserWatchlistQuestsFromIds(watchlistQuestsList: [String]?) async throws -> [QuestStruc]? {
+        // Passed in parameter is an array of ID's corresponding to the watchlist quests
+        guard let watchlistQuestsList else { return nil }
+        return try await questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: watchlistQuestsList)
+            .getDocuments(as: QuestStruc.self)
+    }
 }
 
 extension Query { // Extension of questCollection's parent type (Collection Reference) (self == questCollection)
