@@ -31,7 +31,7 @@ struct ProfilePage: View {
     var body: some View {
         ZStack {
             List {
-                if let createdQuests = viewModel.user?.questsCreatedList, !createdQuests.isEmpty {
+                if let createdQuests = viewModel.createdQuestStrucs, !createdQuests.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack { // Use HStack to align the items horizontally
                             ForEach(createdQuests, id: \.id) { createdQuest in
@@ -194,6 +194,7 @@ struct ProfilePage: View {
         }
         .task {
             try? await viewModel.loadCurrentUser()
+            try? await viewModel.getCreatedQuests()
             try? await viewModel.getWatchlistQuests()
         }
         .animation(.easeInOut, value: isShowingPopup)

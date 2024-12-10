@@ -14,15 +14,17 @@ struct QuestMetaData: Codable {
     var numFails: Int
     var completionRate: Double? // Will not show until quest has been played at least once
     var rating: Double? // Will not show until at least one rating has been given
-    var isPremiumQuest: Bool 
+    var numRatings: Int
+    var isPremiumQuest: Bool
     
-    init(/*dateCreated: Date? = Date(),*/ numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, isPremiumQuest: Bool = false) {
+    init(/*dateCreated: Date? = Date(),*/ numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, numRatings: Int = 0, isPremiumQuest: Bool = false) {
         //self.dateCreated = dateCreated
         self.numTimesPlayed = numTimesPlayed
         self.numSuccesses = numSuccesses
         self.numFails = numFails
         self.completionRate = completionRate
         self.rating = rating
+        self.numRatings = numRatings
         self.isPremiumQuest = isPremiumQuest
     }
     
@@ -33,6 +35,7 @@ struct QuestMetaData: Codable {
         case numFails = "num_fails"
         case completionRate = "completion_rate"
         case rating = "rating"
+        case numRatings = "num_ratings"
         case isPremiumQuest = "is_premium_quest"
     }
     
@@ -44,6 +47,7 @@ struct QuestMetaData: Codable {
         self.numFails = try container.decode(Int.self, forKey: .numFails)
         self.completionRate = try container.decodeIfPresent(Double.self, forKey: .completionRate)
         self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
+        self.numRatings = try container.decode(Int.self, forKey: .numRatings)
         self.isPremiumQuest = try container.decode(Bool.self, forKey: .isPremiumQuest)
     }
     
@@ -55,6 +59,7 @@ struct QuestMetaData: Codable {
         try container.encode(self.numFails, forKey: .numFails)
         try container.encodeIfPresent(self.completionRate, forKey: .completionRate)
         try container.encodeIfPresent(self.rating, forKey: .rating)
+        try container.encode(self.numRatings, forKey: .numRatings)
         try container.encode(self.isPremiumQuest, forKey: .isPremiumQuest)
     }
     

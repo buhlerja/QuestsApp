@@ -25,13 +25,19 @@ final class QuestManager {
         try questDocument(questId: quest.id.uuidString).setData(from: quest, merge: false)
     }
     
+    func deleteQuest(quest: QuestStruc) async throws {
+        try await questDocument(questId: quest.id.uuidString).delete()
+    }
+    
     func getQuest(questId: String) async throws -> QuestStruc {
         try await questDocument(questId: questId).getDocument(as: QuestStruc.self)
     }
     
     private func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 100-200 quests.
         // Access the entire quests collection
-        return try await questCollection.getDocuments(as: QuestStruc.self)
+        return try await questCollection
+            //.limit(to: 5) // Limits the fetch to only 5 quests!!
+            .getDocuments(as: QuestStruc.self)
     }
     
     private func getAllQuestsSortedByCost(ascending: Bool) async throws -> [QuestStruc] {
@@ -69,12 +75,50 @@ final class QuestManager {
         }
    }
     
+    func getQuestsByRating(count: Int) async throws -> [QuestStruc] {
+        try await questCollection
+            .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
+            .limit(to: count)
+            .getDocuments(as: QuestStruc.self)
+    }
+    
     func getUserWatchlistQuestsFromIds(watchlistQuestsList: [String]?) async throws -> [QuestStruc]? {
         // Passed in parameter is an array of ID's corresponding to the watchlist quests
         guard let watchlistQuestsList else { return nil }
         return try await questCollection
             .whereField(QuestStruc.CodingKeys.id.rawValue, in: watchlistQuestsList)
             .getDocuments(as: QuestStruc.self)
+    }
+    
+    func getUserCreatedQuestsFromIds(createdQuestsList: [String]?) async throws -> [QuestStruc]? {
+        // Passed in parameter is an array of ID's corresponding to the created quests
+        guard let createdQuestsList else { return nil }
+        return try await questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: createdQuestsList)
+            .getDocuments(as: QuestStruc.self)
+    }
+    
+    func updateRating(questId: String, rating: Double, currentRating: Double?, numRatings: Int) async throws {
+        let adjustedRating: Double
+        if let currentRating = currentRating {
+            adjustedRating = (rating + currentRating * Double(numRatings)) / Double(numRatings + 1)
+        } else {
+            adjustedRating = rating
+        }        
+        
+        let data: [String:Any] = [
+            QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.rating.rawValue : adjustedRating,
+            QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.numRatings.rawValue : numRatings + 1
+        ]
+        
+        do {
+            try await questDocument(questId: questId).updateData(data)
+            
+        } catch {
+            print("Failed to update quest data: \(error.localizedDescription)")
+            throw error
+        }
+        
     }
 }
 

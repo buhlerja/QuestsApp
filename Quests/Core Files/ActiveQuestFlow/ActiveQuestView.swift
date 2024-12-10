@@ -69,10 +69,10 @@ struct ActiveQuestView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(showActiveQuest: $showActiveQuest)
+                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest)
             }
             .fullScreenCover(isPresented: $timerIsUp) {
-                QuestFailedView()
+                QuestFailedView(questJustCompleted: quest)
             }
             /* Ensures that the objective does have a timer value as a condition for displaying a timer */
             if showTimer {

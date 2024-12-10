@@ -21,8 +21,8 @@ final class QuestCreateViewModel: ObservableObject {
         guard let user else { return } // Make sure the user is logged in or authenticated
         // Add the quest to the USER database AND to the QUESTS database
         Task {
-            // Add to user database
-            try await UserManager.shared.addUserQuest(userId: user.userId, quest: quest)
+            // Add the quest ID to the user database
+            try await UserManager.shared.addUserQuest(userId: user.userId, questId: quest.id.uuidString)
             self.user = try await UserManager.shared.getUser(userId: user.userId)
             
             // Add to quest database
@@ -31,11 +31,11 @@ final class QuestCreateViewModel: ObservableObject {
     }
     
     func editUserQuest(quest: QuestStruc) {
-        guard let user else { return }
-        Task {
-            print("User Manager editUserQuest called")
-            try await UserManager.shared.editUserQuest(userId: user.userId, quest: quest)
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
+        if user != nil {
+            Task {
+                print("User Manager editUserQuest called")
+                try await UserManager.shared.editUserQuest(quest: quest)
+            }
         }
     }
     

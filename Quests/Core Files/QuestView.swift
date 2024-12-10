@@ -25,7 +25,7 @@ struct QuestView: View {
         metaData: QuestMetaData() // Has appropriate default values in its initializer
     )
     
-    //let quests: [QuestStruc] TEST CODE
+    //let quests: [QuestStruc] TEST CODE. YOU WILL IN REALITY NOT PASS A PARAM BUT LOAD DIRECTLY FROM DB ON THIS PAGE.
     
     var body: some View {
         NavigationStack {
@@ -62,20 +62,6 @@ struct QuestView: View {
                         .shadow(radius: 15)
                         .padding()
                         
-                        // TEST CODE
-                        /*ForEach(quests) { quest in
-                            NavigationLink(destination: QuestInfoView(quest: quest, creatorView: false)) {
-                                CardView(quest: quest)
-                                    .navigationBarTitleDisplayMode(.large)
-                                    .background(Color.cyan)
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                                    .padding(.horizontal)
-                                    .padding(.top, 5)
-                            }
-                        }*/
-                        // TEST CODE END
-                        
                         ForEach(viewModel.quests) { quest in
                             VStack {
                                 NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
@@ -103,6 +89,12 @@ struct QuestView: View {
                                     Spacer()
                                 }
                             }
+                        }
+                        
+                        Button(action: {
+                            viewModel.getQuestsByRating()
+                        }) {
+                            Text("See more Quests")
                         }
                         
                     }
@@ -154,7 +146,7 @@ struct QuestView: View {
             }
             .onAppear {
                 showCreateQuestView = false
-                viewModel.getQuests()
+                //viewModel.getQuests() // BRING BACK. Commented out for video's sake!!! But need to load on appear!
                 mapViewModel.checkIfLocationServicesIsEnabled()
             }
             .navigationDestination(isPresented: $showCreateQuestView) {

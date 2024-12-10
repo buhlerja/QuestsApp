@@ -40,19 +40,6 @@ final class QuestViewModel: ObservableObject {
         
         self.selectedFilter = option
         self.getQuests()
-       /* switch option {
-        case .noFilter:
-            self.quests = try await QuestManager.shared.getAllQuests()
-        case .costHigh:
-            self.quests = try await QuestManager.shared.getAllQuestsSortedByCost(ascending: false)
-            break
-        case .costLow:
-            self.quests = try await QuestManager.shared.getAllQuestsSortedByCost(ascending: true)
-            break */
-        /*case .durationHigh:
-            break
-        case .durationLow:
-            break*/
         
     }
     
@@ -73,14 +60,6 @@ final class QuestViewModel: ObservableObject {
     func recurringOptionSelected(option: RecurringOption) async throws {
         self.recurringOption = option
         self.getQuests()
-        /*switch option {
-        case .none:
-            self.quests = try await QuestManager.shared.getAllQuests()
-        case .recurring:
-            self.quests = try await QuestManager.shared.getAllQuestsByRecurring(recurring: true)
-        case .nonRecurring:
-            self.quests = try await QuestManager.shared.getAllQuestsByRecurring(recurring: false)
-        }*/
     }
         
     func getQuests() {
@@ -103,6 +82,12 @@ final class QuestViewModel: ObservableObject {
             try await UserManager.shared.addUserWatchlistQuest(userId: user.userId, questId: questId)
             self.user = try await UserManager.shared.getUser(userId: user.userId)
             print("Successfully added to watchlist")
+        }
+    }
+    
+    func getQuestsByRating() {
+        Task {
+            self.quests = try await QuestManager.shared.getQuestsByRating(count: 4)
         }
     }
     

@@ -14,7 +14,7 @@ struct DBUser: Codable {
     let photoUrl: String? // Optional
     let dateCreated: Date? // Optional (but isn't really optional)
     let isPremium: Bool?
-    let questsCreatedList: [QuestStruc]? // Stores all the quests a user has created
+    let questsCreatedList: [String]? // Stores all the quests a user has created
     let numQuestsCreated: Int? // The number of quests a user has created
     let numQuestsCompleted: Int? // Optional (but isn't really optional)
     let questsCompletedList: [QuestStruc]? // The list of quests a user has successfully completed
@@ -45,7 +45,7 @@ struct DBUser: Codable {
         photoUrl: String? = nil,
         dateCreated: Date? = nil,
         isPremium: Bool? = nil,
-        questsCreatedList: [QuestStruc]? = nil,
+        questsCreatedList: [String]? = nil,
         numQuestsCreated: Int? = 0,
         numQuestsCompleted: Int? = 0,
         questsCompletedList: [QuestStruc]? = nil,
@@ -97,7 +97,7 @@ struct DBUser: Codable {
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium)
-        self.questsCreatedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCreatedList)
+        self.questsCreatedList = try container.decodeIfPresent([String].self, forKey: .questsCreatedList)
         self.numQuestsCreated = try container.decodeIfPresent(Int.self, forKey: .numQuestsCreated)
         self.numQuestsCompleted = try container.decodeIfPresent(Int.self, forKey: .numQuestsCompleted)
         self.questsCompletedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCompletedList)
@@ -194,31 +194,55 @@ final class UserManager {
         try await userDocument(userId: userId).updateData(data)
     }
     
-    func addUserQuest(userId: String, quest: QuestStruc) async throws {
-        guard let data = try? encoder.encode(quest) else {
+    func addUserQuest(userId: String, questId: String) async throws {
+        /*guard let data = try? encoder.encode(quest) else {
             throw URLError(.badURL)
-        }
+        }*/
         let dict: [String:Any] = [
-            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([data])
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([questId])
         ]
         
         try await userDocument(userId: userId).updateData(dict)
+        
+        if let createdQuestsList = try await getCreatedQuestIds(userId: userId) {
+            let numQuestsCreated = createdQuestsList.count
+            
+            // Update the numWatchlistQuests field
+            try await userDocument(userId: userId).updateData([
+                DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
+            ])
+        }
+        
         print("Added Quest successfully!")
     }
     
-    func removeUserQuest(userId: String, quest: QuestStruc) async throws {
-        guard let data = try? encoder.encode(quest) else {
+    func removeUserQuest(userId: String, questId: String) async throws {
+        /*guard let data = try? encoder.encode(quest) else {
             throw URLError(.badURL)
-        }
+        }*/
         let dict: [String:Any] = [
-            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([data])
+            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([questId])
         ]
         
         try await userDocument(userId: userId).updateData(dict)
+        
+        if let createdQuestsList = try await getCreatedQuestIds(userId: userId) {
+            let numQuestsCreated = createdQuestsList.count
+            
+            // Update the numWatchlistQuests field
+            try await userDocument(userId: userId).updateData([
+                DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
+            ])
+        }
+        
         print("Removed Quest successfully!")
     }
     
-    func editUserQuest(userId: String, quest: QuestStruc) async throws {
+    func editUserQuest(quest: QuestStruc) async throws {
+        // Call a QuestManager function to actually adjust the quest in the questCollection
+        return try await QuestManager.shared.uploadQuest(quest: quest)
+    }
+    /* func editUserQuest(userId: String, questId: String) async throws {
         // Search for the UUID in the current database. Remove this member and replace with quest. If UUID not found: Error.
         let user = try await userDocument(userId: userId).getDocument(as: DBUser.self)
         print("Got the user")
@@ -227,7 +251,7 @@ final class UserManager {
         }
         print("Quests list exists")
         // Find the quest with the same UUID as the quest we're trying to edit
-        if let index = questsCreatedList.firstIndex(where: { $0.id == quest.id }) {
+        if let index = questsCreatedList.firstIndex(where: { $0 == questId}) {
             // Found the matching index
             let questToDelete = questsCreatedList[index]
             print("Found the matching index")
@@ -241,12 +265,21 @@ final class UserManager {
             print("Matching ID not found")
             throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Quest with this UUID not found."])
         }
-    }
+    } */
     
     func getUserWatchlistQuestIds(userId: String) async throws -> [String]? {
         let user = try await self.getUser(userId: userId)
         if let watchlistQuestsList = user.watchlistQuestsList {
             return watchlistQuestsList
+        } else {
+            return nil
+        }
+    }
+    
+    func getCreatedQuestIds(userId: String) async throws -> [String]? {
+        let user = try await self.getUser(userId: userId)
+        if let createdQuestsList = user.questsCreatedList {
+            return createdQuestsList
         } else {
             return nil
         }
@@ -279,6 +312,13 @@ final class UserManager {
         let watchlistQuestsList = try await getUserWatchlistQuestIds(userId: userId)
         // Query Firestore for all quests with IDs in the watchlist
         return try await QuestManager.shared.getUserWatchlistQuestsFromIds(watchlistQuestsList: watchlistQuestsList)
+    }
+
+    func getUserCreatedQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
+        // Get the user object
+        let createdQuestsList = try await getCreatedQuestIds(userId: userId)
+        // Query Firestore for all quests with IDs in the watchlist
+        return try await QuestManager.shared.getUserCreatedQuestsFromIds(createdQuestsList: createdQuestsList)
     }
 
     
