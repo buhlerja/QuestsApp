@@ -10,6 +10,7 @@ import MapKit
 
 struct CreateQuestContentView: View {
     @StateObject private var viewModel = QuestCreateViewModel()
+    @Environment(\.dismiss) var dismiss
     @State private var showObjectiveCreateView = false
     @State private var showStartingLocCreateView = false
     @State private var showSupportingInfoView = false
@@ -306,6 +307,7 @@ struct CreateQuestContentView: View {
                                 print("CreateQuestViewModel Called")
                                 viewModel.editUserQuest(quest: questContent)
                             }
+                            dismiss()
                             
                         }
                         else {
@@ -326,6 +328,7 @@ struct CreateQuestContentView: View {
                 }
                 .frame(maxWidth: .infinity) // Constrain width to parent bounds
                 .padding()       // Add consistent padding for content
+            
             }
         }
         .task {

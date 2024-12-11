@@ -37,6 +37,7 @@
 		83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */; };
+		83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
 		83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0792CE26450003595B8 /* ProfilePageModel.swift */; };
@@ -89,6 +90,7 @@
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteViewModel.swift; sourceTree = "<group>"; };
+		83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportingView.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
 		83E4D75F2C41F14200B8346F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		83E9F0762CE2639E003595B8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -150,7 +152,7 @@
 				83E9F0952CEBCFA6003595B8 /* ConstantsAndMacros */,
 				83E9F0832CE26CE3003595B8 /* FireStore */,
 				83FF50682CD84FCC00F4E3B0 /* Utilities */,
-				83C7D98F2CACC9A10046D553 /* MapViewModel */,
+				83C7D98F2CACC9A10046D553 /* MapViewManager */,
 				8315E1E82C9F7AD00079E403 /* Authentication */,
 				83FE5BA82C38B5430005EA55 /* Models */,
 				83FF50722CE25F1800F4E3B0 /* Core Files */,
@@ -179,12 +181,20 @@
 			path = Authentication;
 			sourceTree = "<group>";
 		};
-		83C7D98F2CACC9A10046D553 /* MapViewModel */ = {
+		83C7D98F2CACC9A10046D553 /* MapViewManager */ = {
 			isa = PBXGroup;
 			children = (
 				83C7D9902CACC9D70046D553 /* MapView.swift */,
 			);
-			path = MapViewModel;
+			path = MapViewManager;
+			sourceTree = "<group>";
+		};
+		83C7FF4E2D08018C001AAB2E /* Reporting */ = {
+			isa = PBXGroup;
+			children = (
+				83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */,
+			);
+			path = Reporting;
 			sourceTree = "<group>";
 		};
 		83E9F0782CE263E9003595B8 /* Profile */ = {
@@ -333,6 +343,7 @@
 		83FF50722CE25F1800F4E3B0 /* Core Files */ = {
 			isa = PBXGroup;
 			children = (
+				83C7FF4E2D08018C001AAB2E /* Reporting */,
 				83E9F0782CE263E9003595B8 /* Profile */,
 				83E9F08A2CE2B821003595B8 /* CreateQuestFlow */,
 				83E9F07C2CE26551003595B8 /* Authentication */,
@@ -428,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */,
+				83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */,
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
 				832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */,
 				83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */,

@@ -9,11 +9,17 @@ import SwiftUI
 
 struct QuestView: View {
     
-    @StateObject private var viewModel = QuestViewModel()
-    
-    @StateObject private var mapViewModel = MapViewModel()
+    @StateObject private var viewModel: QuestViewModel
+    @StateObject private var mapViewModel: MapViewModel
     
     @Binding var showSignInView: Bool
+
+    init(showSignInView: Binding<Bool>) {
+        self._showSignInView = showSignInView // Bind the parameter to the @Binding property
+        let mapVM = MapViewModel() // Create the `mapViewModel` instance here
+        self._mapViewModel = StateObject(wrappedValue: mapVM) // Wrap `mapViewModel` in `StateObject`
+        self._viewModel = StateObject(wrappedValue: QuestViewModel(mapViewModel: mapVM)) // Create `QuestViewModel` using the same `mapViewModel`
+    }
     
     @State var showCreateQuestView = false
     @State var questContent = QuestStruc(
@@ -90,13 +96,6 @@ struct QuestView: View {
                                 }
                             }
                         }
-                        
-                        Button(action: {
-                            viewModel.getQuestsByRating()
-                        }) {
-                            Text("See more Quests")
-                        }
-                        
                     }
                     .background(Color.cyan)
                 }
@@ -120,6 +119,9 @@ struct QuestView: View {
                     }
                     NavigationLink(destination: ProfilePage(mapViewModel: mapViewModel, showSignInView: $showSignInView)) {
                         Image(systemName: "person")
+                    }
+                    NavigationLink(destination: ReportingView()) {
+                        Image(systemName: "flag")
                     }
                     Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
                         ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
@@ -146,8 +148,8 @@ struct QuestView: View {
             }
             .onAppear {
                 showCreateQuestView = false
-                //viewModel.getQuests() // BRING BACK. Commented out for video's sake!!! But need to load on appear!
                 mapViewModel.checkIfLocationServicesIsEnabled()
+                viewModel.getQuests()
             }
             .navigationDestination(isPresented: $showCreateQuestView) {
                 CreateQuestContentView(questContent: $questContent, isEditing: false)

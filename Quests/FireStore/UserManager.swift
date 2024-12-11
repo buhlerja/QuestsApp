@@ -242,30 +242,6 @@ final class UserManager {
         // Call a QuestManager function to actually adjust the quest in the questCollection
         return try await QuestManager.shared.uploadQuest(quest: quest)
     }
-    /* func editUserQuest(userId: String, questId: String) async throws {
-        // Search for the UUID in the current database. Remove this member and replace with quest. If UUID not found: Error.
-        let user = try await userDocument(userId: userId).getDocument(as: DBUser.self)
-        print("Got the user")
-        guard let questsCreatedList = user.questsCreatedList else {
-           throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "No quests found in user data."])
-        }
-        print("Quests list exists")
-        // Find the quest with the same UUID as the quest we're trying to edit
-        if let index = questsCreatedList.firstIndex(where: { $0 == questId}) {
-            // Found the matching index
-            let questToDelete = questsCreatedList[index]
-            print("Found the matching index")
-            
-            try await removeUserQuest(userId: userId, quest: questToDelete)
-            
-            try await addUserQuest(userId: userId, quest: quest)
-            
-        } else {
-            // Quest not found
-            print("Matching ID not found")
-            throw NSError(domain: "com.yourapp.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Quest with this UUID not found."])
-        }
-    } */
     
     func getUserWatchlistQuestIds(userId: String) async throws -> [String]? {
         let user = try await self.getUser(userId: userId)

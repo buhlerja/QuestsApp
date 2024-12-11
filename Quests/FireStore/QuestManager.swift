@@ -9,6 +9,7 @@
 
 import Foundation
 import FirebaseFirestore
+import CoreLocation
 
 final class QuestManager {
     
@@ -75,11 +76,54 @@ final class QuestManager {
         }
    }
     
-    func getQuestsByRating(count: Int) async throws -> [QuestStruc] {
-        try await questCollection
-            .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
-            .limit(to: count)
-            .getDocuments(as: QuestStruc.self)
+    /*func getQuestsByRating(count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+        if let lastDocument {
+            return try await questCollection
+                .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
+                .limit(to: count)
+                .start(afterDocument: lastDocument)
+                .getDocumentsWithSnapshot(as: QuestStruc.self)
+        } else {
+            return try await questCollection
+                .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
+                .limit(to: count)
+                .getDocumentsWithSnapshot(as: QuestStruc.self)
+        }
+    }*/
+    
+    func getQuestsByProximity(count: Int, lastDocument: DocumentSnapshot?, userLocation: CLLocation) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+        // lastDocument to return the next batch of items picking up where the last query left off.
+        let radius = 100000 // 100 km. Range that we will query distance within
+        
+        // Compute bounding box
+        let latDelta = Double(radius) / 111000.0 // Approximate meters to degrees latitude
+        let lonDelta = Double(radius) / (111000.0 * cos(userLocation.coordinate.latitude * .pi / 180.0))
+
+        let minLat = userLocation.coordinate.latitude - latDelta
+        let maxLat = userLocation.coordinate.latitude + latDelta
+        let minLon = userLocation.coordinate.longitude - lonDelta
+        let maxLon = userLocation.coordinate.longitude + lonDelta
+    
+        // If there is a lastDocument, use it for pagination
+        if let lastDocument {
+           return try await questCollection
+                .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isGreaterThanOrEqualTo: minLat)
+                .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isLessThanOrEqualTo: maxLat)
+                .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isGreaterThanOrEqualTo: minLon)
+                .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isLessThanOrEqualTo: maxLon)
+                .limit(to: count) // Limit the number of results fetched
+                .start(afterDocument: lastDocument)
+                .getDocumentsWithSnapshot(as: QuestStruc.self)
+
+        } else {
+            return try await questCollection
+                .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isGreaterThanOrEqualTo: minLat)
+                .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isLessThanOrEqualTo: maxLat)
+                .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isGreaterThanOrEqualTo: minLon)
+                .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isLessThanOrEqualTo: maxLon)
+                .limit(to: count) // Limit the number of results fetched
+                .getDocumentsWithSnapshot(as: QuestStruc.self)
+        }
     }
     
     func getUserWatchlistQuestsFromIds(watchlistQuestsList: [String]?) async throws -> [QuestStruc]? {
@@ -124,7 +168,7 @@ final class QuestManager {
 
 extension Query { // Extension of questCollection's parent type (Collection Reference) (self == questCollection)
     
-    func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable { // T is a "generic" that can represent any type
+    /*func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable { // T is a "generic" that can represent any type
         // Access the entire quests collection
         let snapshot = try await self.getDocuments()
         print("Snapshot contains \(snapshot.documents.count) documents.")
@@ -145,6 +189,22 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
              }
          }
 
+    } */
+    
+    func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable {
+        try await getDocumentsWithSnapshot(as: type).quests
+    }
+    
+    func getDocumentsWithSnapshot<T>(as type: T.Type) async throws -> (quests: [T], lastDocument: DocumentSnapshot?) where T : Decodable { // T is a "generic" that can represent any type
+        // Access the entire quests collection
+        let snapshot = try await self.getDocuments()
+        print("Snapshot contains \(snapshot.documents.count) documents.")
+        // ORIGINAL CODE:
+        let quests = try snapshot.documents.map({ document in
+            try document.data(as: T.self)
+        })
+
+        return (quests, snapshot.documents.last)
     }
     
 }
