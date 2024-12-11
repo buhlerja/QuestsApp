@@ -21,6 +21,7 @@ final class QuestViewModel: ObservableObject {
     @Published private(set) var quests: [QuestStruc] = []
     @Published var selectedFilter: FilterOption? = nil
     @Published var recurringOption: RecurringOption? = nil
+    @Published var noMoreToQuery: Bool = false
     
     private var lastDocument: DocumentSnapshot? = nil
     
@@ -75,18 +76,21 @@ final class QuestViewModel: ObservableObject {
         Task {
             print("Getting quests")
             // Get the user's location to view relevant quests
-            if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-                //let userCoordinate = userLocation.coordinate
-                //print("User Coordinate: \(userCoordinate)")
-                /*self.quests = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool)*/ // BRING BACK I ONLY COMMENTED FOR TESTING
-                let (newQuests, lastDocument) = try await QuestManager.shared.getQuestsByProximity(count: 4, lastDocument: lastDocument, userLocation: userLocation) // COMMENT OUT, THIS IS CODE JUST TO TEST MY FUNCTION. FUNCTION WILL EVENTUALLY BE USED BUT IDK HOW
-                self.quests.append(contentsOf: newQuests) // Bug where the query fetches the same quest and appends the duplicate. I think because there is only a single item returned by the query, so there is no "next document".
-                self.lastDocument = lastDocument
-                print("Got quests")
-            } else {
-                print("No user location available. Failed to retrieve relevant quests")
-                // NEED TO HANDLE GRACEFULLY!!
-                return // Exit if no user location is available
+            if !noMoreToQuery {
+                if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
+                    //let userCoordinate = userLocation.coordinate
+                    //print("User Coordinate: \(userCoordinate)")
+                    /*self.quests = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool)*/ // BRING BACK I ONLY COMMENTED FOR TESTING
+                    let (newQuests, lastDocument) = try await QuestManager.shared.getQuestsByProximity(count: 4, lastDocument: lastDocument, userLocation: userLocation) // COMMENT OUT, THIS IS CODE JUST TO TEST MY FUNCTION. FUNCTION WILL EVENTUALLY BE USED BUT IDK HOW
+                    self.quests.append(contentsOf: newQuests) 
+                    self.lastDocument = lastDocument
+                    noMoreToQuery = self.lastDocument == nil // lastDocument nil AFTER the query indicates end of query
+                    print("Got quests")
+                } else {
+                    print("No user location available. Failed to retrieve relevant quests")
+                    // NEED TO HANDLE GRACEFULLY!!
+                    return // Exit if no user location is available
+                }
             }
         }
     }
