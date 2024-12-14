@@ -76,7 +76,7 @@ final class QuestViewModel: ObservableObject {
         Task {
             print("Getting quests")
             // Get the user's location to view relevant quests
-            if !noMoreToQuery {
+            if !noMoreToQuery { // Used to stop getting more queries if we've reached the end.
                 if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
                     //let userCoordinate = userLocation.coordinate
                     //print("User Coordinate: \(userCoordinate)")
@@ -97,7 +97,7 @@ final class QuestViewModel: ObservableObject {
     
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
-    }*/
+    }*/ // Works but not needed?
     
     func addUserWatchlistQuest(questId: String) {
         guard let user else { return } // Make sure the user is logged in or authenticated

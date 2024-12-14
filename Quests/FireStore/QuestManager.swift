@@ -142,6 +142,14 @@ final class QuestManager {
             .getDocuments(as: QuestStruc.self)
     }
     
+    func getUserCompletedQuestsFromIds(completedQuestsList: [String]?) async throws -> [QuestStruc]? {
+        // Passed in parameter is an array of ID's corresponding to the created quests
+        guard let completedQuestsList else { return nil }
+        return try await questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: completedQuestsList)
+            .getDocuments(as: QuestStruc.self)
+    }
+    
     func updateRating(questId: String, rating: Double, currentRating: Double?, numRatings: Int) async throws {
         let adjustedRating: Double
         if let currentRating = currentRating {
@@ -163,6 +171,38 @@ final class QuestManager {
             throw error
         }
         
+    }
+    
+    func updatePassFailAndCompletionRate(questId: String, fail: Bool, numTimesPlayed: Int, numSuccessesOrFails: Int, completionRate: Double?) async throws {
+        
+        let newNumTimesPlayed = numTimesPlayed + 1
+        let newNumSuccessesOrFails = numSuccessesOrFails + 1
+        let key = fail
+            ? QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.numFails.rawValue
+            : QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.numSuccesses.rawValue
+        let newCompletionRate: Double
+        if completionRate != nil {
+            newCompletionRate = fail
+                ? (Double((newNumTimesPlayed - newNumSuccessesOrFails)) / Double(newNumTimesPlayed)) * 100
+                : (Double(newNumSuccessesOrFails) / Double(newNumTimesPlayed)) * 100
+        } else {
+            newCompletionRate = fail ? 0.0 : 100.0 // Default to 0% or 100% based on failure/success
+        }
+        
+        
+        let data: [String:Any] = [
+            QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.numTimesPlayed.rawValue : newNumTimesPlayed,
+            key : newNumSuccessesOrFails,
+            QuestStruc.CodingKeys.metaData.rawValue + "." + QuestMetaData.CodingKeys.completionRate.rawValue : newCompletionRate
+        ]
+        
+        do {
+            try await questDocument(questId: questId).updateData(data)
+            
+        } catch {
+            print("Failed to update quest data: \(error.localizedDescription)")
+            throw error
+        }
     }
 }
 

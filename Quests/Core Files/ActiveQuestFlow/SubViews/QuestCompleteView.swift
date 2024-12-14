@@ -27,10 +27,14 @@ struct QuestCompleteView: View {
                 Spacer()
                 Button(action: {
                     // Save updated quest information to the database!!
+                    // 1. Rating info
                     if let rating = rating {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
                     }
-                    viewModel.updateCompletionRateAndRelatedStats(for: questJustCompleted.id.uuidString, fail: false) // Fail is false since this is the successful completion flow
+                    // 2. Fail number, pass number, total num times played, and completion rate
+                    viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: false, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: questJustCompleted.metaData.numSuccesses, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
+                    // 3. Add to user's completed quests list
+                    viewModel.updateUserQuestsCompletedList(questId:questJustCompleted.id.uuidString)
                     showActiveQuest = false
                 }) {
                     Text("Close")
@@ -56,6 +60,9 @@ struct QuestCompleteView: View {
                ), in: 0...5, step: 0.5)
                .padding()
             }
+        }
+        .task {
+            try? await viewModel.loadCurrentUser()
         }
     }
     

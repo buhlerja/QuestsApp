@@ -17,7 +17,7 @@ struct DBUser: Codable {
     let questsCreatedList: [String]? // Stores all the quests a user has created
     let numQuestsCreated: Int? // The number of quests a user has created
     let numQuestsCompleted: Int? // Optional (but isn't really optional)
-    let questsCompletedList: [QuestStruc]? // The list of quests a user has successfully completed
+    let questsCompletedList: [String]? // The list of quests a user has successfully completed
     let numWatchlistQuests: Int?
     let watchlistQuestsList: [String]? // All the quests the user might want to eventually play. Convert from quest UUID's to String
     let numQuestsFailed: Int?
@@ -48,7 +48,7 @@ struct DBUser: Codable {
         questsCreatedList: [String]? = nil,
         numQuestsCreated: Int? = 0,
         numQuestsCompleted: Int? = 0,
-        questsCompletedList: [QuestStruc]? = nil,
+        questsCompletedList: [String]? = nil,
         numWatchlistQuests: Int? = 0,
         watchlistQuestsList: [String]? = nil,
         numQuestsFailed: Int? = 0,
@@ -100,7 +100,7 @@ struct DBUser: Codable {
         self.questsCreatedList = try container.decodeIfPresent([String].self, forKey: .questsCreatedList)
         self.numQuestsCreated = try container.decodeIfPresent(Int.self, forKey: .numQuestsCreated)
         self.numQuestsCompleted = try container.decodeIfPresent(Int.self, forKey: .numQuestsCompleted)
-        self.questsCompletedList = try container.decodeIfPresent([QuestStruc].self, forKey: .questsCompletedList)
+        self.questsCompletedList = try container.decodeIfPresent([String].self, forKey: .questsCompletedList)
         self.numWatchlistQuests = try container.decodeIfPresent(Int.self, forKey: .numWatchlistQuests)
         self.watchlistQuestsList = try container.decodeIfPresent([String].self, forKey: .watchlistQuestsList)
         self.numQuestsFailed = try container.decodeIfPresent(Int.self, forKey: .numQuestsFailed)
@@ -261,6 +261,15 @@ final class UserManager {
         }
     }
     
+    func getCompletedQuestIds(userId: String) async throws -> [String]? {
+        let user = try await self.getUser(userId: userId)
+        if let completedQuestsList = user.questsCompletedList {
+            return completedQuestsList
+        } else {
+            return nil
+        }
+    }
+    
     /*func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
         // 1. Get the user from the DB
         let user = try await self.getUser(userId: userId)
@@ -293,8 +302,15 @@ final class UserManager {
     func getUserCreatedQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
         // Get the user object
         let createdQuestsList = try await getCreatedQuestIds(userId: userId)
-        // Query Firestore for all quests with IDs in the watchlist
+        // Query Firestore for all quests with IDs in the created list
         return try await QuestManager.shared.getUserCreatedQuestsFromIds(createdQuestsList: createdQuestsList)
+    }
+    
+    func getUserCompletedQuestsFromIds (userId: String) async throws -> [QuestStruc]? {
+        // Get the user object
+        let completedQuestsList = try await getCompletedQuestIds(userId: userId)
+        // Query Firestore for all quests with IDs in the completed list
+        return try await QuestManager.shared.getUserCompletedQuestsFromIds(completedQuestsList: completedQuestsList)
     }
 
     
@@ -320,6 +336,25 @@ final class UserManager {
         }
         
         print("Added Quest to watchlist successfully!")
+    }
+    
+    func updateUserQuestsCompletedList(userId: String, questId: String) async throws {
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.questsCompletedList.rawValue : FieldValue.arrayUnion([questId])
+        ]
+        // Update the questsCompletedList with the appended questID
+        try await userDocument(userId: userId).updateData(dict)
+        
+        if let completedQuestsList = try await getCompletedQuestIds(userId: userId) {
+            let numCompletedQuests = completedQuestsList.count
+            
+            // Update the numCompletedQuests field
+            try await userDocument(userId: userId).updateData([
+                DBUser.CodingKeys.numQuestsCompleted.rawValue : numCompletedQuests
+            ])
+        }
+        
+        print("Added Quest to completed list successfully!")
     }
     
 }

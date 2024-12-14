@@ -14,6 +14,7 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var user: DBUser? = nil
     @Published private(set) var createdQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var watchlistQuestStrucs: [QuestStruc]? = nil
+    @Published private(set) var completedQuestStrucs: [QuestStruc]? = nil
     
     func removeUserQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
@@ -24,6 +25,13 @@ final class ProfileViewModel: ObservableObject {
             
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
+        }
+    }
+    
+    func getCompletedQuests() async throws {
+        guard let user else { return }
+        Task {
+            self.completedQuestStrucs = try await UserManager.shared.getUserCompletedQuestsFromIds(userId: user.userId)
         }
     }
     

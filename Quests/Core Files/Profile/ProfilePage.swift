@@ -102,6 +102,28 @@ struct ProfilePage: View {
                         .italic()
                 }
                 
+                // Watchlist quests view
+                if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack { // Use HStack to align the items horizontally
+                            ForEach(completedQuests, id: \.id) { completedQuest in
+                                VStack {
+                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
+                                        CardView(quest: completedQuest)
+                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                            .navigationBarTitleDisplayMode(.large)
+                                    }
+                                }
+                                .padding(.horizontal) // Add padding between cards
+                            }
+                        }
+                    }
+                } else {
+                    Text("No completed quests")
+                        .foregroundColor(.gray)
+                        .italic()
+                }
+                
                 if let user = viewModel.user {
                     Text("User ID: \(user.userId)")
                     Button {
@@ -196,6 +218,7 @@ struct ProfilePage: View {
             try? await viewModel.loadCurrentUser()
             try? await viewModel.getCreatedQuests()
             try? await viewModel.getWatchlistQuests()
+            try? await viewModel.getCompletedQuests()
         }
         .animation(.easeInOut, value: isShowingPopup)
     }
