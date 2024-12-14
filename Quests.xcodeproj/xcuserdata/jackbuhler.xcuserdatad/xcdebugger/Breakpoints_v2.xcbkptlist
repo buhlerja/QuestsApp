@@ -76,8 +76,8 @@
             filePath = "Quests/FireStore/UserManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "343"
-            endingLineNumber = "343"
+            startingLineNumber = "362"
+            endingLineNumber = "362"
             landmarkName = "updateUserQuestsCompletedOrFailedList(userId:questId:failed:)"
             landmarkType = "7">
          </BreakpointContent>

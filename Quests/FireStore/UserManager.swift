@@ -236,13 +236,47 @@ final class UserManager {
         if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
             let numQuestsCreated = createdQuestsList.count
             
-            // Update the numWatchlistQuests field
-            try await userDocument(userId: userId).updateData([
-                DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
-            ])
+            if numQuestsCreated == 0 {
+                try await userDocument(userId: userId).updateData([
+                    DBUser.CodingKeys.questsCreatedList.rawValue: FieldValue.delete(),
+                    DBUser.CodingKeys.numQuestsCreated.rawValue: FieldValue.delete()
+                ])
+            } else {
+                // Update the numWatchlistQuests field
+                try await userDocument(userId: userId).updateData([
+                    DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
+                ])
+            }
         }
         
         print("Removed Quest successfully!")
+    }
+    
+    func removeWatchlistQuest(userId: String, questId: String) async throws {
+        let dict: [String:Any] = [
+            DBUser.CodingKeys.watchlistQuestsList.rawValue : FieldValue.arrayRemove([questId])
+        ]
+        
+        try await userDocument(userId: userId).updateData(dict)
+        print("Successfully removed from watchlist")
+        
+        if let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist) {
+            let numWatchlistQuests = watchlistQuestsList.count
+            
+            if numWatchlistQuests == 0 { // Set to nil by deleting from the database!!
+                try await userDocument(userId: userId).updateData([
+                    DBUser.CodingKeys.watchlistQuestsList.rawValue: FieldValue.delete(),
+                    DBUser.CodingKeys.numWatchlistQuests.rawValue: FieldValue.delete()
+                ])
+            } else {
+                // Otherwise, update the number of quests
+                // Update the numWatchlistQuests field
+                try await userDocument(userId: userId).updateData([
+                    DBUser.CodingKeys.numWatchlistQuests.rawValue : numWatchlistQuests
+                ])
+            }
+        }
+        print("Successfully updated watchlist quests amount")
     }
     
     func editUserQuest(quest: QuestStruc) async throws {
@@ -287,28 +321,13 @@ final class UserManager {
         
         return watchlistQuestStrucs.isEmpty ? nil : watchlistQuestStrucs
     }*/
-    
-    func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
-        // Get the user object
-        let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist)
-        // Query Firestore for all quests with IDs in the watchlist
-        return try await QuestManager.shared.getUserWatchlistQuestsFromIds(watchlistQuestsList: watchlistQuestsList)
-    }
 
-    func getUserCreatedQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
+    func getUserQuestStrucsFromIds(userId: String, listType: ListType) async throws -> [QuestStruc]? {
         // Get the user object
-        let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created)
-        // Query Firestore for all quests with IDs in the created list
-        return try await QuestManager.shared.getUserCreatedQuestsFromIds(createdQuestsList: createdQuestsList)
+        let questIdList = try await getQuestIdsFromList(userId: userId, listType: listType)
+        // Query Firestore for all quests in the quest collection with these IDs
+        return try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
     }
-    
-    func getUserCompletedQuestsFromIds (userId: String) async throws -> [QuestStruc]? {
-        // Get the user object
-        let completedQuestsList = try await getQuestIdsFromList(userId: userId, listType: .completed)
-        // Query Firestore for all quests with IDs in the completed list
-        return try await QuestManager.shared.getUserCompletedQuestsFromIds(completedQuestsList: completedQuestsList)
-    }
-
     
     func addUserWatchlistQuest(userId: String, questId: String) async throws {
         let dict: [String:Any] = [

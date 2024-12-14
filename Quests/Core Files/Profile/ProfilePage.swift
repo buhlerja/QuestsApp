@@ -91,6 +91,19 @@ struct ProfilePage: View {
                                             .frame(width: 250) // Set a fixed width for each card, adjust as needed
                                             .navigationBarTitleDisplayMode(.large)
                                     }
+                                    HStack {
+                                        Button(action: {
+                                            viewModel.removeWatchlistQuest(quest: watchlistQuest)
+                                        }, label: {
+                                            Text("Remove from watchlist")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                    }
                                 }
                                 .padding(.horizontal) // Add padding between cards
                             }
@@ -120,6 +133,28 @@ struct ProfilePage: View {
                     }
                 } else {
                     Text("No completed quests")
+                        .foregroundColor(.gray)
+                        .italic()
+                }
+                
+                // Watchlist quests view
+                if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack { // Use HStack to align the items horizontally
+                            ForEach(failedQuests, id: \.id) { failedQuest in
+                                VStack {
+                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
+                                        CardView(quest: failedQuest)
+                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                            .navigationBarTitleDisplayMode(.large)
+                                    }
+                                }
+                                .padding(.horizontal) // Add padding between cards
+                            }
+                        }
+                    }
+                } else {
+                    Text("No failed quests")
                         .foregroundColor(.gray)
                         .italic()
                 }
@@ -219,6 +254,7 @@ struct ProfilePage: View {
             try? await viewModel.getCreatedQuests()
             try? await viewModel.getWatchlistQuests()
             try? await viewModel.getCompletedQuests()
+            try? await viewModel.getFailedQuests()
         }
         .animation(.easeInOut, value: isShowingPopup)
     }

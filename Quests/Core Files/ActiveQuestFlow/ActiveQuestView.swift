@@ -71,7 +71,7 @@ struct ActiveQuestView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest, failed: fail) // BUG!!! FAILED IS SET PROPERLY BUT NOT PASSED PROPERLY. 
+                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest, failed: $fail)
             }
             /* Ensures that the objective does have a timer value as a condition for displaying a timer */
             if showTimer {
@@ -81,7 +81,6 @@ struct ActiveQuestView: View {
                     Spacer()
                 }
             }
-            
             
             //Overlay for correct answers
             Color(answerIsRight ? .green.opacity(0.2) : .clear)

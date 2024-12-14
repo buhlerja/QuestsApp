@@ -18,7 +18,7 @@ struct QuestCompleteView: View {
     
     let questJustCompleted: QuestStruc // Parameter to be passed in from ActiveQuestView. Gives questStruc of quest just completed.
     
-    let failed: Bool // Parameter deciding whether the quest has been failed or passed. Passed in from ActiveQuestView
+    @Binding var failed: Bool /* Parameter deciding whether the quest has been failed or passed. Passed in from ActiveQuestView. Not changed but passed as a binding to properly reflect state changes to address a bug where wrong value was passed */
     
     var body: some View {
         ZStack {
@@ -36,7 +36,12 @@ struct QuestCompleteView: View {
                 Text("Stats:")
                 Spacer()
                 Button(action: {
+                    // ****
+                    // DESIGN NOTE: should probably do this directly after the quest ends in case the user turns off their phone
+                    // because the quest info will not save to DB UNLESS they actively close this screen.
+                    // Can do onAppear in this screen (if it works with the fail parameter) or directly in an ActiveQuestViewModel
                     // Save updated quest information to the database!!
+                    // ****
                     // 1. Rating info
                     if let rating = rating {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
@@ -109,6 +114,6 @@ struct QuestCompleteView: View {
 
 struct QuestCompleteView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestCompleteView(showActiveQuest: .constant(false), questJustCompleted: QuestStruc.sampleData[0], failed: true)
+        QuestCompleteView(showActiveQuest: .constant(false), questJustCompleted: QuestStruc.sampleData[0], failed: .constant(true))
     }
 }

@@ -15,37 +15,64 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var createdQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var watchlistQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var completedQuestStrucs: [QuestStruc]? = nil
+    @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
     func removeUserQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
             // Remove from user database
             try await UserManager.shared.removeUserQuest(userId: user.userId, questId: quest.id.uuidString)
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            // Add calls to the other lists to remove from
+            // ADD CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (or build into the function that is already called) ///////////////////
             
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
+            // Get all quest lists and the updated user DB again:
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            try await getCompletedQuests()
+            try await getFailedQuests()
+            try await getWatchlistQuests()
+            try await getCreatedQuests()
+        }
+    }
+    
+    func removeWatchlistQuest(quest: QuestStruc) {
+        guard let user else { return } // Make sure the user is logged in or authenticated
+        Task {
+            // Remove from user's watchlist
+            try await UserManager.shared.removeWatchlistQuest(userId: user.userId, questId: quest.id.uuidString)
+            print("User Manager returns")
+            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            print("Fetched user again")
+            try await getWatchlistQuests() // Reload the panel on the user's profile screen
         }
     }
     
     func getCompletedQuests() async throws {
         guard let user else { return }
         Task {
-            self.completedQuestStrucs = try await UserManager.shared.getUserCompletedQuestsFromIds(userId: user.userId)
+            self.completedQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .completed)
+        }
+    }
+    
+    func getFailedQuests() async throws {
+        guard let user else { return }
+        Task {
+            self.failedQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .failed)
         }
     }
     
     func getWatchlistQuests() async throws {
         guard let user else { return }
         Task {
-            self.watchlistQuestStrucs = try await UserManager.shared.getUserWatchlistQuestsFromIds(userId: user.userId)
+            self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .watchlist)
         }
     }
     
     func getCreatedQuests() async throws {
         guard let user else { return }
         Task {
-            self.createdQuestStrucs = try await UserManager.shared.getUserCreatedQuestsFromIds(userId: user.userId)
+            self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .created)
         }
     }
     

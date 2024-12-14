@@ -126,27 +126,15 @@ final class QuestManager {
         }
     }
     
-    func getUserWatchlistQuestsFromIds(watchlistQuestsList: [String]?) async throws -> [QuestStruc]? {
-        // Passed in parameter is an array of ID's corresponding to the watchlist quests
-        guard let watchlistQuestsList else { return nil }
+    func getUserQuestStrucsFromIds(questIdList: [String]?) async throws -> [QuestStruc]? {
+        // Passed in parameter is an array of ID's corresponding to quest strucs in the quests DB
+        // When I deleted a quest, got the following error: "Invalid Query. A non-empty array is required for 'in' filters"
+        // Basically when you delete a quest you have to remove all traces of it from ALL lists. Invalid ID references remain in lists even if o.g. object is gone
+        // BUG FIX: Make sure that if the last item is deleted, the list does not remain as EMPTY, or else error will be thrown. I've added an additional check here
+        guard let questIdList else { return  nil }
+        if questIdList.isEmpty { return nil }
         return try await questCollection
-            .whereField(QuestStruc.CodingKeys.id.rawValue, in: watchlistQuestsList)
-            .getDocuments(as: QuestStruc.self)
-    }
-    
-    func getUserCreatedQuestsFromIds(createdQuestsList: [String]?) async throws -> [QuestStruc]? {
-        // Passed in parameter is an array of ID's corresponding to the created quests
-        guard let createdQuestsList else { return nil }
-        return try await questCollection
-            .whereField(QuestStruc.CodingKeys.id.rawValue, in: createdQuestsList)
-            .getDocuments(as: QuestStruc.self)
-    }
-    
-    func getUserCompletedQuestsFromIds(completedQuestsList: [String]?) async throws -> [QuestStruc]? {
-        // Passed in parameter is an array of ID's corresponding to the created quests
-        guard let completedQuestsList else { return nil }
-        return try await questCollection
-            .whereField(QuestStruc.CodingKeys.id.rawValue, in: completedQuestsList)
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questIdList)
             .getDocuments(as: QuestStruc.self)
     }
     

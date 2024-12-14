@@ -91,6 +91,8 @@ final class QuestViewModel: ObservableObject {
                     // NEED TO HANDLE GRACEFULLY!!
                     return // Exit if no user location is available
                 }
+            } else {
+                print("no more to query")
             }
         }
     }
