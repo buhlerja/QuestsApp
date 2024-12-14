@@ -5,6 +5,8 @@
 //  Created by Jack Buhler on 2024-10-19.
 //
 
+// Will handle both quest passes AND fails
+
 import SwiftUI
 
 struct QuestCompleteView: View {
@@ -14,15 +16,23 @@ struct QuestCompleteView: View {
     
     @State private var rating: Double? = nil
     
-    let questJustCompleted: QuestStruc // Parameter to be passed in from ActiveQuestView
+    let questJustCompleted: QuestStruc // Parameter to be passed in from ActiveQuestView. Gives questStruc of quest just completed.
+    
+    let failed: Bool // Parameter deciding whether the quest has been failed or passed. Passed in from ActiveQuestView
     
     var body: some View {
         ZStack {
             Color(.cyan)
                 .ignoresSafeArea()
             VStack {
-                Text("Quest Complete!")
-                    .font(.headline)
+                if !failed {
+                    Text("Success: Quest Complete!")
+                        .font(.headline)
+                } else {
+                    Text("Quest Unsuccessful...")
+                        .font(.headline)
+                }
+                
                 Text("Stats:")
                 Spacer()
                 Button(action: {
@@ -32,9 +42,11 @@ struct QuestCompleteView: View {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
                     }
                     // 2. Fail number, pass number, total num times played, and completion rate
-                    viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: false, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: questJustCompleted.metaData.numSuccesses, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
-                    // 3. Add to user's completed quests list
-                    viewModel.updateUserQuestsCompletedList(questId:questJustCompleted.id.uuidString)
+                    let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
+                    viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
+                    // 3. Add to user's completed or failed quests list
+                    viewModel.updateUserQuestsCompletedOrFailedList(questId: questJustCompleted.id.uuidString, failed: failed)
+                   
                     showActiveQuest = false
                 }) {
                     Text("Close")
@@ -42,7 +54,7 @@ struct QuestCompleteView: View {
                         .padding()
                 }
                 Spacer()
-                Text(rating == nil ? "Rate your Quest: Not Rated" : "Rate your Quest: Rating: \(rating!, specifier: "%.1f") stars")
+                Text(rating == nil ? "Rate your Quest: Not Rated" : "Rate your Quest: \(rating!, specifier: "%.1f") stars")
                     .font(.subheadline)
                     .padding()
                 HStack {
@@ -63,6 +75,10 @@ struct QuestCompleteView: View {
         }
         .task {
             try? await viewModel.loadCurrentUser()
+        }
+        .onAppear {
+            print("From quest complete view: ")
+            print(failed)
         }
     }
     
@@ -93,6 +109,6 @@ struct QuestCompleteView: View {
 
 struct QuestCompleteView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestCompleteView(showActiveQuest: .constant(false), questJustCompleted: QuestStruc.sampleData[0])
+        QuestCompleteView(showActiveQuest: .constant(false), questJustCompleted: QuestStruc.sampleData[0], failed: true)
     }
 }

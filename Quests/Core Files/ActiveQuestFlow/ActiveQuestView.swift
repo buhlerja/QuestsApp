@@ -16,14 +16,16 @@ struct ActiveQuestView: View {
     
     @State private var currentObjectiveIndex = 0
     @State private var enteredObjectiveSolution = ""
-    @State private var questCompleted = false
+    @State private var questCompleted = false // Indicates both a pass AND fail
     @State private var showHintButton = false
     @State private var displayHint = false
     @State private var answerIsWrong = false
     @State private var answerIsRight = false
     @State var timerValue = 100 // Should be reset to the correct value on appear
     @State private var showTimer = false
-    @State var timerIsUp = false
+    @State var timerIsUp = false // timer is up is a fail condition
+    @State var fail = false // Set to true if any of the fail conditions are met
+    
     
     let quest: QuestStruc
     
@@ -69,10 +71,7 @@ struct ActiveQuestView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest)
-            }
-            .fullScreenCover(isPresented: $timerIsUp) {
-                QuestFailedView(questJustCompleted: quest)
+                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest, failed: fail) // BUG!!! FAILED IS SET PROPERLY BUT NOT PASSED PROPERLY. 
             }
             /* Ensures that the objective does have a timer value as a condition for displaying a timer */
             if showTimer {
@@ -96,6 +95,17 @@ struct ActiveQuestView: View {
         }
         .onAppear {
             updateTimerValue()
+        }
+        .onChange(of: timerIsUp) {
+            if timerIsUp == true {
+                // The quest has been failed
+                // Order matters here to set fail BEFORE questCompleteView!!
+                fail = true
+                print("On Change Of in ActiveQuestView:")
+                print(fail)
+                questCompleted = true
+                print("questCompleted set to true")
+            }
         }
     }
     

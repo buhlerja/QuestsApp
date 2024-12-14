@@ -19,7 +19,6 @@
 		8315E1F02CA2176A0079E403 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EF2CA2176A0079E403 /* RootView.swift */; };
 		8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1F12CA21D580079E403 /* ProfilePage.swift */; };
 		832A938C2CCD323D00324719 /* timerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832A938B2CCD323D00324719 /* timerView.swift */; };
-		832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832A938D2CCD3CB200324719 /* QuestFailedView.swift */; };
 		8344B7052C7263B000B9216A /* addMaterials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7042C7263B000B9216A /* addMaterials.swift */; };
 		8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7062C7263EC00B9216A /* materialsStruc.swift */; };
 		8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */; };
@@ -73,7 +72,6 @@
 		8315E1EF2CA2176A0079E403 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		8315E1F12CA21D580079E403 /* ProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePage.swift; sourceTree = "<group>"; };
 		832A938B2CCD323D00324719 /* timerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timerView.swift; sourceTree = "<group>"; };
-		832A938D2CCD3CB200324719 /* QuestFailedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestFailedView.swift; sourceTree = "<group>"; };
 		8344B7042C7263B000B9216A /* addMaterials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = addMaterials.swift; sourceTree = "<group>"; };
 		8344B7062C7263EC00B9216A /* materialsStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = materialsStruc.swift; sourceTree = "<group>"; };
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
@@ -301,7 +299,6 @@
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
 				83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */,
 				83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */,
-				832A938D2CCD3CB200324719 /* QuestFailedView.swift */,
 				832A938B2CCD323D00324719 /* timerView.swift */,
 			);
 			path = SubViews;
@@ -441,7 +438,6 @@
 				8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */,
 				83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */,
 				8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */,
-				832A938E2CCD3CB200324719 /* QuestFailedView.swift in Sources */,
 				83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */,
 				83E9F0972CEBCFC7003595B8 /* Macros.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,

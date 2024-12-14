@@ -21,7 +21,7 @@ struct DBUser: Codable {
     let numWatchlistQuests: Int?
     let watchlistQuestsList: [String]? // All the quests the user might want to eventually play. Convert from quest UUID's to String
     let numQuestsFailed: Int?
-    let failedQuestsList: [QuestStruc]? // All the quests a user has failed
+    let failedQuestsList: [String]? // All the quests a user has failed
     
     init(auth: AuthDataResultModel) {
         self.userId = auth.uid
@@ -52,7 +52,7 @@ struct DBUser: Codable {
         numWatchlistQuests: Int? = 0,
         watchlistQuestsList: [String]? = nil,
         numQuestsFailed: Int? = 0,
-        failedQuestsList: [QuestStruc]? = nil
+        failedQuestsList: [String]? = nil
     ) {
         self.userId = userId
         self.email = email
@@ -104,7 +104,7 @@ struct DBUser: Codable {
         self.numWatchlistQuests = try container.decodeIfPresent(Int.self, forKey: .numWatchlistQuests)
         self.watchlistQuestsList = try container.decodeIfPresent([String].self, forKey: .watchlistQuestsList)
         self.numQuestsFailed = try container.decodeIfPresent(Int.self, forKey: .numQuestsFailed)
-        self.failedQuestsList = try container.decodeIfPresent([QuestStruc].self, forKey: .failedQuestsList)
+        self.failedQuestsList = try container.decodeIfPresent([String].self, forKey: .failedQuestsList)
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -148,6 +148,13 @@ final class UserManager {
         //decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     } ()
+    
+    enum ListType: String {
+        case watchlist = "watchlistQuestsList"
+        case created = "questsCreatedList"
+        case completed = "questsCompletedList"
+        case failed = "failedQuestsList"
+    }
     
     func createNewUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(from: user, merge: false) // No need to merge any data since we're creating a brand new database entry
@@ -204,7 +211,7 @@ final class UserManager {
         
         try await userDocument(userId: userId).updateData(dict)
         
-        if let createdQuestsList = try await getCreatedQuestIds(userId: userId) {
+        if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
             let numQuestsCreated = createdQuestsList.count
             
             // Update the numWatchlistQuests field
@@ -226,7 +233,7 @@ final class UserManager {
         
         try await userDocument(userId: userId).updateData(dict)
         
-        if let createdQuestsList = try await getCreatedQuestIds(userId: userId) {
+        if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
             let numQuestsCreated = createdQuestsList.count
             
             // Update the numWatchlistQuests field
@@ -239,34 +246,23 @@ final class UserManager {
     }
     
     func editUserQuest(quest: QuestStruc) async throws {
-        // Call a QuestManager function to actually adjust the quest in the questCollection
+        // Call a QuestManager function to actually adjust the quest in the questCollection. uploading the same ID will overwrite the previous quest with the same ID
         return try await QuestManager.shared.uploadQuest(quest: quest)
     }
     
-    func getUserWatchlistQuestIds(userId: String) async throws -> [String]? {
+    /* Overarching function used in place of getUserWatchlistQuestIds, getCreatedQuestIds, getCompletedQuestIds, getFailedQuestIds
+     that fetches the list of ID's from the user database for a given list type of watchlist, created, completed, failed */
+    func getQuestIdsFromList(userId: String, listType: ListType) async throws -> [String]? {
         let user = try await self.getUser(userId: userId)
-        if let watchlistQuestsList = user.watchlistQuestsList {
-            return watchlistQuestsList
-        } else {
-            return nil
-        }
-    }
-    
-    func getCreatedQuestIds(userId: String) async throws -> [String]? {
-        let user = try await self.getUser(userId: userId)
-        if let createdQuestsList = user.questsCreatedList {
-            return createdQuestsList
-        } else {
-            return nil
-        }
-    }
-    
-    func getCompletedQuestIds(userId: String) async throws -> [String]? {
-        let user = try await self.getUser(userId: userId)
-        if let completedQuestsList = user.questsCompletedList {
-            return completedQuestsList
-        } else {
-            return nil
+        switch listType {
+        case .completed:
+            return user.questsCompletedList
+        case .created:
+            return user.questsCreatedList
+        case .watchlist:
+            return user.watchlistQuestsList
+        case .failed:
+            return user.failedQuestsList
         }
     }
     
@@ -294,21 +290,21 @@ final class UserManager {
     
     func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
         // Get the user object
-        let watchlistQuestsList = try await getUserWatchlistQuestIds(userId: userId)
+        let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist)
         // Query Firestore for all quests with IDs in the watchlist
         return try await QuestManager.shared.getUserWatchlistQuestsFromIds(watchlistQuestsList: watchlistQuestsList)
     }
 
     func getUserCreatedQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
         // Get the user object
-        let createdQuestsList = try await getCreatedQuestIds(userId: userId)
+        let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created)
         // Query Firestore for all quests with IDs in the created list
         return try await QuestManager.shared.getUserCreatedQuestsFromIds(createdQuestsList: createdQuestsList)
     }
     
     func getUserCompletedQuestsFromIds (userId: String) async throws -> [QuestStruc]? {
         // Get the user object
-        let completedQuestsList = try await getCompletedQuestIds(userId: userId)
+        let completedQuestsList = try await getQuestIdsFromList(userId: userId, listType: .completed)
         // Query Firestore for all quests with IDs in the completed list
         return try await QuestManager.shared.getUserCompletedQuestsFromIds(completedQuestsList: completedQuestsList)
     }
@@ -326,7 +322,7 @@ final class UserManager {
             DBUser.CodingKeys.numWatchlistQuests.rawValue: FieldValue.increment(Int64(1))
         ]) */ // Doesn't work since it increments even for duplicates
         
-        if let watchlistQuestsList = try await getUserWatchlistQuestIds(userId: userId) {
+        if let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist) {
             let numWatchlistQuests = watchlistQuestsList.count
             
             // Update the numWatchlistQuests field
@@ -338,23 +334,30 @@ final class UserManager {
         print("Added Quest to watchlist successfully!")
     }
     
-    func updateUserQuestsCompletedList(userId: String, questId: String) async throws {
+    func updateUserQuestsCompletedOrFailedList(userId: String, questId: String, failed: Bool) async throws {
+        let listKey = failed ? DBUser.CodingKeys.failedQuestsList.rawValue : DBUser.CodingKeys.questsCompletedList.rawValue
+        let numberKey = failed ? DBUser.CodingKeys.numQuestsFailed.rawValue : DBUser.CodingKeys.numQuestsCompleted.rawValue
         let dict: [String:Any] = [
-            DBUser.CodingKeys.questsCompletedList.rawValue : FieldValue.arrayUnion([questId])
+            listKey : FieldValue.arrayUnion([questId])
         ]
-        // Update the questsCompletedList with the appended questID
+        // Update the questsCompletedList or questsFailedList with the appended questID
         try await userDocument(userId: userId).updateData(dict)
         
-        if let completedQuestsList = try await getCompletedQuestIds(userId: userId) {
-            let numCompletedQuests = completedQuestsList.count
+        let listType:ListType = failed ? .failed : .completed
+        if let questsList = try await getQuestIdsFromList(userId: userId, listType: listType) {
+            let numQuests = questsList.count
             
-            // Update the numCompletedQuests field
+            // Update the numCompletedQuests or numFailedQuests field
             try await userDocument(userId: userId).updateData([
-                DBUser.CodingKeys.numQuestsCompleted.rawValue : numCompletedQuests
+                numberKey : numQuests
             ])
+            if listType == .completed {
+                print("Added Quest to completed list successfully!")
+            }
+            else if listType == .failed {
+                print("Added Quest to failed list successfully")
+            }
         }
-        
-        print("Added Quest to completed list successfully!")
     }
     
 }
