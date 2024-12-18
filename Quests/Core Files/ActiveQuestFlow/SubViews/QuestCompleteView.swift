@@ -42,11 +42,11 @@ struct QuestCompleteView: View {
                     // Can do onAppear in this screen (if it works with the fail parameter) or directly in an ActiveQuestViewModel
                     // Save updated quest information to the database!!
                     // ****
-                    // 1. Rating info
+                    // 1. Quest Rating info
                     if let rating = rating {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
                     }
-                    // 2. Fail number, pass number, total num times played, and completion rate
+                    // 2. Quest fail number, pass number, total num times played, and completion rate
                     let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
                     viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
                     // 3. Add to user's completed or failed quests list

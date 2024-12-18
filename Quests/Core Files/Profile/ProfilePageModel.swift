@@ -17,18 +17,18 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var completedQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
+    // FINISH ME!!!!!!
     func removeUserQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
-            // Remove from user database
-            try await UserManager.shared.removeUserQuest(userId: user.userId, questId: quest.id.uuidString)
-            // Add calls to the other lists to remove from
-            // ADD CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (or build into the function that is already called) ///////////////////
+            // Remove from ALL databases for ALL users. THIS FUNCTION CALL IS UNFINISHED!!!!!!!!!!!
+            try await UserManager.shared.deleteQuest(questId: quest.id.uuidString) // WILL NEED TO BE A RELATIONSHIP MANAGER CALL PROLLY
             
+            // Only do the following if the above is successful:
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
             // Get all quest lists and the updated user DB again:
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            self.user = try await UserManager.shared.getUser(userId: user.userId) // No need to do this if user quest relationships not stored in user DB: not going to be updating the user DB at all
             try await getCompletedQuests()
             try await getFailedQuests()
             try await getWatchlistQuests()
@@ -72,7 +72,8 @@ final class ProfileViewModel: ObservableObject {
     func getCreatedQuests() async throws {
         guard let user else { return }
         Task {
-            self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .created)
+            //self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .created) OLD FUNCTION CALL
+            self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .created)
         }
     }
     

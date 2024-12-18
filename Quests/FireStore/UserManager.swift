@@ -149,49 +149,44 @@ final class UserManager {
         return decoder
     } ()
     
-    enum ListType: String {
-        case watchlist = "watchlistQuestsList"
-        case created = "questsCreatedList"
-        case completed = "questsCompletedList"
-        case failed = "failedQuestsList"
-    }
-    
     func createNewUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(from: user, merge: false) // No need to merge any data since we're creating a brand new database entry
     }
     
+    // OLD VERSION OF THE FUNCTION
     /*func createNewUser(auth: AuthDataResultModel) async throws {
-        var userData: [String:Any] = [
-            "user_id" : auth.uid,
-            "date_created" : Timestamp(),
-        ]
-        if let email = auth.email {
-            userData["email"] = email // Optional parameter. Default is nil
-        }
-        if let photoUrl = auth.photoUrl {
-            userData["photo_url"] = photoUrl
-        }
-        
-        try await userDocument(userId: auth.uid).setData(userData, merge: false) // No need to merge any data since we're creating a brand new database entry
-    }*/
+     var userData: [String:Any] = [
+     "user_id" : auth.uid,
+     "date_created" : Timestamp(),
+     ]
+     if let email = auth.email {
+     userData["email"] = email // Optional parameter. Default is nil
+     }
+     if let photoUrl = auth.photoUrl {
+     userData["photo_url"] = photoUrl
+     }
+     
+     try await userDocument(userId: auth.uid).setData(userData, merge: false) // No need to merge any data since we're creating a brand new database entry
+     }*/
     
     func getUser(userId: String) async throws -> DBUser { // Must be async because this function pings the server
         try await userDocument(userId: userId).getDocument(as: DBUser.self)
     }
     
+    // OLD VERSION OF THE FUNCTION
     /*func getUser(userId: String) async throws -> DBUser { // Must be async because this function pings the server
-        let snapshot = try await userDocument(userId: userId).getDocument()
-        
-        guard let data = snapshot.data(), let userId = data["user_id"] as? String else { // Convert to a dictionary in this line
-            throw URLError(.badServerResponse)
-        }
-
-        let email = data["email"] as? String
-        let photoUrl = data["photo_url"] as? String
-        let dateCreated = data["date_created"] as? Date
-        
-        return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
-    } */
+     let snapshot = try await userDocument(userId: userId).getDocument()
+     
+     guard let data = snapshot.data(), let userId = data["user_id"] as? String else { // Convert to a dictionary in this line
+     throw URLError(.badServerResponse)
+     }
+     
+     let email = data["email"] as? String
+     let photoUrl = data["photo_url"] as? String
+     let dateCreated = data["date_created"] as? Date
+     
+     return DBUser(userId: userId, email: email, photoUrl: photoUrl, dateCreated: dateCreated)
+     } */
     
     func updateUserPremiumStatus(userId: String, isPremium: Bool) async throws {
         let data: [String:Any] = [
@@ -203,8 +198,10 @@ final class UserManager {
     
     func addUserQuest(userId: String, questId: String) async throws {
         /*guard let data = try? encoder.encode(quest) else {
-            throw URLError(.badURL)
-        }*/
+         throw URLError(.badURL)
+         }*/
+        
+        // 1. The OLD WAY of adding quests to a list under the user DB
         let dict: [String:Any] = [
             DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([questId])
         ]
@@ -220,36 +217,49 @@ final class UserManager {
             ])
         }
         
+        // 2. The NEW WAY of adding quests to a relationship table in a new collection. Eventually, remove call to
+        // this file altogether and call the relationship manager directly through the viewModel
+        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: .created)
+        // Find a way to increment the number of entries in the DB (e.g. numQuestsCreated)
+        
         print("Added Quest successfully!")
     }
     
-    func removeUserQuest(userId: String, questId: String) async throws {
-        /*guard let data = try? encoder.encode(quest) else {
-            throw URLError(.badURL)
-        }*/
-        let dict: [String:Any] = [
-            DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([questId])
-        ]
+    // NOT NEEDED ANYMORE. REPLACED WITH the all-encompassing deleteQuest seen below, or another function in UserQuestRelationshipManager.
+    /*func removeUserQuest(userId: String, questId: String) async throws {
+     /*guard let data = try? encoder.encode(quest) else {
+      throw URLError(.badURL)
+      }*/
+     let dict: [String:Any] = [
+     DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayRemove([questId])
+     ]
+     
+     try await userDocument(userId: userId).updateData(dict)
+     
+     if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
+     let numQuestsCreated = createdQuestsList.count
+     
+     if numQuestsCreated == 0 {
+     try await userDocument(userId: userId).updateData([
+     DBUser.CodingKeys.questsCreatedList.rawValue: FieldValue.delete(),
+     DBUser.CodingKeys.numQuestsCreated.rawValue: FieldValue.delete()
+     ])
+     } else {
+     // Update the numWatchlistQuests field
+     try await userDocument(userId: userId).updateData([
+     DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
+     ])
+     }
+     }
+     
+     print("Removed Quest successfully!")
+     }*/
+    
+    // FINISH ME!!
+    // Functionality will be most likely moved to the UserQuestRelationshipManager. Will probably delete this prototype.
+    func deleteQuest(questId: String) async throws { // COMPLETE THIS FUNCTION!!!!!!
+        // For ALL users for ALL lists, remove reference to the ID
         
-        try await userDocument(userId: userId).updateData(dict)
-        
-        if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
-            let numQuestsCreated = createdQuestsList.count
-            
-            if numQuestsCreated == 0 {
-                try await userDocument(userId: userId).updateData([
-                    DBUser.CodingKeys.questsCreatedList.rawValue: FieldValue.delete(),
-                    DBUser.CodingKeys.numQuestsCreated.rawValue: FieldValue.delete()
-                ])
-            } else {
-                // Update the numWatchlistQuests field
-                try await userDocument(userId: userId).updateData([
-                    DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
-                ])
-            }
-        }
-        
-        print("Removed Quest successfully!")
     }
     
     func removeWatchlistQuest(userId: String, questId: String) async throws {
@@ -284,9 +294,10 @@ final class UserManager {
         return try await QuestManager.shared.uploadQuest(quest: quest)
     }
     
+    // TO BE DELETEED UPON DATABASE REFACTOR
     /* Overarching function used in place of getUserWatchlistQuestIds, getCreatedQuestIds, getCompletedQuestIds, getFailedQuestIds
      that fetches the list of ID's from the user database for a given list type of watchlist, created, completed, failed */
-    func getQuestIdsFromList(userId: String, listType: ListType) async throws -> [String]? {
+    func getQuestIdsFromList(userId: String, listType: RelationshipType) async throws -> [String]? {
         let user = try await self.getUser(userId: userId)
         switch listType {
         case .completed:
@@ -300,29 +311,17 @@ final class UserManager {
         }
     }
     
-    /*func getUserWatchlistQuestsFromIds(userId: String) async throws -> [QuestStruc]? {
-        // 1. Get the user from the DB
-        let user = try await self.getUser(userId: userId)
-       
-        // 2. Check if the user has a watchlist
-        guard let watchlistQuestsList = user.watchlistQuestsList else {
-            // No watchlist quests, return nil
-            return nil
-        }
-        
-        var watchlistQuestStrucs: [QuestStruc] = [] // Empty array to store the matching quests in
-        
-        // 4. Iterate through the IDs in the watchlist
-        for questId in watchlistQuestsList {
-            // 5. Fetch the corresponding QuestStruc from the database
-            let quest = try await QuestManager.shared.getQuest(questId: questId)
-            watchlistQuestStrucs.append(quest)
-        }
-        
-        return watchlistQuestStrucs.isEmpty ? nil : watchlistQuestStrucs
-    }*/
+    func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
+        // Get the questIds associated with the user of a certain list type (created, completed, failed, watchlist)
+        let questIdList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType)
+        print("Successfully returned from userQuestRelationshipManager.shared.getUserQuestIdsByType")
+        print(questIdList ?? "Nothing here")
+        // Get the Quest Strucs associated with the IDs by querying firestore
+        return try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
+    }
 
-    func getUserQuestStrucsFromIds(userId: String, listType: ListType) async throws -> [QuestStruc]? {
+    // THIS FUNCTION IS TO BE REPLACED BY THE FUNCTION GETUSERQUESTSTRUCS
+    func getUserQuestStrucsFromIds(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
         // Get the user object
         let questIdList = try await getQuestIdsFromList(userId: userId, listType: listType)
         // Query Firestore for all quests in the quest collection with these IDs
@@ -362,7 +361,7 @@ final class UserManager {
         // Update the questsCompletedList or questsFailedList with the appended questID
         try await userDocument(userId: userId).updateData(dict)
         
-        let listType:ListType = failed ? .failed : .completed
+        let listType:RelationshipType = failed ? .failed : .completed
         if let questsList = try await getQuestIdsFromList(userId: userId, listType: listType) {
             let numQuests = questsList.count
             

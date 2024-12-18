@@ -227,7 +227,6 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
         // Access the entire quests collection
         let snapshot = try await self.getDocuments()
         print("Snapshot contains \(snapshot.documents.count) documents.")
-        // ORIGINAL CODE:
         let quests = try snapshot.documents.map({ document in
             try document.data(as: T.self)
         })
