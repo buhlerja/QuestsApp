@@ -57,7 +57,7 @@ struct ProfilePage: View {
                                                 .cornerRadius(8)
                                         })
                                         Button(action: {
-                                            viewModel.removeUserQuest(quest: createdQuest)
+                                            viewModel.deleteQuest(quest: createdQuest)
                                         }, label: {
                                             Text("Delete")
                                                 .font(.headline)

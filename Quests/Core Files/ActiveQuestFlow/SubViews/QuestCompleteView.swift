@@ -46,11 +46,11 @@ struct QuestCompleteView: View {
                     if let rating = rating {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
                     }
-                    // 2. Quest fail number, pass number, total num times played, and completion rate
+                    // 2. Update Quest fail number, pass number, total num times played, and completion rate
                     let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
                     viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
                     // 3. Add to user's completed or failed quests list
-                    viewModel.updateUserQuestsCompletedOrFailedList(questId: questJustCompleted.id.uuidString, failed: failed)
+                    viewModel.updateUserQuestsCompletedOrFailed(questId: questJustCompleted.id.uuidString, failed: failed)
                    
                     showActiveQuest = false
                 }) {

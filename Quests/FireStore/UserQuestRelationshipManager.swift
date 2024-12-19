@@ -82,6 +82,11 @@ final class UserQuestRelationshipManager {
         try await userQuestRelationshipDocument(documentId: documentId).setData(data, merge: false)
     }
     
+    func removeRelationship(userId: String, questId: String, relationshipType: RelationshipType) async throws {
+        let documentId = "\(userId)_\(questId)_\(relationshipType.rawValue)"
+        try await userQuestRelationshipDocument(documentId: documentId).delete()
+    }
+    
     func getUserQuestIdsByType(userId: String, listType: RelationshipType) async throws -> [String]? {
         let relationshipTableEntries = try await userQuestRelationshipCollection
             .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)

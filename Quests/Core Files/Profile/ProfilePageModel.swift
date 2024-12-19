@@ -18,7 +18,7 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
     // FINISH ME!!!!!!
-    func removeUserQuest(quest: QuestStruc) {
+    func deleteQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
             // Remove from ALL databases for ALL users. THIS FUNCTION CALL IS UNFINISHED!!!!!!!!!!!
@@ -51,28 +51,28 @@ final class ProfileViewModel: ObservableObject {
     func getCompletedQuests() async throws {
         guard let user else { return }
         Task {
-            self.completedQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .completed)
+            self.completedQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .completed)
         }
     }
     
     func getFailedQuests() async throws {
         guard let user else { return }
         Task {
-            self.failedQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .failed)
+            self.failedQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .failed)
         }
     }
     
     func getWatchlistQuests() async throws {
         guard let user else { return }
         Task {
-            self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .watchlist)
+            //self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .watchlist) // OLD FUNCTION CALL
+            self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .watchlist)
         }
     }
     
     func getCreatedQuests() async throws {
         guard let user else { return }
         Task {
-            //self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .created) OLD FUNCTION CALL
             self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .created)
         }
     }

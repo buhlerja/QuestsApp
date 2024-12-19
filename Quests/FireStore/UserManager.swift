@@ -14,14 +14,14 @@ struct DBUser: Codable {
     let photoUrl: String? // Optional
     let dateCreated: Date? // Optional (but isn't really optional)
     let isPremium: Bool?
-    let questsCreatedList: [String]? // Stores all the quests a user has created
+    //let questsCreatedList: [String]? // Stores all the quests a user has created
     let numQuestsCreated: Int? // The number of quests a user has created
     let numQuestsCompleted: Int? // Optional (but isn't really optional)
-    let questsCompletedList: [String]? // The list of quests a user has successfully completed
+    //let questsCompletedList: [String]? // The list of quests a user has successfully completed
     let numWatchlistQuests: Int?
-    let watchlistQuestsList: [String]? // All the quests the user might want to eventually play. Convert from quest UUID's to String
+    //let watchlistQuestsList: [String]? // All the quests the user might want to eventually play. Convert from quest UUID's to String
     let numQuestsFailed: Int?
-    let failedQuestsList: [String]? // All the quests a user has failed
+    //let failedQuestsList: [String]? // All the quests a user has failed
     
     init(auth: AuthDataResultModel) {
         self.userId = auth.uid
@@ -29,14 +29,10 @@ struct DBUser: Codable {
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
         self.isPremium = false
-        self.questsCreatedList = nil
         self.numQuestsCreated = 0
         self.numQuestsCompleted = 0
-        self.questsCompletedList = nil
         self.numWatchlistQuests = 0
-        self.watchlistQuestsList = nil
         self.numQuestsFailed = 0
-        self.failedQuestsList = nil
     }
     
     init(
@@ -45,28 +41,20 @@ struct DBUser: Codable {
         photoUrl: String? = nil,
         dateCreated: Date? = nil,
         isPremium: Bool? = nil,
-        questsCreatedList: [String]? = nil,
         numQuestsCreated: Int? = 0,
         numQuestsCompleted: Int? = 0,
-        questsCompletedList: [String]? = nil,
         numWatchlistQuests: Int? = 0,
-        watchlistQuestsList: [String]? = nil,
-        numQuestsFailed: Int? = 0,
-        failedQuestsList: [String]? = nil
+        numQuestsFailed: Int? = 0
     ) {
         self.userId = userId
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
         self.isPremium = isPremium
-        self.questsCreatedList = questsCreatedList
         self.numQuestsCreated = numQuestsCreated
         self.numQuestsCompleted = numQuestsCompleted
-        self.questsCompletedList = questsCompletedList
         self.numWatchlistQuests = numWatchlistQuests
-        self.watchlistQuestsList = watchlistQuestsList
         self.numQuestsFailed = numQuestsFailed
-        self.failedQuestsList = failedQuestsList
     }
     
     /*mutating func togglePremiumStatus() {
@@ -80,14 +68,10 @@ struct DBUser: Codable {
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
         case isPremium = "is_premium"
-        case questsCreatedList = "quests_created_list"
         case numQuestsCreated = "num_quests_created"
         case numQuestsCompleted = "num_quests_completed"
-        case questsCompletedList = "quests_completed_list"
         case numWatchlistQuests = "num_watchlist_quests"
-        case watchlistQuestsList = "watchlist_quests_list"
         case numQuestsFailed = "num_quests_failed"
-        case failedQuestsList = "failed_quests_list"
     }
     
     init(from decoder: any Decoder) throws {
@@ -97,14 +81,10 @@ struct DBUser: Codable {
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium)
-        self.questsCreatedList = try container.decodeIfPresent([String].self, forKey: .questsCreatedList)
         self.numQuestsCreated = try container.decodeIfPresent(Int.self, forKey: .numQuestsCreated)
         self.numQuestsCompleted = try container.decodeIfPresent(Int.self, forKey: .numQuestsCompleted)
-        self.questsCompletedList = try container.decodeIfPresent([String].self, forKey: .questsCompletedList)
         self.numWatchlistQuests = try container.decodeIfPresent(Int.self, forKey: .numWatchlistQuests)
-        self.watchlistQuestsList = try container.decodeIfPresent([String].self, forKey: .watchlistQuestsList)
         self.numQuestsFailed = try container.decodeIfPresent(Int.self, forKey: .numQuestsFailed)
-        self.failedQuestsList = try container.decodeIfPresent([String].self, forKey: .failedQuestsList)
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -114,14 +94,10 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.isPremium, forKey: .isPremium)
-        try container.encodeIfPresent(self.questsCreatedList, forKey: .questsCreatedList)
         try container.encodeIfPresent(self.numQuestsCreated, forKey: .numQuestsCreated)
         try container.encodeIfPresent(self.numQuestsCompleted, forKey: .numQuestsCompleted)
-        try container.encodeIfPresent(self.questsCompletedList, forKey: .questsCompletedList)
         try container.encodeIfPresent(self.numWatchlistQuests, forKey: .numWatchlistQuests)
-        try container.encodeIfPresent(self.watchlistQuestsList, forKey: .watchlistQuestsList)
         try container.encodeIfPresent(self.numQuestsFailed, forKey: .numQuestsFailed)
-        try container.encodeIfPresent(self.failedQuestsList, forKey: .failedQuestsList)
     }
     
 }
@@ -202,25 +178,23 @@ final class UserManager {
          }*/
         
         // 1. The OLD WAY of adding quests to a list under the user DB
-        let dict: [String:Any] = [
+        /*let dict: [String:Any] = [
             DBUser.CodingKeys.questsCreatedList.rawValue : FieldValue.arrayUnion([questId])
         ]
         
-        try await userDocument(userId: userId).updateData(dict)
+        try await userDocument(userId: userId).updateData(dict) */
         
-        if let createdQuestsList = try await getQuestIdsFromList(userId: userId, listType: .created) {
+        // 2. The NEW WAY of adding quests to a relationship table in a new collection.
+        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: .created)
+        
+        // Increment numQuestsCreated in the user DB
+        if let createdQuestsList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: .created) {
             let numQuestsCreated = createdQuestsList.count
             
-            // Update the numWatchlistQuests field
             try await userDocument(userId: userId).updateData([
                 DBUser.CodingKeys.numQuestsCreated.rawValue : numQuestsCreated
             ])
         }
-        
-        // 2. The NEW WAY of adding quests to a relationship table in a new collection. Eventually, remove call to
-        // this file altogether and call the relationship manager directly through the viewModel
-        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: .created)
-        // Find a way to increment the number of entries in the DB (e.g. numQuestsCreated)
         
         print("Added Quest successfully!")
     }
@@ -263,14 +237,15 @@ final class UserManager {
     }
     
     func removeWatchlistQuest(userId: String, questId: String) async throws {
-        let dict: [String:Any] = [
+        // 1. OLD WAY OF REMOVING WATCHLIST QUEST
+        /*let dict: [String:Any] = [
             DBUser.CodingKeys.watchlistQuestsList.rawValue : FieldValue.arrayRemove([questId])
         ]
         
         try await userDocument(userId: userId).updateData(dict)
-        print("Successfully removed from watchlist")
+        print("Successfully removed from watchlist") */
         
-        if let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist) {
+        /*if let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist) {
             let numWatchlistQuests = watchlistQuestsList.count
             
             if numWatchlistQuests == 0 { // Set to nil by deleting from the database!!
@@ -285,8 +260,21 @@ final class UserManager {
                     DBUser.CodingKeys.numWatchlistQuests.rawValue : numWatchlistQuests
                 ])
             }
+        }*/
+        
+        // 2. NEW WAY OF REMOVING WATCHLIST QUEST, USING USER QUEST RELATIONSHIP MANAGER
+        try await UserQuestRelationshipManager.shared.removeRelationship(userId: userId, questId: questId, relationshipType: .watchlist)
+        
+        // If successful, update the number of watchlist quests remaining
+        if let watchlistQuestsList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: .watchlist) {
+            let numWatchlistQuests = watchlistQuestsList.count
+            
+            try await userDocument(userId: userId).updateData([
+                DBUser.CodingKeys.numWatchlistQuests.rawValue : numWatchlistQuests
+            ])
         }
         print("Successfully updated watchlist quests amount")
+        
     }
     
     func editUserQuest(quest: QuestStruc) async throws {
@@ -297,7 +285,7 @@ final class UserManager {
     // TO BE DELETEED UPON DATABASE REFACTOR
     /* Overarching function used in place of getUserWatchlistQuestIds, getCreatedQuestIds, getCompletedQuestIds, getFailedQuestIds
      that fetches the list of ID's from the user database for a given list type of watchlist, created, completed, failed */
-    func getQuestIdsFromList(userId: String, listType: RelationshipType) async throws -> [String]? {
+    /*func getQuestIdsFromList(userId: String, listType: RelationshipType) async throws -> [String]? {
         let user = try await self.getUser(userId: userId)
         switch listType {
         case .completed:
@@ -309,7 +297,7 @@ final class UserManager {
         case .failed:
             return user.failedQuestsList
         }
-    }
+    }*/
     
     func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
         // Get the questIds associated with the user of a certain list type (created, completed, failed, watchlist)
@@ -320,30 +308,30 @@ final class UserManager {
         return try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
     }
 
-    // THIS FUNCTION IS TO BE REPLACED BY THE FUNCTION GETUSERQUESTSTRUCS
+    /*// THIS FUNCTION IS TO BE REPLACED BY THE FUNCTION GETUSERQUESTSTRUCS
     func getUserQuestStrucsFromIds(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
         // Get the user object
         let questIdList = try await getQuestIdsFromList(userId: userId, listType: listType)
         // Query Firestore for all quests in the quest collection with these IDs
         return try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
-    }
+    }*/
     
     func addUserWatchlistQuest(userId: String, questId: String) async throws {
-        let dict: [String:Any] = [
+        // 1. Old way of uploading watchlist quests directly to the user object
+        /*let dict: [String:Any] = [
             DBUser.CodingKeys.watchlistQuestsList.rawValue : FieldValue.arrayUnion([questId])
         ]
         // Update the watchlistQuestsList with the appended questID
-        try await userDocument(userId: userId).updateData(dict)
+        try await userDocument(userId: userId).updateData(dict) */
         
-        // Update the count of quests in the list
-        /*try await userDocument(userId: userId).updateData([
-            DBUser.CodingKeys.numWatchlistQuests.rawValue: FieldValue.increment(Int64(1))
-        ]) */ // Doesn't work since it increments even for duplicates
+        // 2. The NEW WAY of adding quests to a relationship table in a new collection.
+        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: .watchlist)
         
-        if let watchlistQuestsList = try await getQuestIdsFromList(userId: userId, listType: .watchlist) {
+        // ONLY DO THIS IF THE ABOVE CALL SUCCEEDS
+        // Increment numWatchlistQuests in the user DB
+        if let watchlistQuestsList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: .watchlist) {
             let numWatchlistQuests = watchlistQuestsList.count
             
-            // Update the numWatchlistQuests field
             try await userDocument(userId: userId).updateData([
                 DBUser.CodingKeys.numWatchlistQuests.rawValue : numWatchlistQuests
             ])
@@ -352,19 +340,25 @@ final class UserManager {
         print("Added Quest to watchlist successfully!")
     }
     
-    func updateUserQuestsCompletedOrFailedList(userId: String, questId: String, failed: Bool) async throws {
-        let listKey = failed ? DBUser.CodingKeys.failedQuestsList.rawValue : DBUser.CodingKeys.questsCompletedList.rawValue
-        let numberKey = failed ? DBUser.CodingKeys.numQuestsFailed.rawValue : DBUser.CodingKeys.numQuestsCompleted.rawValue
+    func updateUserQuestsCompletedOrFailed(userId: String, questId: String, failed: Bool) async throws {
+        // OLD CODE USED BEFORE THE ADDITION OF THE USER QUESTS RELATIONSHIP TABLE
+        /*let listKey = failed ? DBUser.CodingKeys.failedQuestsList.rawValue : DBUser.CodingKeys.questsCompletedList.rawValue
         let dict: [String:Any] = [
             listKey : FieldValue.arrayUnion([questId])
         ]
         // Update the questsCompletedList or questsFailedList with the appended questID
         try await userDocument(userId: userId).updateData(dict)
+        */
         
-        let listType:RelationshipType = failed ? .failed : .completed
-        if let questsList = try await getQuestIdsFromList(userId: userId, listType: listType) {
+        // Code that utilizes the relationship table
+        let listType: RelationshipType = failed ? .failed : .completed
+        
+        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: listType)
+        
+        let numberKey = failed ? DBUser.CodingKeys.numQuestsFailed.rawValue : DBUser.CodingKeys.numQuestsCompleted.rawValue
+        
+        if let questsList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType) {
             let numQuests = questsList.count
-            
             // Update the numCompletedQuests or numFailedQuests field
             try await userDocument(userId: userId).updateData([
                 numberKey : numQuests

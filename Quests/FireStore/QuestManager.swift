@@ -7,6 +7,10 @@
 
 // Manager to handle quest related DB queries.
 
+// NEED TO HANDLE ERROR: QUEST IS DELETED OR HIDDEN WHILE A USER IS COMPLETING IT ON THEIR LOCAL COPY.
+// THEN THE APP TRIES TO UPLOAD UPDATED QUEST DATA BACK TO DB FOR A QUEST ID THAT IS NO LONGER VALID.
+// NEED TO SHOW USER "Error: Quest has been deleted"
+
 import Foundation
 import FirebaseFirestore
 import CoreLocation
