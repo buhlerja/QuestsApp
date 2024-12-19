@@ -17,18 +17,19 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var completedQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
-    // FINISH ME!!!!!!
     func deleteQuest(quest: QuestStruc) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
-            // Remove from ALL databases for ALL users. THIS FUNCTION CALL IS UNFINISHED!!!!!!!!!!!
-            try await UserManager.shared.deleteQuest(questId: quest.id.uuidString) // WILL NEED TO BE A RELATIONSHIP MANAGER CALL PROLLY
+            // Remove from ALL databases for ALL users. Wipe from all users associated with this quest in the relationship database,
+            // and update the number of quests associated with each user's lists
+            
+            // Call relationship manager to delete all relationships involving the quest
+            try await UserQuestRelationshipManager.shared.deleteQuest(questId: quest.id.uuidString)
             
             // Only do the following if the above is successful:
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
-            // Get all quest lists and the updated user DB again:
-            self.user = try await UserManager.shared.getUser(userId: user.userId) // No need to do this if user quest relationships not stored in user DB: not going to be updating the user DB at all
+            // Refresh all lists
             try await getCompletedQuests()
             try await getFailedQuests()
             try await getWatchlistQuests()
@@ -40,10 +41,7 @@ final class ProfileViewModel: ObservableObject {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
             // Remove from user's watchlist
-            try await UserManager.shared.removeWatchlistQuest(userId: user.userId, questId: quest.id.uuidString)
-            print("User Manager returns")
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
-            print("Fetched user again")
+            try await UserQuestRelationshipManager.shared.removeRelationship(userId: user.userId, questId: quest.id.uuidString, relationshipType: .watchlist)
             try await getWatchlistQuests() // Reload the panel on the user's profile screen
         }
     }
@@ -119,6 +117,7 @@ final class ProfileViewModel: ObservableObject {
         try await AuthenticationManager.shared.updatePassword(password: password)
     }
     
+    // ADD CODE TO REMOVE ALL USER DATA!!!!!
     func deleteAccount() async throws {
         try await AuthenticationManager.shared.delete()
     }

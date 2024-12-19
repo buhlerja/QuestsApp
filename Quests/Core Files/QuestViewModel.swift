@@ -105,10 +105,7 @@ final class QuestViewModel: ObservableObject {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
             // Add to relationship database
-            try await UserManager.shared.addUserWatchlistQuest(userId: user.userId, questId: questId)
-            
-            // Get the user object since numWatchlistQuests is updated
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            try await UserQuestRelationshipManager.shared.addRelationship(userId: user.userId, questId: questId, relationshipType: .watchlist)
             print("Successfully added to watchlist")
         }
     }

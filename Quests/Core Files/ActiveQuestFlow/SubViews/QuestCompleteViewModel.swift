@@ -24,11 +24,9 @@ final class QuestCompleteViewModel: ObservableObject {
     func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {
-            // Add to user database
-            try await UserManager.shared.updateUserQuestsCompletedOrFailed(userId: user.userId, questId: questId, failed: failed)
-            
-            // Still need to call as the number of completed or failed quests is still housed in the user DB
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
+            // Add to relationship database
+            let listType: RelationshipType = failed ? .failed : .completed
+            try await UserQuestRelationshipManager.shared.addRelationship(userId: user.userId, questId: questId, relationshipType: listType)
             
             print("Successfully returned from 'updateUserQuestsCompletedOrFailedList'")
         }

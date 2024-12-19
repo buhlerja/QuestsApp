@@ -22,14 +22,11 @@ final class QuestCreateViewModel: ObservableObject {
         // Add the quest to the USER database AND to the QUESTS database
         Task {
             // Add the quest ID, User ID with "created" relationship to the relationship table
-            try await UserManager.shared.addUserQuest(userId: user.userId, questId: quest.id.uuidString)
+            try await UserQuestRelationshipManager.shared.addRelationship(userId: user.userId, questId: quest.id.uuidString, relationshipType: .created)
             
             // During error handling: only perform the following if the above succeeds
             // Add to quest database
             try await QuestManager.shared.uploadQuest(quest: quest)
-            
-            // Still need to fetch the user DB since numQuestsCreated is updated
-            self.user = try await UserManager.shared.getUser(userId: user.userId)
         }
     }
     
