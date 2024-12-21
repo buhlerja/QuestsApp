@@ -36,21 +36,10 @@ struct QuestCompleteView: View {
                 Text("Stats:")
                 Spacer()
                 Button(action: {
-                    // ****
-                    // DESIGN NOTE: should probably do this directly after the quest ends in case the user turns off their phone
-                    // because the quest info will not save to DB UNLESS they actively close this screen.
-                    // Can do onAppear in this screen (if it works with the fail parameter) or directly in an ActiveQuestViewModel
-                    // Save updated quest information to the database!!
-                    // ****
-                    // 1. Quest Rating info
+                    // Update quest rating info
                     if let rating = rating {
                         viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
                     }
-                    // 2. Update Quest fail number, pass number, total num times played, and completion rate
-                    let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
-                    viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
-                    // 3. Add to user's completed or failed quests list
-                    viewModel.updateUserQuestsCompletedOrFailed(questId: questJustCompleted.id.uuidString, failed: failed)
                    
                     showActiveQuest = false
                 }) {
@@ -82,8 +71,15 @@ struct QuestCompleteView: View {
             try? await viewModel.loadCurrentUser()
         }
         .onAppear {
-            print("From quest complete view: ")
-            print(failed)
+            // 1. Set hidden field to false if not a recurring quest and it was completed successfully
+            if questJustCompleted.supportingInfo.recurring == false && !failed { // watch for bug with the value of failed
+                viewModel.hideQuest(questId: questJustCompleted.id.uuidString)
+            }
+            // 2. Update Quest fail number, pass number, total num times played, and completion rate
+            let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
+            viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
+            // 3. Add to user's completed or failed quests list
+            viewModel.updateUserQuestsCompletedOrFailed(questId: questJustCompleted.id.uuidString, failed: failed) // NOT WORKING!!!!!!!!!!!!!
         }
     }
     

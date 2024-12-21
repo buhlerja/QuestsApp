@@ -11,7 +11,8 @@ struct SupportingInfoView: View {
     @Binding var supportingInfo: SupportingInfoStruc
     @State private var showAddMaterials = false
     @State private var addTreasureValue = true
-    @State private var costToolTip = false
+    //@State private var costToolTip = false // UNUSED VARIABLE
+    @State private var recurringToolTip = false
     
     @State private var totalLengthHours = 0
     @State private var totalLengthMinutes = 0
@@ -140,10 +141,20 @@ struct SupportingInfoView: View {
                 }
                 
                 Toggle(isOn: $supportingInfo.recurring) {
-                    Text("Recurring quest?")
+                    Button {
+                        recurringToolTip.toggle()
+                    } label : {
+                        HStack {
+                            Text("Recurring Quest?")
+                            Image(systemName: "questionmark.circle.fill")
+                            Spacer()
+                        }
+                    }
                 }
-                Text("A recurring quest may be completed repeatedly. A non-recurring quest may only be completed once. Non-recurring quests may involve treasure that is found and taken at the end of the quest by the adventurer.")
-                    .font(.footnote)
+                if recurringToolTip {
+                    Text("A recurring quest may be completed repeatedly without additional setup. A non-recurring quest may only be completed once, and is automatically hidden at the end of a successful completion. Non-recurring quests may involve treasure that is found and taken at the end of the quest by the adventurer, for example. Non-recurring quests can be unhidden by the owner once they are reset.")
+                        .font(.footnote)
+                }
 
                 /*Toggle(isOn: $verifyPhotos) {
                     Text("Verify Submitted Photos?")

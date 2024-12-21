@@ -30,10 +30,32 @@ final class ProfileViewModel: ObservableObject {
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
             // Refresh all lists
+            try await getCreatedQuests()
             try await getCompletedQuests()
             try await getFailedQuests()
             try await getWatchlistQuests()
+        }
+    }
+    
+    func hideQuest(questId: String) {
+        Task {
+            try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true)
+            // Refresh all lists
             try await getCreatedQuests()
+            try await getCompletedQuests()
+            try await getFailedQuests()
+            try await getWatchlistQuests()
+        }
+    }
+    
+    func unhideQuest(questId: String) {
+        Task {
+            try await QuestManager.shared.setQuestHidden(questId: questId, hidden: false)
+            // Refresh all lists
+            try await getCreatedQuests()
+            try await getCompletedQuests()
+            try await getFailedQuests()
+            try await getWatchlistQuests()
         }
     }
     

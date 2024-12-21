@@ -21,6 +21,12 @@ final class QuestCompleteViewModel: ObservableObject {
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
     
+    func hideQuest(questId: String) {
+        Task {
+            try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true)
+        }
+    }
+    
     func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) {
         guard let user else { return } // Make sure the user is logged in or authenticated
         Task {

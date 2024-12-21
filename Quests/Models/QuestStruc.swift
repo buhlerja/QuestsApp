@@ -13,17 +13,19 @@ struct QuestStruc: Identifiable, Codable {
     var coordinateStart: CLLocationCoordinate2D? = nil
     var title: String
     var description: String
+    var hidden: Bool
     //var theme: Theme
     var objectiveCount: Int
     var objectives: [ObjectiveStruc] = [] // Initially an empty array
     var supportingInfo: SupportingInfoStruc
     var metaData: QuestMetaData 
     
-    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc, metaData: QuestMetaData) {
+    init(id: UUID = UUID(), coordinateStart: CLLocationCoordinate2D? = nil, title: String, description: String, hidden: Bool = false, objectiveCount: Int = 0, objectives: [ObjectiveStruc] = [], supportingInfo: SupportingInfoStruc, metaData: QuestMetaData) {
         self.id = id
         self.coordinateStart = coordinateStart
         self.title = title
         self.description = description
+        self.hidden = hidden
         //self.theme = theme
         self.objectiveCount = objectiveCount
         self.objectives = objectives
@@ -38,6 +40,7 @@ struct QuestStruc: Identifiable, Codable {
         case startingLocLongitude = "starting_loc_longitude"
         case title
         case description
+        case hidden
         case objectiveCount = "objective_count"
         case objectives
         case supportingInfo = "supporting_info"
@@ -58,6 +61,7 @@ struct QuestStruc: Identifiable, Codable {
         }
         self.title = try container.decode(String.self, forKey: .title)
         self.description = try container.decode(String.self, forKey: .description)
+        self.hidden = try container.decode(Bool.self, forKey: .hidden)
         self.objectiveCount = try container.decode(Int.self, forKey: .objectiveCount)
         self.objectives = try container.decode([ObjectiveStruc].self, forKey: .objectives)
         self.supportingInfo = try container.decode(SupportingInfoStruc.self, forKey: .supportingInfo)
@@ -75,6 +79,7 @@ struct QuestStruc: Identifiable, Codable {
         }
         try container.encode(self.title, forKey: .title)
         try container.encode(self.description, forKey: .description)
+        try container.encode(self.hidden, forKey: .hidden)
         try container.encode(self.objectiveCount, forKey: .objectiveCount)
         try container.encode(self.objectives, forKey: .objectives)
         try container.encode(self.supportingInfo, forKey: .supportingInfo)
@@ -138,6 +143,7 @@ extension QuestStruc {
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 42.354528, longitude: -71.068369),
                    title: "Public shaming",
                    description: "A unique take on a classic punishment",
+                   hidden: false,
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData,
@@ -146,6 +152,7 @@ extension QuestStruc {
         QuestStruc(coordinateStart: CLLocationCoordinate2D(latitude: 52.354528, longitude: -71.068369),
                    title: "Design",
                    description: "A fun design challenge using the arts",
+                   hidden: false,
                    objectiveCount: ObjectiveStruc.objectiveSampleData.count, // Set count based on sample data
                    objectives: ObjectiveStruc.objectiveSampleData,
                    supportingInfo: SupportingInfoStruc.sampleData,

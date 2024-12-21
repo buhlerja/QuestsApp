@@ -21,6 +21,15 @@ struct CardView: View {
                 Image(systemName: "chevron.right")
             }
             
+            if quest.hidden {
+                Text("Quest unavailable")
+                    .font(.headline)
+                    .foregroundColor(.red) // Emphasized with red
+                    .padding(5)
+                    //.background(Color(.systemGray5))
+                    .cornerRadius(5)
+            }
+            
             Divider() // Added divider
         
             Text("\(quest.description)")

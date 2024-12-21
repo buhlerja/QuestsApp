@@ -29,6 +29,18 @@ struct QuestInfoView: View {
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 10) {
                    
+                    if quest.hidden {
+                        Text("Quest not available for play")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.red)
+                            .cornerRadius(8)
+                            .shadow(radius: 5)
+                            .padding()
+                    }
+                    
                     HStack {
                         // Premium Quest Badge (If applicable)
                         if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
@@ -360,17 +372,19 @@ struct QuestInfoView: View {
                     Spacer()
 
                     // Start challenge button
-                    Button(action: { showActiveQuest = true }) {
-                        Text("Start Challenge")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding()
-                            .background(LinearGradient(gradient: Gradient(colors: [.orange, .yellow]), startPoint: .top, endPoint: .bottom))
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                            .shadow(radius: 10)
+                    if !quest.hidden {
+                        Button(action: { showActiveQuest = true }) {
+                            Text("Start Quest")
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .padding()
+                                .background(LinearGradient(gradient: Gradient(colors: [.orange, .yellow]), startPoint: .top, endPoint: .bottom))
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                                .shadow(radius: 10)
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                     
                     Spacer()
                 }

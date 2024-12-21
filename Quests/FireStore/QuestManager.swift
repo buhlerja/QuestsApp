@@ -115,6 +115,7 @@ final class QuestManager {
                 .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isLessThanOrEqualTo: maxLat)
                 .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isGreaterThanOrEqualTo: minLon)
                 .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isLessThanOrEqualTo: maxLon)
+                .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
                 .limit(to: count) // Limit the number of results fetched
                 .start(afterDocument: lastDocument)
                 .getDocumentsWithSnapshot(as: QuestStruc.self)
@@ -125,6 +126,7 @@ final class QuestManager {
                 .whereField(QuestStruc.CodingKeys.startingLocLatitude.rawValue, isLessThanOrEqualTo: maxLat)
                 .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isGreaterThanOrEqualTo: minLon)
                 .whereField(QuestStruc.CodingKeys.startingLocLongitude.rawValue, isLessThanOrEqualTo: maxLon)
+                .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
                 .limit(to: count) // Limit the number of results fetched
                 .getDocumentsWithSnapshot(as: QuestStruc.self)
         }
@@ -195,6 +197,15 @@ final class QuestManager {
             print("Failed to update quest data: \(error.localizedDescription)")
             throw error
         }
+    }
+    
+    func setQuestHidden(questId: String, hidden: Bool) async throws {
+        let data: [String:Any] = [
+            QuestStruc.CodingKeys.hidden.rawValue : hidden
+        ]
+        
+        try await questDocument(questId: questId).updateData(data)
+        print("Quest successfully hidden")
     }
 }
 

@@ -56,7 +56,7 @@ struct ProfilePage: View {
                                     VStack {
                                         NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
                                             CardView(quest: createdQuest)
-                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
                                                 .navigationBarTitleDisplayMode(.large)
                                         }
                                         HStack {
@@ -74,6 +74,34 @@ struct ProfilePage: View {
                                                     .background(Color.clear)
                                                     .cornerRadius(8)
                                             })
+                                            if createdQuest.hidden {
+                                                Button(action: {
+                                                    // Unhide the quest
+                                                    viewModel.unhideQuest(questId: createdQuest.id.uuidString)
+                                                }, label: {
+                                                    Text("Unhide")
+                                                        .font(.headline)
+                                                        .foregroundColor(.blue)
+                                                        .padding()
+                                                        .frame(maxWidth: .infinity)
+                                                        .background(Color.clear)
+                                                        .cornerRadius(8)
+                                                })
+                                            } else {
+                                                Button(action: {
+                                                    // Hide the quest
+                                                    viewModel.hideQuest(questId: createdQuest.id.uuidString)
+                                                }, label: {
+                                                    Text("Hide")
+                                                        .font(.headline)
+                                                        .foregroundColor(.blue)
+                                                        .padding()
+                                                        .frame(maxWidth: .infinity)
+                                                        .background(Color.clear)
+                                                        .cornerRadius(8)
+                                                })
+                                            }
+                                            
                                             Button(action: {
                                                 viewModel.deleteQuest(quest: createdQuest)
                                             }, label: {
@@ -110,6 +138,8 @@ struct ProfilePage: View {
                             Spacer()
                         }
                     }
+                    
+                    Divider()
                     
                     // Watchlist quests view
                     HStack {
@@ -170,6 +200,7 @@ struct ProfilePage: View {
                             .padding(.bottom)
                     }
                     
+                    Divider()
                     
                     // Completed quests view
                     HStack {
@@ -215,9 +246,9 @@ struct ProfilePage: View {
                             .italic()
                             .padding(.horizontal)
                             .padding(.bottom)
-
                     }
                     
+                    Divider()
                     
                     // Failed quests view
                     HStack {
@@ -265,6 +296,7 @@ struct ProfilePage: View {
                             .padding(.bottom)
                     }
                     
+                    Divider()
     
                     if let user = viewModel.user {
                         HStack {
