@@ -77,7 +77,6 @@ final class UserQuestRelationshipManager {
             RelationshipTable.CodingKeys.questId.rawValue : questId,
             RelationshipTable.CodingKeys.relationshipType.rawValue : relationshipType.rawValue
         ]
-        
         // Use setData with merge: false to create or overwrite the document
         try await userQuestRelationshipDocument(documentId: documentId).setData(data, merge: false)
     }

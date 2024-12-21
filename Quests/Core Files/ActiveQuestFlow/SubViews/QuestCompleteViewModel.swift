@@ -27,14 +27,23 @@ final class QuestCompleteViewModel: ObservableObject {
         }
     }
     
-    func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) {
+    func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) async throws {
+        print("Running updateUserQuestsCompletedOrFailedList")
         guard let user else { return } // Make sure the user is logged in or authenticated
-        Task {
-            // Add to relationship database
-            let listType: RelationshipType = failed ? .failed : .completed
-            try await UserQuestRelationshipManager.shared.addRelationship(userId: user.userId, questId: questId, relationshipType: listType)
-            
-            print("Successfully returned from 'updateUserQuestsCompletedOrFailedList'")
+        print("user validated")
+        // Add to relationship database
+        let listType: RelationshipType = failed ? .failed : .completed
+        print("list type: \(listType)")
+        do {
+            try await UserQuestRelationshipManager.shared.addRelationship(
+                userId: user.userId,
+                questId: questId,
+                relationshipType: listType
+            )
+            print("Successfully updated relationship for questId: \(questId) as \(listType)")
+        } catch {
+            print("Failed to update relationship: \(error.localizedDescription)")
+            throw error
         }
     }
     
