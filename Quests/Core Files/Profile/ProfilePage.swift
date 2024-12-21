@@ -30,177 +30,334 @@ struct ProfilePage: View {
     
     var body: some View {
         ZStack {
-            List {
-                if let createdQuests = viewModel.createdQuestStrucs, !createdQuests.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { // Use HStack to align the items horizontally
-                            ForEach(createdQuests, id: \.id) { createdQuest in
-                                VStack {
-                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
-                                        CardView(quest: createdQuest)
-                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
-                                            .navigationBarTitleDisplayMode(.large)
+            ScrollView(.vertical) {
+                VStack(alignment: .leading) {
+                    
+                    HStack {
+                        Text("Created Quests")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                    if let createdQuests = viewModel.createdQuestStrucs, !createdQuests.isEmpty {
+                        HStack {
+                            Text("Total: \(createdQuests.count)")
+                                .font(.headline)
+                                .italic()
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                            Spacer()
+                        }
+                      
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack { // Use HStack to align the items horizontally
+                                ForEach(createdQuests, id: \.id) { createdQuest in
+                                    VStack {
+                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
+                                            CardView(quest: createdQuest)
+                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .navigationBarTitleDisplayMode(.large)
+                                        }
+                                        HStack {
+                                            Button(action: {
+                                                // Trigger the edit flow
+                                                editQuest = createdQuest
+                                                isEditing = true
+                                                
+                                            }, label: {
+                                                Text("Edit")
+                                                    .font(.headline)
+                                                    .foregroundColor(.blue)
+                                                    .padding()
+                                                    .frame(maxWidth: .infinity)
+                                                    .background(Color.clear)
+                                                    .cornerRadius(8)
+                                            })
+                                            Button(action: {
+                                                viewModel.deleteQuest(quest: createdQuest)
+                                            }, label: {
+                                                Text("Delete")
+                                                    .font(.headline)
+                                                    .foregroundColor(.red)
+                                                    .padding()
+                                                    .frame(maxWidth: .infinity)
+                                                    .background(Color.clear)
+                                                    .cornerRadius(8)
+                                            })
+                                        }
+                                        
                                     }
-                                    HStack {
-                                        Button(action: {
-                                            // Trigger the edit flow
-                                            editQuest = createdQuest
-                                            isEditing = true
-                                            
-                                        }, label: {
-                                            Text("Edit")
-                                                .font(.headline)
-                                                .foregroundColor(.blue)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.clear)
-                                                .cornerRadius(8)
-                                        })
-                                        Button(action: {
-                                            viewModel.deleteQuest(quest: createdQuest)
-                                        }, label: {
-                                            Text("Delete")
-                                                .font(.headline)
-                                                .foregroundColor(.red)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.clear)
-                                                .cornerRadius(8)
-                                        })
-                                    }
-                                    
+                                    .padding() // Add padding between cards
                                 }
-                                .padding(.horizontal) // Add padding between cards
                             }
                         }
-                    }
-                } else {
-                    Text("No created quests")
-                        .foregroundColor(.gray)
-                        .italic()
-                }
-                
-                // Watchlist quests view
-                if let watchlistQuests = viewModel.watchlistQuestStrucs, !watchlistQuests.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { // Use HStack to align the items horizontally
-                            ForEach(watchlistQuests, id: \.id) { watchlistQuest in
-                                VStack {
-                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
-                                        CardView(quest: watchlistQuest)
-                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
-                                            .navigationBarTitleDisplayMode(.large)
-                                    }
-                                    HStack {
-                                        Button(action: {
-                                            viewModel.removeWatchlistQuest(quest: watchlistQuest)
-                                        }, label: {
-                                            Text("Remove from watchlist")
-                                                .font(.headline)
-                                                .foregroundColor(.blue)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.clear)
-                                                .cornerRadius(8)
-                                        })
-                                    }
-                                }
-                                .padding(.horizontal) // Add padding between cards
-                            }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.bottom)
+                    } else {
+                        HStack {
+                            Text("No created quests")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                                .italic()
+                                .padding(.horizontal)
+                                .padding(.bottom)
+
+                            Spacer()
                         }
                     }
-                } else {
-                    Text("No quests in watchlist")
-                        .foregroundColor(.gray)
-                        .italic()
-                }
-                
-                // Watchlist quests view
-                if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { // Use HStack to align the items horizontally
-                            ForEach(completedQuests, id: \.id) { completedQuest in
-                                VStack {
-                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
-                                        CardView(quest: completedQuest)
-                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
-                                            .navigationBarTitleDisplayMode(.large)
+                    
+                    // Watchlist quests view
+                    HStack {
+                        Text("Watchlist Quests")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                    if let watchlistQuests = viewModel.watchlistQuestStrucs, !watchlistQuests.isEmpty {
+                        HStack {
+                            Text("Total: \(watchlistQuests.count)")
+                                .font(.headline)
+                                .italic()
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                            Spacer()
+                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack { // Use HStack to align the items horizontally
+                                ForEach(watchlistQuests, id: \.id) { watchlistQuest in
+                                    VStack {
+                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
+                                            CardView(quest: watchlistQuest)
+                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .navigationBarTitleDisplayMode(.large)
+                                        }
+                                        HStack {
+                                            Button(action: {
+                                                viewModel.removeWatchlistQuest(quest: watchlistQuest)
+                                            }, label: {
+                                                Text("Remove from watchlist")
+                                                    .font(.headline)
+                                                    .foregroundColor(.blue)
+                                                    .padding()
+                                                    .frame(maxWidth: .infinity)
+                                                    .background(Color.clear)
+                                                    .cornerRadius(8)
+                                            })
+                                        }
                                     }
+                                    .padding() // Add padding between cards
                                 }
-                                .padding(.horizontal) // Add padding between cards
                             }
                         }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.bottom)
+                    } else {
+                        Text("No quests in watchlist")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .italic()
+                            .padding(.horizontal)
+                            .padding(.bottom)
                     }
-                } else {
-                    Text("No completed quests")
-                        .foregroundColor(.gray)
-                        .italic()
-                }
-                
-                // Watchlist quests view
-                if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack { // Use HStack to align the items horizontally
-                            ForEach(failedQuests, id: \.id) { failedQuest in
-                                VStack {
-                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
-                                        CardView(quest: failedQuest)
-                                            .frame(width: 250) // Set a fixed width for each card, adjust as needed
-                                            .navigationBarTitleDisplayMode(.large)
+                    
+                    
+                    // Completed quests view
+                    HStack {
+                        Text("Completed Quests")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                    if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
+                        HStack {
+                            Text("Total: \(completedQuests.count)")
+                                .font(.headline)
+                                .italic()
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                            Spacer()
+                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack { // Use HStack to align the items horizontally
+                                ForEach(completedQuests, id: \.id) { completedQuest in
+                                    VStack {
+                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
+                                            CardView(quest: completedQuest)
+                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .navigationBarTitleDisplayMode(.large)
+                                        }
                                     }
+                                    .padding() // Add padding between cards
                                 }
-                                .padding(.horizontal) // Add padding between cards
                             }
                         }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.bottom)
+                    } else {
+                        Text("No completed quests")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .italic()
+                            .padding(.horizontal)
+                            .padding(.bottom)
+
                     }
-                } else {
-                    Text("No failed quests")
-                        .foregroundColor(.gray)
-                        .italic()
-                }
-                
-                if let user = viewModel.user {
-                    Text("User ID: \(user.userId)")
+                    
+                    
+                    // Failed quests view
+                    HStack {
+                        Text("Failed Quests")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                    if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
+                        HStack {
+                            Text("Total: \(failedQuests.count)")
+                                .font(.headline)
+                                .italic()
+                                .foregroundColor(.gray)
+                                .padding(.horizontal)
+                            Spacer()
+                        }
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack { // Use HStack to align the items horizontally
+                                ForEach(failedQuests, id: \.id) { failedQuest in
+                                    VStack {
+                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
+                                            CardView(quest: failedQuest)
+                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .navigationBarTitleDisplayMode(.large)
+                                        }
+                                    }
+                                    .padding() // Add padding between cards
+                                }
+                            }
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.bottom)
+                    } else {
+                        Text("No failed quests")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .italic()
+                            .padding(.horizontal)
+                            .padding(.bottom)
+                    }
+                    
+    
+                    if let user = viewModel.user {
+                        HStack {
+                            Text("User ID: \(user.userId)")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                                .padding()
+                            Spacer()
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.horizontal)
+                        Button {
+                            viewModel.togglePremiumStatus()
+                        } label: {
+                            HStack {
+                                Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                    .padding()
+                                Spacer()
+                            }
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color(.systemGray6)) // Background color resembling a list
+                            )
+                            .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                            .padding(.horizontal)
+                        }
+                    }
                     Button {
-                        viewModel.togglePremiumStatus()
-                    } label: {
-                        Text("User is Premium: \((user.isPremium ?? false).description.capitalized)")
-                    }
-                }
-                Button("Sign Out") {
-                    Task {
-                        do {
-                            try viewModel.signOut()
-                            showSignInView = true
-                        } catch {
-                            print(error)
+                        Task {
+                            do {
+                                try viewModel.signOut()
+                                showSignInView = true
+                            } catch {
+                                print(error)
+                            }
                         }
+                    } label: {
+                        HStack {
+                            Text("Sign Out")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                                .padding()
+                            Spacer()
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.horizontal)
+                    }
+                    
+                    Button(role: .destructive) {
+                        Task {
+                            isShowingPopup = true
+                        }
+                    } label: {
+                        // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
+                        HStack {
+                            Text("Delete Account")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                                .padding()
+                            Spacer()
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.systemGray6)) // Background color resembling a list
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                        .padding(.horizontal)
+                    }
+                    
+                    if reAuthRequired {
+                        Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
+                            .font(.subheadline)
+                            .foregroundColor(.white) // Text color
+                            .padding()              // Inner padding
+                            .background(Color.red)  // Red background
+                            .cornerRadius(8)        // Rounded corners
+                            .shadow(radius: 4)      // Optional shadow for better visibility
+                    }
+                    
+                    if viewModel.authProviders.contains(.email) {
+                        emailSection
                     }
                 }
-                
-                Button(role: .destructive) {
-                    Task {
-                        isShowingPopup = true
-                    }
-                } label: {
-                    // Need to add functionality to LOG BACK IN TO RE-Authenticate before being able to do this
-                    Text("Delete Account")
-                }
-                
-                if reAuthRequired {
-                    Text("Re-authentication required for account deletion. Please sign in again before deleting this acount.")
-                        .font(.subheadline)
-                        .foregroundColor(.white) // Text color
-                        .padding()              // Inner padding
-                        .background(Color.red)  // Red background
-                        .cornerRadius(8)        // Rounded corners
-                        .shadow(radius: 4)      // Optional shadow for better visibility
-                }
-                
-                if viewModel.authProviders.contains(.email) {
-                    emailSection
-                }
-          
             }
 
             if isShowingPopup {
@@ -310,7 +467,7 @@ extension ProfilePage {
 extension ProfilePage {
     private var emailSection: some View {
         Section {
-            Button("Reset Password") {
+            Button {
                 Task {
                     do {
                         try await viewModel.resetPassword()
@@ -319,8 +476,22 @@ extension ProfilePage {
                         print(error)
                     }
                 }
+            } label: {
+                HStack {
+                    Text("Reset Password")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .padding()
+                    Spacer()
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.horizontal)
             }
-            Button("Update Password") {
+            Button {
                 Task {
                     do {
                         try await viewModel.updatePassword()
@@ -329,8 +500,22 @@ extension ProfilePage {
                         print(error)
                     }
                 }
+            } label: {
+                HStack {
+                    Text("Update Password")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .padding()
+                    Spacer()
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.horizontal)
             }
-            Button("Update Email") { // Works!!
+            Button { // Works!!
                 Task {
                     do {
                         try await viewModel.updateEmail()
@@ -339,6 +524,20 @@ extension ProfilePage {
                         print(error)
                     }
                 }
+            } label: {
+                HStack {
+                    Text("Update Email")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .padding()
+                    Spacer()
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.horizontal)
             }
         } header: {
             Text("Email Settings")
