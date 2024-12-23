@@ -526,7 +526,8 @@ extension ProfilePage {
             Button {
                 Task {
                     do {
-                        try await viewModel.updatePassword()
+                        let password = "1234" // NEED A FLOW FOR USER TO REAUTHENTICATE AND ENTER NEW PASSWORD AS DESIRED
+                        try await viewModel.updatePassword(password: password)
                         print("Password updated")
                     } catch {
                         print(error)

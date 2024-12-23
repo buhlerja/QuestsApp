@@ -133,6 +133,46 @@ final class UserQuestRelationshipManager {
             print("Got a batch to delete")
         }
     }
+    
+    // Batches have limits of 500, so I added pagination here
+    func deleteUser(userId: String) async throws {
+        var lastDocument: DocumentSnapshot? = nil
+        var queryComplete = false
+        while !queryComplete {
+            let querySnapshot: QuerySnapshot
+            if let lastDocument {
+                querySnapshot = try await userQuestRelationshipCollection
+                    .whereField(RelationshipTable.CodingKeys.questId.rawValue, isEqualTo: userId)
+                    .limit(to: 500) // Limit the number of results fetched
+                    .start(afterDocument: lastDocument)
+                    .getDocuments()
+            } else {
+                querySnapshot = try await userQuestRelationshipCollection
+                    .whereField(RelationshipTable.CodingKeys.questId.rawValue, isEqualTo: userId)
+                    .limit(to: 500) // Limit the number of results fetched
+                    .getDocuments()
+            }
+            
+            if querySnapshot.documents.isEmpty {
+                queryComplete = true
+                break
+            }
+
+            let batch = Firestore.firestore().batch()
+
+            for document in querySnapshot.documents {
+                batch.deleteDocument(document.reference)
+            }
+
+            // Commit the batch operation
+            try await batch.commit()
+            
+            // Prepare for the next page
+            lastDocument = querySnapshot.documents.last
+            
+            print("Got a batch to delete")
+        }
+    }
 
 }
 

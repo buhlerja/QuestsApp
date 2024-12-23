@@ -18,7 +18,7 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
     func deleteQuest(quest: QuestStruc) {
-        guard let user else { return } // Make sure the user is logged in or authenticated
+        //guard let user else { return } // Make sure the user is logged in or authenticated. not needed here!!
         Task {
             // Remove from ALL databases for ALL users. Wipe from all users associated with this quest in the relationship database,
             // and update the number of quests associated with each user's lists
@@ -130,17 +130,38 @@ final class ProfileViewModel: ObservableObject {
     }
     
     func updateEmail() async throws {
-        let email = "jabbuhler@icloud.com" // Static email for testing
-        try await AuthenticationManager.shared.updateEmail(email: email)
+        guard let user else { return }
+        guard let currentEmail = user.email else { return }
+        try await AuthenticationManager.shared.updateEmail(email: currentEmail)
     }
     
-    func updatePassword() async throws {
-        let password = "Hello123!" // Should be passed into the functions
+    func updatePassword(password: String) async throws { // NEED A FLOW FOR USER TO REAUTHENTICATE AND/OR PUT IN NEW PSWD
         try await AuthenticationManager.shared.updatePassword(password: password)
     }
     
-    // ADD CODE TO REMOVE ALL USER DATA!!!!!
     func deleteAccount() async throws {
+        // ALL OF THESE OPERATIONS MUST BE SUCCESSFUL OR NONE OF THEM
+        // Get the user
+        guard let user else { return }
+        let userId = user.userId
+        
+        try await getCreatedQuests()
+       
+        // Delete authentication info
         try await AuthenticationManager.shared.delete()
+            
+        // Delete from firestore:
+        // 1. Delete all quests for the user!
+        // 1.1. Delete all user created quests from the quest struc DB
+        if let quests = createdQuestStrucs {
+            try await QuestManager.shared.deleteQuests(quests: quests)
+        }
+        // 1.2. Delete all relationships involving the USER ID from the relationship table
+        try await UserQuestRelationshipManager.shared.deleteUser(userId: userId)
+        
+        // 2. Delete the user object
+        try await UserManager.shared.deleteUser(userId: userId)
+            
+        // If all the above work, then all user data has been deleted!
     }
 }

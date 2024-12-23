@@ -105,6 +105,10 @@ final class UserManager {
         try userDocument(userId: user.userId).setData(from: user, merge: false) // No need to merge any data since we're creating a brand new database entry
     }
     
+    func deleteUser(userId: String) async throws {
+        try await userDocument(userId: userId).delete()
+    }
+    
     // OLD VERSION OF THE FUNCTION
     /*func createNewUser(auth: AuthDataResultModel) async throws {
      var userData: [String:Any] = [

@@ -34,6 +34,17 @@ final class QuestManager {
         try await questDocument(questId: quest.id.uuidString).delete()
     }
     
+    func deleteQuests(quests: [QuestStruc]) async throws {
+        let batch = Firestore.firestore().batch()
+        for quest in quests {
+            let docRef = questDocument(questId: quest.id.uuidString)
+            batch.deleteDocument(docRef)
+        }
+        
+        // Commit the batch
+        try await batch.commit()
+    }
+    
     func getQuest(questId: String) async throws -> QuestStruc {
         try await questDocument(questId: questId).getDocument(as: QuestStruc.self)
     }
