@@ -31,8 +31,6 @@ struct QuestView: View {
         metaData: QuestMetaData() // Has appropriate default values in its initializer
     )
     
-    //let quests: [QuestStruc] TEST CODE. YOU WILL IN REALITY NOT PASS A PARAM BUT LOAD DIRECTLY FROM DB ON THIS PAGE.
-    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -115,7 +113,7 @@ struct QuestView: View {
                                 }
                             }
                             
-                            if quest == viewModel.quests.last {
+                            if quest.id == viewModel.quests.last?.id {
                                 ProgressView()
                                     .onAppear {
                                         viewModel.getQuests()

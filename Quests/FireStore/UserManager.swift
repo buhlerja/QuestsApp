@@ -274,14 +274,43 @@ final class UserManager {
         }
     }*/
     
-    func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
+    // THIS IS THE VERSION THAT WORKS BUT WITH NO ERROR HANDLING
+    /*func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
         // Get the questIds associated with the user of a certain list type (created, completed, failed, watchlist)
         let questIdList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType)
         print("Successfully returned from userQuestRelationshipManager.shared.getUserQuestIdsByType")
         print(questIdList ?? "Nothing here")
         // Get the Quest Strucs associated with the IDs by querying firestore
         return try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
+    }*/
+    
+    func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
+        do {
+            // Attempt to fetch the quest IDs associated with the user of a certain list type (created, completed, failed, watchlist)
+            let questIdList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType)
+            print("Successfully returned from userQuestRelationshipManager.shared.getUserQuestIdsByType")
+            
+            // If questIdList is nil or empty, handle that scenario
+            guard let questIdList = questIdList, !questIdList.isEmpty else {
+                print("No quest IDs found for the user.")
+                return nil
+            }
+            
+            print(questIdList) // This is safe because we validated that it's not nil or empty
+
+            // Get the Quest Strucs associated with the IDs by querying Firestore
+            let questStrucs = try await QuestManager.shared.getUserQuestStrucsFromIds(questIdList: questIdList)
+            return questStrucs
+
+        } catch {
+            // Catch the error and print the error description
+            print("An error occurred: \(error.localizedDescription)")
+            
+            // Rethrow the error if necessary
+            throw error
+        }
     }
+
 
     /*// THIS FUNCTION IS TO BE REPLACED BY THE FUNCTION GETUSERQUESTSTRUCS
     func getUserQuestStrucsFromIds(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {

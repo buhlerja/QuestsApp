@@ -28,9 +28,7 @@ struct ObjectiveCreateView: View {
             VStack {
                 
                 // Objective Number set in function in QuestStruc file (during add objective)
-                
                 objectiveDescriptionView(objectiveDescription: $objectiveContent.objectiveDescription, objectiveTitle: $objectiveContent.objectiveTitle)
-                             
              
                 HStack {
                     Text("Objective Type: ")
@@ -170,8 +168,10 @@ struct ObjectiveCreateView: View {
                             // From the CREATE flow, not the EDIT flow, so append to struc
                             tooManyObjectives = questContent.objectiveCount >= Macros.MAX_OBJECTIVES
                             if !tooManyObjectives, !noTitle, !noSolution, !noDescription {
+                                print(objectiveContent)
                                 questContent.addObjective(objectiveContent)  /* 2) Append new ObjectiveStruc to array of ObjectiveStruc's that forms the objectives for this quest */
                                 questContent.editTotalLength(objectiveContent) // Adjust the total length of quest based on objective length
+                                print(questContent.objectives)
                                
                                 // 3) Display created objectives on screen (find some sort of sub-view to display objective info -> this is ObjectiveHighLevelView. This is done in CreateQuestContentView)
                                 showObjectiveCreateView = false         /* 4) create another "create objective button" on screen. */

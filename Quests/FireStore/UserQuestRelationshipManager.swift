@@ -142,13 +142,13 @@ final class UserQuestRelationshipManager {
             let querySnapshot: QuerySnapshot
             if let lastDocument {
                 querySnapshot = try await userQuestRelationshipCollection
-                    .whereField(RelationshipTable.CodingKeys.questId.rawValue, isEqualTo: userId)
+                    .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
                     .limit(to: 500) // Limit the number of results fetched
                     .start(afterDocument: lastDocument)
                     .getDocuments()
             } else {
                 querySnapshot = try await userQuestRelationshipCollection
-                    .whereField(RelationshipTable.CodingKeys.questId.rawValue, isEqualTo: userId)
+                    .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
                     .limit(to: 500) // Limit the number of results fetched
                     .getDocuments()
             }
@@ -164,8 +164,12 @@ final class UserQuestRelationshipManager {
                 batch.deleteDocument(document.reference)
             }
 
-            // Commit the batch operation
-            try await batch.commit()
+            do {
+                try await batch.commit()
+            } catch {
+                print("Error committing batch: \(error)")
+                throw error // Or handle accordingly
+            }
             
             // Prepare for the next page
             lastDocument = querySnapshot.documents.last

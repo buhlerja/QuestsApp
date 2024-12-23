@@ -60,7 +60,6 @@ struct CreateQuestContentView: View {
                                 .fontWeight(.bold)
                             Spacer()
                             Button(action: {
-                                // Your action here
                                 showToolTip.toggle()
                             }) {
                                 Image(systemName: "questionmark.circle") // Use SF Symbols for a question mark icon
@@ -146,6 +145,7 @@ struct CreateQuestContentView: View {
                     VStack {
                         Button(action: {
                             showStartingLocCreateView.toggle()
+                           
                         }) {
                             HStack {
                                 Image(systemName: "3.circle")
@@ -245,9 +245,7 @@ struct CreateQuestContentView: View {
                     
                     VStack {
                         Button(action: {
-                            withAnimation {
-                                showSupportingInfoView.toggle()
-                            }
+                            showSupportingInfoView.toggle()
                         }) {
                             HStack {
                                 Image(systemName: "5.circle")

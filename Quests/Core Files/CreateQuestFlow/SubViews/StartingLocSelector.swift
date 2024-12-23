@@ -29,6 +29,12 @@ struct StartingLocSelector: View {
                     locChosen = true
                     selectedStartingLoc = region.center
                     print("Selected Location: \(region.center.latitude), \(region.center.longitude)")
+                    if let location = selectedStartingLoc {
+                        print("selectedStartingLoc: Latitude = \(location.latitude), Longitude = \(location.longitude)")
+                    } else {
+                        print("selectedStartingLoc: NONE")
+                    }
+
                 }
             }
             .edgesIgnoringSafeArea(.all)
