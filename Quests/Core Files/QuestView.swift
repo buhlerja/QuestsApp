@@ -68,6 +68,25 @@ struct QuestView: View {
                         .shadow(radius: 15)
                         .padding()
                         
+                        Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
+                            ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
+                                Button(filterOption.rawValue) {
+                                    Task {
+                                        try? await viewModel.filterSelected(option: filterOption)
+                                    }
+                                }
+                            }
+                        }
+                        Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
+                            ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
+                                Button(recurringOption.rawValue) {
+                                    Task {
+                                        try? await viewModel.recurringOptionSelected(option: recurringOption)
+                                    }
+                                }
+                            }
+                        }
+                        
                         ForEach(viewModel.quests) { quest in
                             VStack {
                                 NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
@@ -94,6 +113,13 @@ struct QuestView: View {
                                     })
                                     Spacer()
                                 }
+                            }
+                            
+                            if quest == viewModel.quests.last {
+                                ProgressView()
+                                    .onAppear {
+                                        viewModel.getQuests()
+                                    }
                             }
                         }
                     }
@@ -122,24 +148,6 @@ struct QuestView: View {
                     }
                     NavigationLink(destination: ReportingView()) {
                         Image(systemName: "flag")
-                    }
-                    Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
-                        ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
-                            Button(filterOption.rawValue) {
-                                Task {
-                                    try? await viewModel.filterSelected(option: filterOption)
-                                }
-                            }
-                        }
-                    }
-                    Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
-                        ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
-                            Button(recurringOption.rawValue) {
-                                Task {
-                                    try? await viewModel.recurringOptionSelected(option: recurringOption)
-                                }
-                            }
-                        }
                     }
                 }
             }

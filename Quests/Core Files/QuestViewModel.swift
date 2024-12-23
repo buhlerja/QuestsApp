@@ -21,7 +21,7 @@ final class QuestViewModel: ObservableObject {
     @Published private(set) var quests: [QuestStruc] = []
     @Published var selectedFilter: FilterOption? = nil
     @Published var recurringOption: RecurringOption? = nil
-    @Published var noMoreToQuery: Bool = false
+    //@Published var noMoreToQuery: Bool = false
     
     private var lastDocument: DocumentSnapshot? = nil
     
@@ -47,10 +47,10 @@ final class QuestViewModel: ObservableObject {
     }
     
     func filterSelected(option: FilterOption) async throws {
-        
         self.selectedFilter = option
+        self.quests = []
+        self.lastDocument = nil
         self.getQuests()
-        
     }
     
     enum RecurringOption: String, CaseIterable {
@@ -69,31 +69,34 @@ final class QuestViewModel: ObservableObject {
     
     func recurringOptionSelected(option: RecurringOption) async throws {
         self.recurringOption = option
+        self.quests = []
+        self.lastDocument = nil
         self.getQuests()
     }
         
     func getQuests() {
         Task {
             print("Getting quests")
-            // Get the user's location to view relevant quests
-            if !noMoreToQuery { // Used to stop getting more queries if we've reached the end.
-                if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-                    //let userCoordinate = userLocation.coordinate
-                    //print("User Coordinate: \(userCoordinate)")
-                    /*self.quests = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool)*/ // BRING BACK I ONLY COMMENTED FOR TESTING
-                    let (newQuests, lastDocument) = try await QuestManager.shared.getQuestsByProximity(count: 4, lastDocument: lastDocument, userLocation: userLocation) // COMMENT OUT, THIS IS CODE JUST TO TEST MY FUNCTION. FUNCTION WILL EVENTUALLY BE USED BUT IDK HOW
-                    self.quests.append(contentsOf: newQuests) 
-                    self.lastDocument = lastDocument
-                    noMoreToQuery = self.lastDocument == nil // lastDocument nil AFTER the query indicates end of query
-                    print("Got quests")
-                } else {
-                    print("No user location available. Failed to retrieve relevant quests")
-                    // NEED TO HANDLE GRACEFULLY!!
-                    return // Exit if no user location is available
-                }
-            } else {
-                print("no more to query")
+            let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
+            self.quests.append(contentsOf: newQuests)
+            if let lastDocument { // Stops bug. LastDocument is set to nil after a failed / last query
+                self.lastDocument = lastDocument
             }
+            // Get the user's location to view relevant quests
+            /*if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
+                let userCoordinate = userLocation.coordinate
+                print("User Coordinate: \(userCoordinate)")
+                
+                let (newQuests, lastDocument) = try await QuestManager.shared.getQuestsByProximity(count: 4, lastDocument: lastDocument, userLocation: userLocation) // COMMENT OUT, THIS IS CODE JUST TO TEST MY FUNCTION. FUNCTION WILL EVENTUALLY BE USED BUT IDK HOW
+                self.quests.append(contentsOf: newQuests)
+                self.lastDocument = lastDocument
+                noMoreToQuery = self.lastDocument == nil // lastDocument nil AFTER the query indicates end of query
+                print("Got quests")
+            } else {
+                print("No user location available. Failed to retrieve relevant quests")
+                // NEED TO HANDLE GRACEFULLY!!
+                return // Exit if no user location is available
+            }*/
         }
     }
     

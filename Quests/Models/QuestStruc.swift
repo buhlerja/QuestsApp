@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct QuestStruc: Identifiable, Codable {
+struct QuestStruc: Identifiable, Codable, Equatable {
     let id: UUID
     var coordinateStart: CLLocationCoordinate2D? = nil
     var title: String
@@ -45,6 +45,11 @@ struct QuestStruc: Identifiable, Codable {
         case objectives
         case supportingInfo = "supporting_info"
         case metaData = "meta_data"
+    }
+    
+    // How will we determine equality among two quest objects
+    static func ==(lhs: QuestStruc, rhs: QuestStruc) -> Bool {
+        return lhs.id == rhs.id // If have same ID return equal
     }
     
     // Custom decoder to handle decoding of optional CLLocationCoordinate2D

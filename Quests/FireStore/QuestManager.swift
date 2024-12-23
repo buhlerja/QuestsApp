@@ -38,7 +38,7 @@ final class QuestManager {
         try await questDocument(questId: questId).getDocument(as: QuestStruc.self)
     }
     
-    private func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 100-200 quests.
+    /*private func getAllQuests() async throws -> [QuestStruc] { // CAUTION: IN FIREBASE YOU PAY PER DOCUMENT. DO NOT GET ALL DOCUMENTS LONG TERM. CREATE QUERIES FOR RELEVANT QUESTS. Aim for 100-200 quests.
         // Access the entire quests collection
         return try await questCollection
             //.limit(to: 5) // Limits the fetch to only 5 quests!!
@@ -62,38 +62,60 @@ final class QuestManager {
             .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
             .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
             .getDocuments(as: QuestStruc.self)
+    }*/
+    
+    private func getAllQuestsQuery() -> Query {
+        questCollection
     }
     
-    func getAllQuests(costAscending: Bool?, recurring: Bool?) async throws -> [QuestStruc] {
+    private func getAllQuestsSortedByCostQuery(ascending: Bool) -> Query {
+        questCollection
+            .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
+    }
+    
+    private func getAllQuestsByRecurringQuery(recurring: Bool) -> Query {
+        questCollection
+            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
+    }
+    
+    private func getAllQuestsByCostAndRecurringQuery(ascending: Bool, recurring: Bool) -> Query {
+        questCollection
+            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
+            .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
+    }
+    
+    func getAllQuestsCount() async throws -> Int { // Counts the number of documents in a collection
+        let snapshot = try await questCollection.count.getAggregation(source: .server)
+        return Int(truncating: snapshot.count)
+    }
+    
+    func getAllQuests(costAscending: Bool?, recurring: Bool?, count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         print("Getting quests")
+        var query: Query = getAllQuestsQuery()
+        
         if let costAscending, let recurring {
-            return try await getAllQuestsByCostAndRecurring(ascending: costAscending, recurring: recurring)
+            query = getAllQuestsByCostAndRecurringQuery(ascending: costAscending, recurring: recurring)
         }
         else if let costAscending {
-            return try await getAllQuestsSortedByCost(ascending: costAscending)
+            query = getAllQuestsSortedByCostQuery(ascending: costAscending)
         }
         else if let recurring {
-            return try await getAllQuestsByRecurring(recurring: recurring)
-        } else {
-            print("Successfully retrieved quests: No filters")
-            return try await getAllQuests()
+            query = getAllQuestsByRecurringQuery(recurring: recurring)
         }
+        
+        return try await query
+            .limit(to: count)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: QuestStruc.self)
    }
     
-    /*func getQuestsByRating(count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
-        if let lastDocument {
-            return try await questCollection
-                .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
-                .limit(to: count)
-                .start(afterDocument: lastDocument)
-                .getDocumentsWithSnapshot(as: QuestStruc.self)
-        } else {
-            return try await questCollection
-                .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
-                .limit(to: count)
-                .getDocumentsWithSnapshot(as: QuestStruc.self)
-        }
-    }*/
+    func getQuestsByRating(count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+        return try await questCollection
+            .order(by: QuestStruc.CodingKeys.metaData.rawValue + ".rating", descending: true)
+            .limit(to: count)
+            .startOptionally(afterDocument: lastDocument)
+            .getDocumentsWithSnapshot(as: QuestStruc.self)
+    }
     
     func getQuestsByProximity(count: Int, lastDocument: DocumentSnapshot?, userLocation: CLLocation) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         // lastDocument to return the next batch of items picking up where the last query left off.
@@ -247,6 +269,14 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
         })
 
         return (quests, snapshot.documents.last)
+    }
+    
+    // .start(afterDocument: lastDocument)
+    func startOptionally(afterDocument lastDocument: DocumentSnapshot?) -> Query {
+        guard let lastDocument else {
+            return self
+        }
+        return self.start(afterDocument: lastDocument)
     }
     
 }
