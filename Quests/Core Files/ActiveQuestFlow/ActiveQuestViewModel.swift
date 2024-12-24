@@ -16,6 +16,8 @@ final class ActiveQuestViewModel: ObservableObject {
             let userId = try await UserQuestRelationshipManager.shared.getUserIdsByQuestIdAndType(questId: questId, listType: .created)
             if let userId = userId, userId.count == 1, let firstUserId = userId.first {
                 // should not be more than one quest creator
+                try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true) // Hide the quest
+                // Create an inappropriate relationship in table
                 try await UserQuestRelationshipManager.shared.addRelationship(userId: firstUserId, questId: questId, relationshipType: .created_inappropriate)
                 print("Added INAPPROPRIATE relationship")
             }
@@ -28,6 +30,7 @@ final class ActiveQuestViewModel: ObservableObject {
             let userId = try await UserQuestRelationshipManager.shared.getUserIdsByQuestIdAndType(questId: questId, listType: .created)
             if let userId = userId, userId.count == 1, let firstUserId = userId.first {
                 // should not be more than one quest creator
+                try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true) // Hide the quest
                 try await UserQuestRelationshipManager.shared.addRelationship(userId: firstUserId, questId: questId, relationshipType: .created_incomplete)
                 print("Added INCOMPLETE relationship")
             }

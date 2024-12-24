@@ -234,6 +234,7 @@ struct ActiveQuestView: View {
                            .fontWeight(.bold)
                            .foregroundColor(.red)
                    }
+                   .padding()
                 }
                 
                 Spacer()

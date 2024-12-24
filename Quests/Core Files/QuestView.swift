@@ -37,91 +37,113 @@ struct QuestView: View {
                 Color(.systemCyan)
                     .ignoresSafeArea()
                 
-                ScrollView {
-                    VStack {
-                        VStack(alignment: .leading, spacing: 20.0) {
-                            HStack {
-                                Text("Welcome!")
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.black)
-                                
-                                Image(systemName: "mountain.2.fill")
-                                    .foregroundColor(Color.black)
-                                    .font(.title2)
-                            }
-                            
-                            Text("Choose your next adventure.")
+                VStack {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("Welcome!")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
                                 .foregroundColor(Color.black)
                             
-                            Image("mountains_banff")
-                                .resizable()
-                                .cornerRadius(12)
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.all)
-                        }
-                        .padding()
-                        .background(Rectangle().foregroundColor(Color.white))
-                        .cornerRadius(12)
-                        .shadow(radius: 15)
-                        .padding()
-                        
-                        Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
-                            ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
-                                Button(filterOption.rawValue) {
-                                    Task {
-                                        try? await viewModel.filterSelected(option: filterOption)
-                                    }
-                                }
-                            }
-                        }
-                        Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
-                            ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
-                                Button(recurringOption.rawValue) {
-                                    Task {
-                                        try? await viewModel.recurringOptionSelected(option: recurringOption)
-                                    }
-                                }
-                            }
-                        }
-                        
-                        ForEach(viewModel.quests) { quest in
-                            VStack {
-                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
-                                    CardView(quest: quest)
-                                        .navigationBarTitleDisplayMode(.large)
-                                        .background(Color.cyan)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 5)
-                                        .padding(.horizontal)
-                                        .padding(.top, 5)
-                                }
-                                HStack {
-                                    Button(action: {
-                                        // Add to watchlist
-                                        viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
-                                    }, label: {
-                                        Text("+ Add to Watchlist")
-                                            .font(.headline)
-                                            .foregroundColor(.blue)
-                                            .padding()
-                                            .frame(maxWidth: .infinity)
-                                            .background(Color.clear)
-                                            .cornerRadius(8)
-                                    })
-                                    Spacer()
-                                }
-                            }
+                            Image(systemName: "mountain.2.fill")
+                                .foregroundColor(Color.black)
+                                .font(.title2)
                             
-                            if quest.id == viewModel.quests.last?.id {
-                                ProgressView()
-                                    .onAppear {
-                                        viewModel.getQuests()
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Text("Choose your next adventure.")
+                                .foregroundColor(Color.black)
+                            Spacer()
+                        }
+                      
+                        /*Image("mountains_banff")
+                            .resizable()
+                            .cornerRadius(12)
+                            .aspectRatio(contentMode: .fit)
+                            .padding(.all)*/
+                    }
+                    .padding()
+                    .background(Rectangle().foregroundColor(Color.white))
+                    .cornerRadius(12)
+                    .shadow(radius: 15)
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                    
+                    Spacer()
+                    
+                    ScrollView {
+                        VStack {
+                            Spacer()
+                            
+                            Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
+                                ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
+                                    Button(filterOption.rawValue) {
+                                        Task {
+                                            try? await viewModel.filterSelected(option: filterOption)
+                                        }
                                     }
+                                }
+                            }
+                            .menuStyle(.borderlessButton)
+                            .padding(8)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 2)
+                            Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
+                                ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
+                                    Button(recurringOption.rawValue) {
+                                        Task {
+                                            try? await viewModel.recurringOptionSelected(option: recurringOption)
+                                        }
+                                    }
+                                }
+                            }
+                            .menuStyle(.borderlessButton)
+                            .padding(8)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 2)
+
+                            ForEach(viewModel.quests) { quest in
+                                VStack {
+                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
+                                        CardView(quest: quest)
+                                            .navigationBarTitleDisplayMode(.large)
+                                            .background(Color.cyan)
+                                            .cornerRadius(10)
+                                            .shadow(radius: 5)
+                                            .padding(.horizontal)
+                                            .padding(.top, 5)
+                                    }
+                                    HStack {
+                                        Button(action: {
+                                            // Add to watchlist
+                                            viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
+                                        }, label: {
+                                            Text("+ Add to Watchlist")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                        Spacer()
+                                    }
+                                }
+                                
+                                if quest.id == viewModel.quests.last?.id {
+                                    ProgressView()
+                                        .onAppear {
+                                            viewModel.getQuests()
+                                        }
+                                }
                             }
                         }
+                        .background(Color.cyan)
                     }
-                    .background(Color.cyan)
                 }
             }
             .toolbar {
@@ -138,9 +160,9 @@ struct QuestView: View {
                     }) {
                         Image(systemName: "plus")
                     }
-                    Button(action: {}) {
+                    /*Button(action: {}) {
                         Image(systemName: "gear")
-                    }
+                    }*/
                     NavigationLink(destination: ProfilePage(mapViewModel: mapViewModel, showSignInView: $showSignInView)) {
                         Image(systemName: "person")
                     }

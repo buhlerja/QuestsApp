@@ -574,6 +574,9 @@ extension ProfilePage {
             }
         } header: {
             Text("Email Settings")
+                .font(.headline)
+                .foregroundColor(.primary)
+                .padding()
         }
     }
 }
