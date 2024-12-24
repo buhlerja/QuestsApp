@@ -19,6 +19,8 @@ struct QuestInfoView: View {
     @State private var route: MKRoute?
     @State private var directionsErrorMessage: String?
     
+    @StateObject private var viewModel = ActiveQuestViewModel()
+    
     let quest: QuestStruc
     let creatorView: Bool
     
@@ -292,9 +294,6 @@ struct QuestInfoView: View {
                         .cornerRadius(15)
                         .shadow(radius: 10)
                         .padding(.horizontal)
-                        /*.onAppear {
-                            viewModel.checkIfLocationServicesIsEnabled()
-                        }*/ // Done in questView
                         .mapControls {
                             MapUserLocationButton()
                             MapCompass()
@@ -345,9 +344,6 @@ struct QuestInfoView: View {
                         .cornerRadius(15)
                         .shadow(radius: 10)
                         .padding(.horizontal)
-                        /*.onAppear {
-                            viewModel.checkIfLocationServicesIsEnabled()
-                        }*/ // Done in questView
                         .mapControls {
                             MapUserLocationButton()
                             MapCompass()
@@ -389,8 +385,31 @@ struct QuestInfoView: View {
                     Spacer()
                 }
                 .navigationTitle(quest.title)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button("Incomplete", action: {
+                                viewModel.addIncompleteRelationship(questId: quest.id.uuidString)
+                                print("Selected: Incomplete")
+                            })
+                            Button("Inappropriate", action: {
+                                viewModel.addInappropriateRelationship(questId: quest.id.uuidString)
+                                print("Selected: Inappropriate")
+                            })
+                       } label: {
+                           HStack {
+                               Image(systemName: "exclamationmark.triangle.fill")
+                                   .foregroundColor(.red)
+                               Text("Report")
+                                   .font(.subheadline)
+                                   .fontWeight(.bold)
+                                   .foregroundColor(.red)
+                           }
+                        }
+                    }
+                }
                 .fullScreenCover(isPresented: $showActiveQuest) {
-                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, quest: quest)
+                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, quest: quest/*, viewModel: viewModel*/)
                 }
                 //.padding()
             }

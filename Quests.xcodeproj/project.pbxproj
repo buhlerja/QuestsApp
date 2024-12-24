@@ -13,6 +13,7 @@
 		830BCD862BFA73650056BC8D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD852BFA73650056BC8D /* Preview Assets.xcassets */; };
 		830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F234D2CC416A8008586C9 /* QuestCompleteView.swift */; };
 		83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */; };
+		831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */; };
 		8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1E92C9F7B010079E403 /* AuthenticationView.swift */; };
 		8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */; };
 		8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */; };
@@ -67,6 +68,7 @@
 		830BCD852BFA73650056BC8D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		830F234D2CC416A8008586C9 /* QuestCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteView.swift; sourceTree = "<group>"; };
 		83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveStruc.swift; sourceTree = "<group>"; };
+		831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestViewModel.swift; sourceTree = "<group>"; };
 		8315E1E92C9F7B010079E403 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
 		8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */,
+				831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */,
 				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
 				83E9F08E2CE2BA56003595B8 /* SubViews */,
 			);
@@ -476,6 +479,7 @@
 				83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,
 				83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */,
+				831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */,
 				83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */,
 				83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */,
 				832A938C2CCD323D00324719 /* timerView.swift in Sources */,

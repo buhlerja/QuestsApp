@@ -17,4 +17,6 @@ enum RelationshipType: String, Codable {
     case created
     case completed
     case failed
+    case created_inappropriate
+    case created_incomplete
 }

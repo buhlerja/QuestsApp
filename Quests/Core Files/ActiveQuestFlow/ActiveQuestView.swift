@@ -26,6 +26,8 @@ struct ActiveQuestView: View {
     @State var timerIsUp = false // timer is up is a fail condition
     @State var fail = false // Set to true if any of the fail conditions are met
     
+    //@ObservedObject var viewModel: ActiveQuestViewModel
+    @StateObject var viewModel = ActiveQuestViewModel()
     
     let quest: QuestStruc
     
@@ -213,6 +215,27 @@ struct ActiveQuestView: View {
                         .cornerRadius(8)
                         .shadow(radius: 5)
                 }
+                
+                Menu {
+                    Button("Incomplete", action: {
+                        viewModel.addIncompleteRelationship(questId: quest.id.uuidString)
+                        print("Selected: Incomplete")
+                    })
+                    Button("Inappropriate", action: {
+                        viewModel.addInappropriateRelationship(questId: quest.id.uuidString)
+                        print("Selected: Inappropriate")
+                    })
+               } label: {
+                   HStack {
+                       Image(systemName: "exclamationmark.triangle.fill")
+                           .foregroundColor(.red)
+                       Text("Report")
+                           .font(.subheadline)
+                           .fontWeight(.bold)
+                           .foregroundColor(.red)
+                   }
+                }
+                
                 Spacer()
             }
             .padding()
@@ -306,7 +329,7 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, quest: QuestStruc.sampleData[0])
+            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, /*viewModel: ActiveQuestViewModel(),*/ quest: QuestStruc.sampleData[0])
         }
     }
     

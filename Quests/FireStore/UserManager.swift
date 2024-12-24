@@ -287,7 +287,7 @@ final class UserManager {
     func getUserQuestStrucs(userId: String, listType: RelationshipType) async throws -> [QuestStruc]? {
         do {
             // Attempt to fetch the quest IDs associated with the user of a certain list type (created, completed, failed, watchlist)
-            let questIdList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType)
+            let questIdList = try await UserQuestRelationshipManager.shared.getQuestIdsByUserIdAndType(userId: userId, listType: listType)
             print("Successfully returned from userQuestRelationshipManager.shared.getUserQuestIdsByType")
             
             // If questIdList is nil or empty, handle that scenario

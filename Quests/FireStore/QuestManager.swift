@@ -77,20 +77,24 @@ final class QuestManager {
     
     private func getAllQuestsQuery() -> Query {
         questCollection
+            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
     }
     
     private func getAllQuestsSortedByCostQuery(ascending: Bool) -> Query {
         questCollection
+            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
             .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
     }
     
     private func getAllQuestsByRecurringQuery(recurring: Bool) -> Query {
         questCollection
+            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
             .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
     }
     
     private func getAllQuestsByCostAndRecurringQuery(ascending: Bool, recurring: Bool) -> Query {
         questCollection
+            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false)
             .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + ".recurring", isEqualTo: recurring)
             .order(by: QuestStruc.CodingKeys.supportingInfo.rawValue + ".cost", descending: !ascending)
     }

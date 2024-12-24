@@ -86,9 +86,19 @@ final class UserQuestRelationshipManager {
         try await userQuestRelationshipDocument(documentId: documentId).delete()
     }
     
-    func getUserQuestIdsByType(userId: String, listType: RelationshipType) async throws -> [String]? {
+    // Returns the quest IDs corresponding to a userID based on a certain relationship type
+    func getQuestIdsByUserIdAndType(userId: String, listType: RelationshipType) async throws -> [String]? {
         let relationshipTableEntries = try await userQuestRelationshipCollection
             .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: listType.rawValue)
+            .getDocuments(as: RelationshipTable.self)
+        return relationshipTableEntries.map { $0.questId }
+    }
+    
+    // Returns the user IDs corresponding to a questID based on a certain relationship type
+    func getUserIdsByQuestIdAndType(questId: String, listType: RelationshipType) async throws -> [String]? {
+        let relationshipTableEntries = try await userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.questId.rawValue, isEqualTo: questId)
             .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: listType.rawValue)
             .getDocuments(as: RelationshipTable.self)
         return relationshipTableEntries.map { $0.questId }
