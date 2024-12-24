@@ -10,29 +10,19 @@ import Foundation
 @MainActor
 final class ActiveQuestViewModel: ObservableObject {
     
-    func addInappropriateRelationship(questId: String) {
-        Task {
-            // Need to get the ID of the user who created the inappropriate quest
-            let userId = try await UserQuestRelationshipManager.shared.getUserIdsByQuestIdAndType(questId: questId, listType: .created)
-            if let userId = userId, userId.count == 1, let firstUserId = userId.first {
-                // should not be more than one quest creator
-                try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true) // Hide the quest
-                // Create an inappropriate relationship in table
-                try await UserQuestRelationshipManager.shared.addRelationship(userId: firstUserId, questId: questId, relationshipType: .created_inappropriate)
-                print("Added INAPPROPRIATE relationship")
-            }
-        }
-    }
+    @Published var reportText: String = ""
+    @Published var reportType: ReportType? = nil
     
-    func addIncompleteRelationship(questId: String) {
+    func addReportRelationship(questId: String) {
         Task {
-            // Need to get the ID of the user who created the incomplete quest
+            // Need to get the ID of the user who created the reported quest
             let userId = try await UserQuestRelationshipManager.shared.getUserIdsByQuestIdAndType(questId: questId, listType: .created)
             if let userId = userId, userId.count == 1, let firstUserId = userId.first {
                 // should not be more than one quest creator
                 try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true) // Hide the quest
-                try await UserQuestRelationshipManager.shared.addRelationship(userId: firstUserId, questId: questId, relationshipType: .created_incomplete)
-                print("Added INCOMPLETE relationship")
+                // Create a relationship in the reporting table with reportType and report message
+                // ADD CODE HERE ////// NEED TO FINISH THIS FUNCTION!!!!!
+                print("Added REPORT")
             }
         }
     }

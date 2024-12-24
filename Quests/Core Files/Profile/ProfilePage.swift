@@ -164,7 +164,7 @@ struct ProfilePage: View {
                                     VStack {
                                         NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
                                             CardView(quest: watchlistQuest)
-                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
                                                 .navigationBarTitleDisplayMode(.large)
                                         }
                                         HStack {
@@ -225,7 +225,7 @@ struct ProfilePage: View {
                                     VStack {
                                         NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
                                             CardView(quest: completedQuest)
-                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
                                                 .navigationBarTitleDisplayMode(.large)
                                         }
                                     }
@@ -273,7 +273,7 @@ struct ProfilePage: View {
                                     VStack {
                                         NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
                                             CardView(quest: failedQuest)
-                                                .frame(width: 250) // Set a fixed width for each card, adjust as needed
+                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
                                                 .navigationBarTitleDisplayMode(.large)
                                         }
                                     }

@@ -31,6 +31,50 @@ struct CardView: View {
             }
             
             Divider() // Added divider
+            
+            // Compact Banners
+            HStack(spacing: 8) {
+               // Premium Quest Badge
+               /*if quest.metaData.isPremiumQuest {
+                   Label("Premium", systemImage: "bolt.fill")
+                       .font(.caption2)
+                       .padding(6)
+                       .background(Color.green)
+                       .foregroundColor(.white)
+                       .cornerRadius(6)
+               }*/
+
+               // Recurring or Non-Recurring
+               Label(quest.supportingInfo.recurring ? "Recurring" : "Non-Recurring!",
+                     systemImage: quest.supportingInfo.recurring ? "arrow.triangle.2.circlepath" : "exclamationmark.triangle.fill")
+                   .font(.caption2)
+                   .padding(6)
+                   .background(quest.supportingInfo.recurring ? Color.blue : Color.red)
+                   .foregroundColor(.white)
+                   .cornerRadius(6)
+
+               // Treasure Available
+               if quest.supportingInfo.treasure {
+                   Label("Treasure!", systemImage: "bag.fill")
+                       .font(.caption2)
+                       .padding(6)
+                       .background(Color.purple)
+                       .foregroundColor(.white)
+                       .cornerRadius(6)
+               }
+            }
+            
+            if let rating = quest.metaData.rating {
+                HStack {
+                    Text("\(String(format: "%.1f", rating))/5")
+                        .font(.footnote)
+                        .foregroundColor(.yellow)
+                    StarRatingView(rating: rating)
+                        .font(.footnote)
+                        .foregroundColor(.yellow)
+                    Spacer()
+                }
+            }
         
             Text("\(quest.description)")
                 .font(.body)
@@ -57,7 +101,8 @@ struct CardView: View {
                     Gauge(value: quest.supportingInfo.difficulty, in: 1.0...10.0) {
                     }
                     .gaugeStyle(.accessoryCircular) // Default gauge style
-                    .scaleEffect() // Adjusted gauge scale
+                    .scaleEffect(1.2) // Slightly larger scale
+                    //.tint(Gradient(colors: [.green, .yellow, .red])) // Gradient for difficulty levels
                     .frame(height: 50)
                     Text("Difficulty")
                         .font(.footnote)

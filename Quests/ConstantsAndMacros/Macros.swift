@@ -17,6 +17,12 @@ enum RelationshipType: String, Codable {
     case created
     case completed
     case failed
-    case created_inappropriate
-    case created_incomplete
+}
+
+enum ReportType: String, Codable {
+    case inappropriate
+    case incomplete
+    case feedback
+    case bug
+    case other
 }

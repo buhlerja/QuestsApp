@@ -26,6 +26,9 @@ struct ActiveQuestView: View {
     @State var timerIsUp = false // timer is up is a fail condition
     @State var fail = false // Set to true if any of the fail conditions are met
     
+    // Reporting for issues
+    @State private var showReportText = false
+    
     //@ObservedObject var viewModel: ActiveQuestViewModel
     @StateObject var viewModel = ActiveQuestViewModel()
     
@@ -218,12 +221,19 @@ struct ActiveQuestView: View {
                 
                 Menu {
                     Button("Incomplete", action: {
-                        viewModel.addIncompleteRelationship(questId: quest.id.uuidString)
+                        showReportText = true
+                        viewModel.reportType = .incomplete
                         print("Selected: Incomplete")
                     })
                     Button("Inappropriate", action: {
-                        viewModel.addInappropriateRelationship(questId: quest.id.uuidString)
+                        showReportText = true
+                        viewModel.reportType = .inappropriate
                         print("Selected: Inappropriate")
+                    })
+                    Button("Other", action: {
+                        showReportText = true
+                        viewModel.reportType = .other
+                        print("Selected: Other")
                     })
                } label: {
                    HStack {
@@ -237,10 +247,38 @@ struct ActiveQuestView: View {
                    .padding()
                 }
                 
+                if showReportText {
+                    VStack {
+                        Text("Describe issue: ")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                        HStack {
+                            TextField("Describe the issue...", text: $viewModel.reportText)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
+                            Button("Submit") {
+                                // Handle the submission
+                                print("Report: \(viewModel.reportText)")
+                                showReportText = false
+                                viewModel.addReportRelationship(questId: quest.id.uuidString)
+                                
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .padding()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.red)
+                    .cornerRadius(8)
+                    .shadow(radius: 5)
+                    .padding()
+                }
+                
                 Spacer()
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: 600)
+            .frame(maxWidth: .infinity, maxHeight: 700)
             .background(Color.white)
             .cornerRadius(16)
             .shadow(radius: 10)

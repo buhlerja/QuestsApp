@@ -15,6 +15,9 @@ struct QuestInfoView: View {
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
     @State private var showProgressView = false
     
+    // Reporting for issues
+    @State private var showReportText = false
+
     // For directions search results
     @State private var route: MKRoute?
     @State private var directionsErrorMessage: String?
@@ -43,9 +46,38 @@ struct QuestInfoView: View {
                             .padding()
                     }
                     
+                    if showReportText {
+                        VStack {
+                            Text("Describe issue: ")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                            HStack {
+                                TextField("Describe the issue...", text: $viewModel.reportText)
+                                   .textFieldStyle(RoundedBorderTextFieldStyle())
+                                   .padding()
+                                Button("Submit") {
+                                    // Handle the submission
+                                    print("Report: \(viewModel.reportText)")
+                                    showReportText = false
+                                    viewModel.addReportRelationship(questId: quest.id.uuidString)
+                                    
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .padding()
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .background(Color.red)
+                        .cornerRadius(8)
+                        .shadow(radius: 5)
+                        .padding()
+                      
+                    }
+                    
                     HStack {
                         // Premium Quest Badge (If applicable)
-                        if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
+                        /*if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
                             HStack {
                                 Image(systemName: "bolt.fill")
                                 Text("Premium")
@@ -57,7 +89,7 @@ struct QuestInfoView: View {
                             .foregroundColor(.white)
                             .shadow(radius: 3)
                             //Spacer()
-                        }
+                        }*/
                        
                         
                         // Recurring Quest Section (If applicable)
@@ -107,6 +139,8 @@ struct QuestInfoView: View {
                     }
                     .padding()
                     
+                    Divider()
+                    
                     // Quest metadata information
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
@@ -146,13 +180,18 @@ struct QuestInfoView: View {
                     .foregroundColor(.white.opacity(0.8))
                     .padding(.horizontal)
                     
+                    Divider()
+                    
                     // Rating Section (If applicable)
                     if let rating = quest.metaData.rating {
                         StarRatingView(rating: rating)
                             .padding([.leading, .trailing])
+                            .font(.title)
                             //.background(RoundedRectangle(cornerRadius: 12).fill(Color.yellow))
                             .foregroundColor(.black)
                             .shadow(radius: 5)
+                        
+                        Divider()
                     }
 
                     // Quest description
@@ -389,12 +428,19 @@ struct QuestInfoView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
                             Button("Incomplete", action: {
-                                viewModel.addIncompleteRelationship(questId: quest.id.uuidString)
+                                showReportText = true
+                                viewModel.reportType = .incomplete
                                 print("Selected: Incomplete")
                             })
                             Button("Inappropriate", action: {
-                                viewModel.addInappropriateRelationship(questId: quest.id.uuidString)
+                                showReportText = true
+                                viewModel.reportType = .inappropriate
                                 print("Selected: Inappropriate")
+                            })
+                            Button("Other", action: {
+                                showReportText = true
+                                viewModel.reportType = .other
+                                print("Selected: Incomplete")
                             })
                        } label: {
                            HStack {
@@ -480,17 +526,17 @@ struct StarRatingView: View {
                     // Full star
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
-                        .font(.title)
+                        //.font(.title)
                 } else if Double(index) < adjustedRating {
                     // Half star
                     Image(systemName: "star.leadinghalf.fill")
                         .foregroundColor(.yellow)
-                        .font(.title)
+                        //.font(.title)
                 } else {
                     // Empty star
                     Image(systemName: "star")
                         .foregroundColor(.yellow)
-                        .font(.title)
+                        //.font(.title)
                 }
             }
         }

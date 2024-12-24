@@ -37,7 +37,8 @@ struct QuestView: View {
                 Color(.systemCyan)
                     .ignoresSafeArea()
                 
-                VStack {
+                VStack(spacing: 0) {
+                    // Welcome banner
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Text("Welcome!")
@@ -71,11 +72,8 @@ struct QuestView: View {
                     .padding(.horizontal)
                     .padding(.bottom)
                     
-                    Spacer()
-                    
                     ScrollView {
                         VStack {
-                            Spacer()
                             
                             Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
                                 ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
@@ -141,6 +139,7 @@ struct QuestView: View {
                                         }
                                 }
                             }
+                            Spacer()
                         }
                         .background(Color.cyan)
                     }

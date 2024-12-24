@@ -14,6 +14,7 @@
 		830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830F234D2CC416A8008586C9 /* QuestCompleteView.swift */; };
 		83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */; };
 		831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */; };
+		831337CF2D1B4CA80019C84F /* ReportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831337CE2D1B4CA80019C84F /* ReportManager.swift */; };
 		8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1E92C9F7B010079E403 /* AuthenticationView.swift */; };
 		8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */; };
 		8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */; };
@@ -69,6 +70,7 @@
 		830F234D2CC416A8008586C9 /* QuestCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteView.swift; sourceTree = "<group>"; };
 		83108B392C6D86CE00BDC83B /* ObjectiveStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveStruc.swift; sourceTree = "<group>"; };
 		831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestViewModel.swift; sourceTree = "<group>"; };
+		831337CE2D1B4CA80019C84F /* ReportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportManager.swift; sourceTree = "<group>"; };
 		8315E1E92C9F7B010079E403 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
 		8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				83E9F0842CE26D1C003595B8 /* UserManager.swift */,
 				83C7FF512D109A84001AAB2E /* UserQuestRelationshipManager.swift */,
 				83B5DA182CFE94BC000F3444 /* QuestManager.swift */,
+				831337CE2D1B4CA80019C84F /* ReportManager.swift */,
 			);
 			path = FireStore;
 			sourceTree = "<group>";
@@ -450,6 +453,7 @@
 				83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */,
 				83E9F0852CE26D1D003595B8 /* UserManager.swift in Sources */,
 				83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */,
+				831337CF2D1B4CA80019C84F /* ReportManager.swift in Sources */,
 				83E9F07E2CE26592003595B8 /* AuthenticationViewModel.swift in Sources */,
 				83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */,
 				83C7D9912CACC9D70046D553 /* MapView.swift in Sources */,
