@@ -12,20 +12,33 @@ struct QuestInfoView: View {
     @ObservedObject var mapViewModel: MapViewModel
     @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
-    @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic)
-    @State private var showProgressView = false
+    @State private var position: MapCameraPosition
     
     // Reporting for issues
     @State private var showReportText = false
 
     // For directions search results
-    @State private var route: MKRoute?
-    @State private var directionsErrorMessage: String?
+    //@State private var route: MKRoute?
+    //@State private var directionsErrorMessage: String?
+    //@State private var showProgressView = false
     
-    @StateObject private var viewModel = ActiveQuestViewModel()
+    @StateObject private var viewModel: ActiveQuestViewModel
     
     let quest: QuestStruc
     let creatorView: Bool
+    
+    init(mapViewModel: MapViewModel, quest: QuestStruc, creatorView: Bool) {
+        self.mapViewModel = mapViewModel
+        self.quest = quest
+        self.creatorView = creatorView
+        // Initialize the position based on quest.coordinateStart
+        if let startCoordinate = quest.coordinateStart {
+            _position = State(initialValue: .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500)))
+        } else {
+            _position = State(initialValue: .userLocation(followsHeading: true, fallback: .automatic))
+        }
+        _viewModel = StateObject(wrappedValue: ActiveQuestViewModel(mapViewModel: mapViewModel))
+    }
     
     var body: some View {
         ZStack {
@@ -323,7 +336,7 @@ struct QuestInfoView: View {
                         Map(position: $position) {
                             UserAnnotation()
                             Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
-                            if let route = route {
+                            if let route = viewModel.route {
                                 MapPolyline(route)
                                     .stroke(.blue, lineWidth: 5)
                             }
@@ -341,8 +354,13 @@ struct QuestInfoView: View {
                         
                         // Directions button
                         Button(action: {
-                            showProgressView = true
-                            getDirections()
+                            if let startCoordinate = quest.coordinateStart {
+                                viewModel.showProgressView = true
+                                viewModel.getDirections(startCoordinate: startCoordinate)
+                            } else {
+                                viewModel.showProgressView = false
+                                viewModel.directionsErrorMessage = "Error: No quest starting location"
+                            }
                         }) {
                             HStack {
                                 Text("Get directions to starting location")
@@ -351,7 +369,7 @@ struct QuestInfoView: View {
                                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                                     .shadow(radius: 5)
                                     .foregroundColor(.blue)
-                                if showProgressView {
+                                if viewModel.showProgressView {
                                     ProgressView()
                                         .padding()
                                         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
@@ -362,7 +380,7 @@ struct QuestInfoView: View {
                         }
                         .padding()
                         
-                        if let errorMessage = directionsErrorMessage {
+                        if let errorMessage = viewModel.directionsErrorMessage {
                             Text(errorMessage)
                                 .foregroundColor(.white)
                                 .padding()
@@ -455,14 +473,14 @@ struct QuestInfoView: View {
                     }
                 }
                 .fullScreenCover(isPresented: $showActiveQuest) {
-                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, quest: quest/*, viewModel: viewModel*/)
+                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel, quest: quest)
                 }
                 //.padding()
             }
         }
     }
     
-    func getDirections() {
+    /*func getDirections() {
         route = nil
 
         let request = MKDirections.Request()
@@ -509,7 +527,7 @@ struct QuestInfoView: View {
             showProgressView = false
         }
    
-    }
+    }*/
 
 }
 

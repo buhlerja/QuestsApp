@@ -87,6 +87,9 @@ struct CardView: View {
                     if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
                         Label("\(totalLength)", systemImage: "clock")
                             .font(.footnote)
+                    } else {
+                        Label("Unspecified", systemImage: "clock")
+                            .font(.footnote)
                     }
                     if let tempCost = quest.supportingInfo.cost {
                         Label("\(Int(tempCost))", systemImage: "dollarsign.circle")

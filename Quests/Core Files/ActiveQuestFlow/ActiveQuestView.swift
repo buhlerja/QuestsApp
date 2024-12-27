@@ -29,8 +29,8 @@ struct ActiveQuestView: View {
     // Reporting for issues
     @State private var showReportText = false
     
-    //@ObservedObject var viewModel: ActiveQuestViewModel
-    @StateObject var viewModel = ActiveQuestViewModel()
+    @ObservedObject var viewModel: ActiveQuestViewModel
+    //@StateObject var viewModel = ActiveQuestViewModel(mapViewModel: nil)
     
     let quest: QuestStruc
     
@@ -50,6 +50,10 @@ struct ActiveQuestView: View {
                     if let center = currentObjective.objectiveArea.center {
                         MapCircle(center: center, radius: currentObjective.objectiveArea.range)
                             .foregroundStyle(Color.cyan.opacity(0.5))
+                        if let route = viewModel.route {
+                            MapPolyline(route)
+                                .stroke(.blue, lineWidth: 5)
+                        }
                     }
                 }
                 .ignoresSafeArea()
@@ -78,13 +82,42 @@ struct ActiveQuestView: View {
             .fullScreenCover(isPresented: $questCompleted) {
                 QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest, failed: $fail)
             }
-            /* Ensures that the objective does have a timer value as a condition for displaying a timer */
-            if showTimer {
-                VStack {
+           
+            VStack {
+                /* Ensures that the objective does have a timer value as a condition for displaying a timer */
+                if showTimer {
                     timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
                         .padding()
-                    Spacer()
                 }
+                
+                // Directions button UI
+                if let center = currentObjective.objectiveArea.center {
+                    HStack {
+                        Button(action: {
+                            viewModel.getDirections(startCoordinate: center) // view model
+                            viewModel.showProgressView = true
+                        }) {
+                            HStack {
+                                Text("Get directions to objective area")
+                                    .fontWeight(.medium)
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                    .shadow(radius: 5)
+                                    .foregroundColor(.blue)
+                                if viewModel.showProgressView {
+                                    ProgressView()
+                                        .padding()
+                                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                        .shadow(radius: 5)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                Spacer()
+                
             }
             
             //Overlay for correct answers
@@ -96,9 +129,13 @@ struct ActiveQuestView: View {
             Color(answerIsWrong ? .red.opacity(0.5) : .clear)
                 .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
                 .ignoresSafeArea()
+            
         }
         .onAppear {
             updateTimerValue()
+            viewModel.route = nil
+            viewModel.directionsErrorMessage = nil
+            viewModel.showProgressView = false
         }
         .onChange(of: timerIsUp) {
             if timerIsUp == true {
@@ -326,6 +363,9 @@ struct ActiveQuestView: View {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
                 showHintButton = false // reset showHintButton to false
+                viewModel.route = nil // Reset the directions route for the next objective
+                viewModel.directionsErrorMessage = nil // Reset the directions error message for the next objective
+                viewModel.showProgressView = false // Reset the progress view to false for the next objective
                 updateTimerValue() // Reset the timer for the new objective
             }
             
@@ -368,7 +408,7 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, /*viewModel: ActiveQuestViewModel(),*/ quest: QuestStruc.sampleData[0])
+            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, viewModel: ActiveQuestViewModel(mapViewModel:  nil), quest: QuestStruc.sampleData[0])
         }
     }
     
