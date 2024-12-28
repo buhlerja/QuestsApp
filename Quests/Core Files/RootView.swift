@@ -14,9 +14,10 @@ struct RootView: View {
     var body: some View {
         ZStack {
             if !showSignInView {
-                NavigationStack {
+                TabBarView(showSignInView: $showSignInView)
+                /*NavigationStack {
                     QuestView(showSignInView: $showSignInView/*, quests: QuestStruc.sampleData*/) // Eventually need to call by loading local quests from user data structure
-                }
+                }*/
             }
         }
         .onAppear { // Check if user is signed in. If they are, no need to display sign in page

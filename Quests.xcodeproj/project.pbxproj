@@ -37,6 +37,7 @@
 		83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */; };
 		83B5DA192CFE94BD000F3444 /* QuestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA182CFE94BC000F3444 /* QuestManager.swift */; };
 		83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */; };
+		83B98FAC2D2072EB001D000E /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FAB2D2072EB001D000E /* TabBarView.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */; };
 		83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */; };
@@ -92,6 +93,7 @@
 		83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialsDisplayView.swift; sourceTree = "<group>"; };
 		83B5DA182CFE94BC000F3444 /* QuestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestManager.swift; sourceTree = "<group>"; };
 		83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModel.swift; sourceTree = "<group>"; };
+		83B98FAB2D2072EB001D000E /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteViewModel.swift; sourceTree = "<group>"; };
@@ -185,6 +187,14 @@
 				83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */,
 			);
 			path = Authentication;
+			sourceTree = "<group>";
+		};
+		83B98FAA2D2072CA001D000E /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				83B98FAB2D2072EB001D000E /* TabBarView.swift */,
+			);
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 		83C7D98F2CACC9A10046D553 /* MapViewManager */ = {
@@ -352,6 +362,7 @@
 		83FF50722CE25F1800F4E3B0 /* Core Files */ = {
 			isa = PBXGroup;
 			children = (
+				83B98FAA2D2072CA001D000E /* TabBar */,
 				83C7FF4E2D08018C001AAB2E /* Reporting */,
 				83E9F0782CE263E9003595B8 /* Profile */,
 				83E9F08A2CE2B821003595B8 /* CreateQuestFlow */,
@@ -489,6 +500,7 @@
 				83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */,
 				831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */,
 				83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */,
+				83B98FAC2D2072EB001D000E /* TabBarView.swift in Sources */,
 				83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */,
 				832A938C2CCD323D00324719 /* timerView.swift in Sources */,
 				83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */,

@@ -10,26 +10,15 @@ import SwiftUI
 struct QuestView: View {
     
     @StateObject private var viewModel: QuestViewModel
-    @StateObject private var mapViewModel: MapViewModel
+    @ObservedObject private var mapViewModel: MapViewModel
     
     @Binding var showSignInView: Bool
 
-    init(showSignInView: Binding<Bool>) {
+    init(showSignInView: Binding<Bool>,  mapViewModel: MapViewModel) {
         self._showSignInView = showSignInView // Bind the parameter to the @Binding property
-        let mapVM = MapViewModel() // Create the `mapViewModel` instance here
-        self._mapViewModel = StateObject(wrappedValue: mapVM) // Wrap `mapViewModel` in `StateObject`
-        self._viewModel = StateObject(wrappedValue: QuestViewModel(mapViewModel: mapVM)) // Create `QuestViewModel` using the same `mapViewModel`
+        self.mapViewModel = mapViewModel
+        self._viewModel = StateObject(wrappedValue: QuestViewModel(mapViewModel: mapViewModel)) // Create `QuestViewModel` using the same `mapViewModel
     }
-    
-    @State var showCreateQuestView = false
-    @State var questContent = QuestStruc(
-        // Starting location is automatically initialized to NIL, but still is a mandatory parameter
-        title: "",
-        description: "",
-        // objectiveCount is initialized to 0
-        supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
-        metaData: QuestMetaData() // Has appropriate default values in its initializer
-    )
     
     var body: some View {
         NavigationStack {
@@ -145,41 +134,13 @@ struct QuestView: View {
                     }
                 }
             }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        // Reset the quest content and flip boolean indicating to take navigationLink to quest creation flow
-                        questContent = QuestStruc(
-                            title: "",
-                            description: "",
-                            supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []),
-                            metaData: QuestMetaData()
-                        )
-                        showCreateQuestView = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                    /*Button(action: {}) {
-                        Image(systemName: "gear")
-                    }*/
-                    NavigationLink(destination: ProfilePage(mapViewModel: mapViewModel, showSignInView: $showSignInView)) {
-                        Image(systemName: "person")
-                    }
-                    NavigationLink(destination: ReportingView()) {
-                        Image(systemName: "flag")
-                    }
-                }
-            }
             .task {
                 try? await viewModel.loadCurrentUser() 
             }
             .onAppear {
-                showCreateQuestView = false
+                //showCreateQuestView = false
                 mapViewModel.checkIfLocationServicesIsEnabled()
                 viewModel.getQuests()
-            }
-            .navigationDestination(isPresented: $showCreateQuestView) {
-                CreateQuestContentView(questContent: $questContent, isEditing: false)
             }
         }
     }
@@ -187,7 +148,7 @@ struct QuestView: View {
 
 struct QuestView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestView(showSignInView: .constant(false)/*, quests: QuestStruc.sampleData*/)
+        QuestView(showSignInView: .constant(false), mapViewModel: MapViewModel()/*, quests: QuestStruc.sampleData*/)
     }
 }
 

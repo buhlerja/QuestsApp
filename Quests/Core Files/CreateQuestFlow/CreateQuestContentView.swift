@@ -46,6 +46,27 @@ struct CreateQuestContentView: View {
     
     let isEditing: Bool // Parameter to determine whether the view is being called to edit or not
     
+    /*init(questContent: Binding<QuestStruc?>, isEditing: Bool) {
+        self.isEditing = isEditing
+        _questContent = Binding(projectedValue: questContent).wrappedValue.map {
+            Binding.constant($0) // Keep reactive link
+        } ?? Binding.constant(
+            QuestStruc(
+                title: "",
+                description: "",
+                supportingInfo: SupportingInfoStruc(
+                    difficulty: 5,
+                    distance: 5,
+                    recurring: true,
+                    treasure: false,
+                    treasureValue: 5,
+                    materials: []
+                ),
+                metaData: QuestMetaData()
+            )
+        )
+    }*/
+    
     var body: some View {
         ZStack {
             Color(.systemCyan)
