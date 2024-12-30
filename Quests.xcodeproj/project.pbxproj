@@ -38,6 +38,8 @@
 		83B5DA192CFE94BD000F3444 /* QuestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA182CFE94BC000F3444 /* QuestManager.swift */; };
 		83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */; };
 		83B98FAC2D2072EB001D000E /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FAB2D2072EB001D000E /* TabBarView.swift */; };
+		83B98FB22D224333001D000E /* Query+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FB12D224333001D000E /* Query+EXT.swift */; };
+		83B98FB62D2243C2001D000E /* OnFirstAppearViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FB52D2243C2001D000E /* OnFirstAppearViewModifier.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
 		83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */; };
 		83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */; };
@@ -94,6 +96,8 @@
 		83B5DA182CFE94BC000F3444 /* QuestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestManager.swift; sourceTree = "<group>"; };
 		83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestViewModel.swift; sourceTree = "<group>"; };
 		83B98FAB2D2072EB001D000E /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		83B98FB12D224333001D000E /* Query+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Query+EXT.swift"; sourceTree = "<group>"; };
+		83B98FB52D2243C2001D000E /* OnFirstAppearViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppearViewModifier.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteViewModel.swift; sourceTree = "<group>"; };
@@ -157,6 +161,8 @@
 				83E4D75F2C41F14200B8346F /* Info.plist */,
 				83BDD94A2C1498D0001853A3 /* Quests.entitlements */,
 				830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */,
+				83B98FB32D22438D001D000E /* Components */,
+				83B98FB02D224318001D000E /* Extensions */,
 				83E9F0952CEBCFA6003595B8 /* ConstantsAndMacros */,
 				83E9F0832CE26CE3003595B8 /* FireStore */,
 				83FF50682CD84FCC00F4E3B0 /* Utilities */,
@@ -195,6 +201,30 @@
 				83B98FAB2D2072EB001D000E /* TabBarView.swift */,
 			);
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		83B98FB02D224318001D000E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				83B98FB12D224333001D000E /* Query+EXT.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		83B98FB32D22438D001D000E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				83B98FB42D2243A8001D000E /* ViewModifiers */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		83B98FB42D2243A8001D000E /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				83B98FB52D2243C2001D000E /* OnFirstAppearViewModifier.swift */,
+			);
+			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 		83C7D98F2CACC9A10046D553 /* MapViewManager */ = {
@@ -476,6 +506,7 @@
 				83E9F0872CE28364003595B8 /* SupportingInfoStruc.swift in Sources */,
 				831337D12D1B588F0019C84F /* QuestStartScreen.swift in Sources */,
 				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
+				83B98FB62D2243C2001D000E /* OnFirstAppearViewModifier.swift in Sources */,
 				8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */,
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
 				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,
@@ -492,6 +523,7 @@
 				83FB09C12C4C40EB00723EBE /* CreateQuestContentView.swift in Sources */,
 				830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */,
 				83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */,
+				83B98FB22D224333001D000E /* Query+EXT.swift in Sources */,
 				83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */,
 				83C7FF522D109A85001AAB2E /* UserQuestRelationshipManager.swift in Sources */,
 				8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */,

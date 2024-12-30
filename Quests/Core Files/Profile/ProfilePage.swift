@@ -425,26 +425,31 @@ struct ProfilePage: View {
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
+        .onFirstAppear {
+            viewModel.addListenerForWatchlist()
+            //viewModel.addListenerForCreated() // SOME DIFFICULTY INVOLVING MONITORING CHANGES TO THE QUESTSTRUC ITSELF
+        }
         .onAppear {
             viewModel.loadAuthProviders()
             reAuthRequired = false
             isEditing = false
-            editQuest = nil /*QuestStruc(
-                // Starting location is automatically initialized to NIL, but still is a mandatory parameter
-                title: "",
-                description: "",
-                // objectiveCount is initialized to 0
-                supportingInfo: SupportingInfoStruc(difficulty: 5, distance: 5, recurring: true, treasure: false, treasureValue: 5, materials: []), /* Total length not initialized here, so still has a value of NIL (optional parameter). Special instructions not initialized here, so still NIL. Cost initialized to nil */
-                metaData: QuestMetaData() // Has appropriate default values in its initializer
-            ) */
+            editQuest = nil
+            
+            //viewModel.getWatchlistQuests() // DONE IN ON FIRST APPEAR ADD LISTENER
+            viewModel.getCreatedQuests()
+            viewModel.getCompletedQuests()
+            viewModel.getFailedQuests()
         }
         .task {
             try? await viewModel.loadCurrentUser()
-            try? await viewModel.getCreatedQuests()
-            try? await viewModel.getWatchlistQuests()
-            try? await viewModel.getCompletedQuests()
-            try? await viewModel.getFailedQuests()
         }
+        .onChange(of: viewModel.watchlistQuestIds) {
+            //viewModel.getQuestStrucsFromIds(questIdList: viewModel.watchlistQuestIds, listType: .watchlist)
+            viewModel.updateWatchlistQuestStrucListener()
+        }
+        /*.onChange(of: viewModel.createdQuestIds) {
+            viewModel.getQuestStrucsFromIds(questIdList: viewModel.createdQuestIds, listType: .created)
+        }*/
         .animation(.easeInOut, value: isShowingPopup)
     }
 }

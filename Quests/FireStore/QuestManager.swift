@@ -14,6 +14,7 @@
 import Foundation
 import FirebaseFirestore
 import CoreLocation
+import Combine
 
 final class QuestManager {
     
@@ -25,6 +26,8 @@ final class QuestManager {
     private func questDocument(questId: String) -> DocumentReference {
         questCollection.document(questId)
     }
+    
+    private var watchlistQuestStrucsListener: ListenerRegistration? = nil
     
     func uploadQuest(quest: QuestStruc) async throws {
         try questDocument(questId: quest.id.uuidString).setData(from: quest, merge: false)
@@ -102,6 +105,32 @@ final class QuestManager {
     func getAllQuestsCount() async throws -> Int { // Counts the number of documents in a collection
         let snapshot = try await questCollection.count.getAggregation(source: .server)
         return Int(truncating: snapshot.count)
+    }
+    
+    func addListenerForWatchlistQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
+        let (publisher, listener) = questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
+            .addSnapshotListener(as: QuestStruc.self)
+        self.watchlistQuestStrucsListener = listener
+        return publisher
+    }
+    
+    func updateWatchlistQuestStrucListener(with newQuestIds: [String]?) -> AnyPublisher<[QuestStruc], Error> {
+        
+        // Remove the old listener
+        watchlistQuestStrucsListener?.remove()
+        watchlistQuestStrucsListener = nil
+        
+        // If the list is not empty, create a new listener
+        guard let newQuestIds = newQuestIds, !newQuestIds.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+
+        
+        // Set up a new listener
+        return addListenerForWatchlistQuestStrucs(questsToListenTo: newQuestIds)
     }
     
     func getAllQuests(costAscending: Bool?, recurring: Bool?, count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
@@ -244,54 +273,4 @@ final class QuestManager {
         try await questDocument(questId: questId).updateData(data)
         print("Quest successfully hidden")
     }
-}
-
-extension Query { // Extension of questCollection's parent type (Collection Reference) (self == questCollection)
-    
-    /*func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable { // T is a "generic" that can represent any type
-        // Access the entire quests collection
-        let snapshot = try await self.getDocuments()
-        print("Snapshot contains \(snapshot.documents.count) documents.")
-        // ORIGINAL CODE:
-        /*return try snapshot.documents.map({ document in
-            try document.data(as: T.self)
-        }) */
-        return try snapshot.documents.map { document in
-             do {
-                 let decodedData = try document.data(as: T.self)
-                 // Debug: Print successfully decoded data
-                 print("Successfully decoded document with ID \(document.documentID): \(decodedData)")
-                 return decodedData
-             } catch {
-                 // Debug: Print error and document details
-                 print("Error decoding document with ID \(document.documentID): \(error.localizedDescription)")
-                 throw error
-             }
-         }
-
-    } */
-    
-    func getDocuments<T>(as type: T.Type) async throws -> [T] where T : Decodable {
-        try await getDocumentsWithSnapshot(as: type).quests
-    }
-    
-    func getDocumentsWithSnapshot<T>(as type: T.Type) async throws -> (quests: [T], lastDocument: DocumentSnapshot?) where T : Decodable { // T is a "generic" that can represent any type
-        // Access the entire quests collection
-        let snapshot = try await self.getDocuments()
-        print("Snapshot contains \(snapshot.documents.count) documents.")
-        let quests = try snapshot.documents.map({ document in
-            try document.data(as: T.self)
-        })
-
-        return (quests, snapshot.documents.last)
-    }
-    
-    // .start(afterDocument: lastDocument)
-    func startOptionally(afterDocument lastDocument: DocumentSnapshot?) -> Query {
-        guard let lastDocument else {
-            return self
-        }
-        return self.start(afterDocument: lastDocument)
-    }
-    
 }

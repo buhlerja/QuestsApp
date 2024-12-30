@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import Combine
 
 struct RelationshipTable: Codable {
     let userId: String
@@ -67,6 +68,11 @@ final class UserQuestRelationshipManager {
         return decoder
     } ()
     
+    private var userWatchlistQuestsListener: ListenerRegistration? = nil
+    private var userCreatedQuestsListener: ListenerRegistration? = nil
+    private var userCompletedQuestsListener: ListenerRegistration? = nil
+    private var userFailedQuestsListener: ListenerRegistration? = nil
+    
     // List out other functions here
     func addRelationship(userId: String, questId: String, relationshipType: RelationshipType) async throws {
         // Generate a unique document ID based on userId, questId, and relationshipType
@@ -93,6 +99,106 @@ final class UserQuestRelationshipManager {
             .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: listType.rawValue)
             .getDocuments(as: RelationshipTable.self)
         return relationshipTableEntries.map { $0.questId }
+    }
+    
+    // VERSION 1 (WORKS JUST AS WELL AS V2). CALL TO GENERIC FUNC EXT TO QUERY IN QUESTMANAGER USED INSTEAD
+    /*func addListenerForWatchlistQuests(userId: String, completion: @escaping (_ questIds: [String]) -> Void) {
+        let query = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.watchlist.rawValue)
+        
+        self.userWatchlistQuestsListener = query.addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("No documents")
+                return
+            }
+            
+            let relationshipEntries: [RelationshipTable] = documents.compactMap { documentSnapshot in
+                return try? documentSnapshot.data(as: RelationshipTable.self)
+            }
+            completion(relationshipEntries.map { $0.questId })
+            
+            /*querySnapshot?.documentChanges.forEach { diff in
+                if (diff.type == .added) {
+                    // Added logic for added
+                    // print("New quest: \(diff.document.data())")
+                }
+                if (diff.type == .modified) {
+                    // Added logic for modified
+                }
+                if (diff.type == .removed) {
+                    // Added logic for removed
+                }
+            }*/
+        }
+    }*/
+    
+    // VERSION 2 (WORKS JUST AS WELL AS V1). CALL TO GENERIC FUNC EXT TO QUERY IN QUESTMANAGER USED INSTEAD
+    /*func addListenerForWatchlistQuests(userId: String) -> AnyPublisher<[String], Error> {
+        // Create publisher and return it. Quests discovered by the listener are returned to the app through to the previously returned publisher
+        // Just listen to publisher on the view
+        let publisher = PassthroughSubject<[String], Error>() // No starting value
+        
+        let query = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.watchlist.rawValue)
+        
+        self.userWatchlistQuestsListener = query.addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("No documents")
+                return
+            }
+            
+            let relationshipEntries: [RelationshipTable] = documents.compactMap { documentSnapshot in
+                return try? documentSnapshot.data(as: RelationshipTable.self)
+            }
+            publisher.send(relationshipEntries.map { $0.questId })
+        }
+        
+        return publisher.eraseToAnyPublisher() // Any publisher type
+    }*/
+    
+    // VERSION 3. CALL TO GENERIC QUERY EXT IN QUESTMANAGER
+    func addListenerForWatchlistQuests(userId: String) -> AnyPublisher<[RelationshipTable], Error> {
+        let (publisher, listener) = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.watchlist.rawValue)
+            .addSnapshotListener(as: RelationshipTable.self)
+        self.userWatchlistQuestsListener = listener
+        return publisher
+    }
+    
+    func addListenerForCreatedQuests(userId: String) -> AnyPublisher<[RelationshipTable], Error> {
+        let (publisher, listener) = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.created.rawValue)
+            .addSnapshotListener(as: RelationshipTable.self)
+        self.userCreatedQuestsListener = listener
+        return publisher
+    }
+    
+    func addListenerForCompletedQuests(userId: String) -> AnyPublisher<[RelationshipTable], Error> {
+        let (publisher, listener) = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.completed.rawValue)
+            .addSnapshotListener(as: RelationshipTable.self)
+        self.userCompletedQuestsListener = listener
+        return publisher
+    }
+    
+    func addListenerForFailedQuests(userId: String) -> AnyPublisher<[RelationshipTable], Error> {
+        let (publisher, listener) = userQuestRelationshipCollection
+            .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)
+            .whereField(RelationshipTable.CodingKeys.relationshipType.rawValue, isEqualTo: RelationshipType.failed.rawValue)
+            .addSnapshotListener(as: RelationshipTable.self)
+        self.userFailedQuestsListener = listener
+        return publisher
+    }
+    
+    // NOT CURRENTLY USED BUT PERHAPS ONE DAY
+    func removeListenerForWatchlistQuests() {
+        self.userWatchlistQuestsListener?.remove() // NOT REQUIRED SINCE WE WANT TO LISTEN ON ANY APP SCREEN.
+        // Useful for chat apps where you'd want to leave the listener if you leave the chat
     }
     
     // Returns the user IDs corresponding to a questID based on a certain relationship type
