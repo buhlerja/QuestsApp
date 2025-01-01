@@ -427,7 +427,9 @@ struct ProfilePage: View {
         .navigationBarTitleDisplayMode(.large)
         .onFirstAppear {
             viewModel.addListenerForWatchlist()
-            //viewModel.addListenerForCreated() // SOME DIFFICULTY INVOLVING MONITORING CHANGES TO THE QUESTSTRUC ITSELF
+            viewModel.addListenerForCreated()
+            viewModel.addListenerForCompleted()
+            viewModel.addListenerForFailed()
         }
         .onAppear {
             viewModel.loadAuthProviders()
@@ -436,9 +438,9 @@ struct ProfilePage: View {
             editQuest = nil
             
             //viewModel.getWatchlistQuests() // DONE IN ON FIRST APPEAR ADD LISTENER
-            viewModel.getCreatedQuests()
-            viewModel.getCompletedQuests()
-            viewModel.getFailedQuests()
+            //viewModel.getCreatedQuests() // DONE IN ON FIRST APPEAR ADD LISTENER
+            //viewModel.getCompletedQuests() // DONE IN ON FIRST APPEAR ADD LISTENER
+            //viewModel.getFailedQuests() // DONE IN ON FIRST APPEAR ADD LISTENER
         }
         .task {
             try? await viewModel.loadCurrentUser()
@@ -447,9 +449,16 @@ struct ProfilePage: View {
             //viewModel.getQuestStrucsFromIds(questIdList: viewModel.watchlistQuestIds, listType: .watchlist)
             viewModel.updateWatchlistQuestStrucListener()
         }
-        /*.onChange(of: viewModel.createdQuestIds) {
-            viewModel.getQuestStrucsFromIds(questIdList: viewModel.createdQuestIds, listType: .created)
-        }*/
+        .onChange(of: viewModel.createdQuestIds) {
+            //viewModel.getQuestStrucsFromIds(questIdList: viewModel.createdQuestIds, listType: .created)
+            viewModel.updateCreatedQuestStrucListener()
+        }
+        .onChange(of: viewModel.completedQuestIds) {
+            viewModel.updateCompletedQuestStrucListener()
+        }
+        .onChange(of: viewModel.failedQuestIds) {
+            viewModel.updateFailedQuestStrucListener()
+        }
         .animation(.easeInOut, value: isShowingPopup)
     }
 }

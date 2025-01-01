@@ -158,7 +158,7 @@ final class UserQuestRelationshipManager {
         return publisher.eraseToAnyPublisher() // Any publisher type
     }*/
     
-    // VERSION 3. CALL TO GENERIC QUERY EXT IN QUESTMANAGER
+    // VERSION 3. CALL TO GENERIC QUERY EXTENSION IN QUESTMANAGER
     func addListenerForWatchlistQuests(userId: String) -> AnyPublisher<[RelationshipTable], Error> {
         let (publisher, listener) = userQuestRelationshipCollection
             .whereField(RelationshipTable.CodingKeys.userId.rawValue, isEqualTo: userId)

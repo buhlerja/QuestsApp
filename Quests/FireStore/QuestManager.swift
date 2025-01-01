@@ -28,6 +28,10 @@ final class QuestManager {
     }
     
     private var watchlistQuestStrucsListener: ListenerRegistration? = nil
+    private var createdQuestStrucsListener: ListenerRegistration? = nil
+    private var completedQuestStrucsListener: ListenerRegistration? = nil
+    private var failedQuestStrucsListener: ListenerRegistration? = nil
+    private var recommendedQuestStrucsListener: ListenerRegistration? = nil
     
     func uploadQuest(quest: QuestStruc) async throws {
         try questDocument(questId: quest.id.uuidString).setData(from: quest, merge: false)
@@ -37,10 +41,10 @@ final class QuestManager {
         try await questDocument(questId: quest.id.uuidString).delete()
     }
     
-    func deleteQuests(quests: [QuestStruc]) async throws {
+    func deleteQuests(quests: [String]) async throws {
         let batch = Firestore.firestore().batch()
-        for quest in quests {
-            let docRef = questDocument(questId: quest.id.uuidString)
+        for questId in quests {
+            let docRef = questDocument(questId: questId)
             batch.deleteDocument(docRef)
         }
         
@@ -107,6 +111,7 @@ final class QuestManager {
         return Int(truncating: snapshot.count)
     }
     
+    // LISTENER CODE FOR WATCHLIST QUEST STRUCS
     func addListenerForWatchlistQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
         let (publisher, listener) = questCollection
             .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
@@ -127,11 +132,114 @@ final class QuestManager {
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
-
-        
         // Set up a new listener
         return addListenerForWatchlistQuestStrucs(questsToListenTo: newQuestIds)
     }
+    // END LISTENER CODE FOR WATCHLIST QUEST STRUCS
+    
+    // LISTENER CODE FOR CREATED QUEST STRUCS
+    func addListenerForCreatedQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
+        let (publisher, listener) = questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
+            .addSnapshotListener(as: QuestStruc.self)
+        self.createdQuestStrucsListener = listener
+        return publisher
+    }
+    
+    func updateCreatedQuestStrucListener(with newQuestIds: [String]?) -> AnyPublisher<[QuestStruc], Error> {
+        
+        // Remove the old listener
+        createdQuestStrucsListener?.remove()
+        createdQuestStrucsListener = nil
+        
+        // If the list is not empty, create a new listener
+        guard let newQuestIds = newQuestIds, !newQuestIds.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        // Set up a new listener
+        return addListenerForCreatedQuestStrucs(questsToListenTo: newQuestIds)
+    }
+    // END LISTENER CODE FOR CREATED QUEST STRUCS
+    
+    // LISTENER CODE FOR COMPLETED QUEST STRUCS
+    func addListenerForCompletedQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
+        let (publisher, listener) = questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
+            .addSnapshotListener(as: QuestStruc.self)
+        self.completedQuestStrucsListener = listener
+        return publisher
+    }
+    
+    func updateCompletedQuestStrucListener(with newQuestIds: [String]?) -> AnyPublisher<[QuestStruc], Error> {
+        
+        // Remove the old listener
+        completedQuestStrucsListener?.remove()
+        completedQuestStrucsListener = nil
+        
+        // If the list is not empty, create a new listener
+        guard let newQuestIds = newQuestIds, !newQuestIds.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        // Set up a new listener
+        return addListenerForCompletedQuestStrucs(questsToListenTo: newQuestIds)
+    }
+    // END LISTENER CODE FOR COMPLETED QUEST STRUCS
+    
+    // LISTENER CODE FOR FAILED QUEST STRUCS
+    func addListenerForFailedQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
+        let (publisher, listener) = questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
+            .addSnapshotListener(as: QuestStruc.self)
+        self.failedQuestStrucsListener = listener
+        return publisher
+    }
+    
+    func updateFailedQuestStrucListener(with newQuestIds: [String]?) -> AnyPublisher<[QuestStruc], Error> {
+        
+        // Remove the old listener
+        failedQuestStrucsListener?.remove()
+        failedQuestStrucsListener = nil
+        
+        // If the list is not empty, create a new listener
+        guard let newQuestIds = newQuestIds, !newQuestIds.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        // Set up a new listener
+        return addListenerForFailedQuestStrucs(questsToListenTo: newQuestIds)
+    }
+    // END LISTENER CODE FOR FAILED QUEST STRUCS
+    
+    // LISTENER CODE FOR THE QUEST STRUCS IN MAIN QUEST RECOMMENDATION SYSTEM
+    func addListenerForRecommendedQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
+        let (publisher, listener) = questCollection
+            .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
+            .addSnapshotListener(as: QuestStruc.self)
+        self.recommendedQuestStrucsListener = listener
+        return publisher
+    }
+    
+    func updateRecommendedQuestStrucListener(with newQuestIds: [String]?) -> AnyPublisher<[QuestStruc], Error> {
+        
+        // Remove the old listener
+        recommendedQuestStrucsListener?.remove()
+        recommendedQuestStrucsListener = nil
+        
+        // If the list is not empty, create a new listener
+        guard let newQuestIds = newQuestIds, !newQuestIds.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        // Set up a new listener
+        return addListenerForRecommendedQuestStrucs(questsToListenTo: newQuestIds)
+    }
+    // END LISTENER CODE FOR RECOMMENDED QUESTS
     
     func getAllQuests(costAscending: Bool?, recurring: Bool?, count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         print("Getting quests")

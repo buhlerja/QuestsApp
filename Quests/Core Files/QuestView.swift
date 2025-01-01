@@ -142,6 +142,9 @@ struct QuestView: View {
                 mapViewModel.checkIfLocationServicesIsEnabled()
                 viewModel.getQuests()
             }
+            /*.onChange(of: viewModel.quests) { // NEED TO CHANGE QUESTS TO BE A LIST OF IDS INSTEAD OF QUESTSTRUCS
+                // Call the view model function to update the questStruc listener
+            } */
         }
     }
 }

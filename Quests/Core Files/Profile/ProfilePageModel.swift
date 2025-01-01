@@ -36,10 +36,10 @@ final class ProfileViewModel: ObservableObject {
             // Only do the following if the above is successful:
             // Remove from quest database
             try await QuestManager.shared.deleteQuest(quest: quest)
-            // Refresh all lists
-            getCreatedQuests()
-            getCompletedQuests()
-            getFailedQuests()
+            // Refresh all lists -> UPDATE: AUTOMATICALLY REFRESHED THANKS TO LISTENERS
+            //getCreatedQuests()
+            //getCompletedQuests()
+            //getFailedQuests()
             //getWatchlistQuests()
         }
     }
@@ -47,10 +47,10 @@ final class ProfileViewModel: ObservableObject {
     func hideQuest(questId: String) {
         Task {
             try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true)
-            // Refresh all lists
-            getCreatedQuests()
-            getCompletedQuests()
-            getFailedQuests()
+            // Refresh all lists -> UPDATE: AUTOMATICALLY REFRESHED THANKS TO LISTENERS
+            //getCreatedQuests()
+            //getCompletedQuests()
+            //getFailedQuests()
             //getWatchlistQuests()
         }
     }
@@ -58,10 +58,10 @@ final class ProfileViewModel: ObservableObject {
     func unhideQuest(questId: String) {
         Task {
             try await QuestManager.shared.setQuestHidden(questId: questId, hidden: false)
-            // Refresh all lists
-            getCreatedQuests()
-            getCompletedQuests()
-            getFailedQuests()
+            // Refresh all lists -> UPDATE: AUTOMATICALLY REFRESHED THANKS TO LISTENERS
+            //getCreatedQuests()
+            //getCompletedQuests()
+            //getFailedQuests()
             //getWatchlistQuests()
         }
     }
@@ -75,28 +75,35 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
-    func getCompletedQuests() {
+    /*func getCreatedQuests() {
+        guard let user else { return }
+        Task {
+            self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .created)
+        }
+    }*/ // REPLACED BY LISTENER
+    
+    /*func getCompletedQuests() {
         guard let user else { return }
         Task {
             self.completedQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .completed)
         }
-    }
+    }*/ // REPLACED BY LISTENER!!
     
-    func getFailedQuests() {
+   /* func getFailedQuests() {
         guard let user else { return }
         Task {
             self.failedQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .failed)
         }
-    }
+    }*/ /* REPLACED BY LISTENER!! (Automatically listens to the id list of failed quests and will update QuestStrucs when the id list changes. Id list listens to the relationship database for real time updates to failed quests) */
     
     /*func getWatchlistQuests() {
         guard let user else { return }
         Task {
-            //self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucsFromIds(userId: user.userId, listType: .watchlist) // OLD FUNCTION CALL
             self.watchlistQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .watchlist)
         }
-    }*/
-    
+    }*/ // Replaced by listener!!
+
+    // Was never used but removes the middle man call to user manager
     /*func getWatchlistQuestsTwo() async throws {
         guard let user else { return }
         do {
@@ -116,6 +123,7 @@ final class ProfileViewModel: ObservableObject {
         }
     }*/
     
+    // Used before the quest struc listener was introduced.
     /*func getQuestStrucsFromIds(questIdList: [String]?, listType: RelationshipType) {
         Task {
             guard let questIdList = questIdList else {
@@ -141,16 +149,8 @@ final class ProfileViewModel: ObservableObject {
             }
         }
     }*/
-
     
-    // BOTH VERSIONS OF THE FUNCTION WORK AND ARE EQUALLY EFFICIENT!!
-    /*func addListenerForWatchlist() {
-        guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
-        UserQuestRelationshipManager.shared.addListenerForWatchlistQuests(userId: authDataResult.uid) { [weak self] questIds in
-            self?.watchlistQuestIds = questIds
-        }
-    }*/
-    
+    // CREATED QUESTS LISTENER CODE START
     func addListenerForCreated() {
         guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
         UserQuestRelationshipManager.shared.addListenerForCreatedQuests(userId: authDataResult.uid)
@@ -161,6 +161,27 @@ final class ProfileViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    func updateCreatedQuestStrucListener() {
+        QuestManager.shared.updateCreatedQuestStrucListener(with: createdQuestIds)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] questStrucs in
+                self?.createdQuestStrucs = questStrucs
+            }
+            .store(in: &cancellables)
+    }
+    // CREATED QUESTS LISTENER CODE END
+    
+    // WATCHLIST QUESTS LISTENER CODE START
+    //
+    // BOTH VERSIONS OF THE FUNCTION WORK AND ARE EQUALLY EFFICIENT!!
+    /*func addListenerForWatchlist() {
+        guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
+        UserQuestRelationshipManager.shared.addListenerForWatchlistQuests(userId: authDataResult.uid) { [weak self] questIds in
+            self?.watchlistQuestIds = questIds
+        }
+    }*/
     
     func addListenerForWatchlist() {
         guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
@@ -182,7 +203,9 @@ final class ProfileViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
+    // WATCHLIST QUESTS LISTENER CODE END
+    
+    // COMPLETED QUESTS LISTENER CODE START
     func addListenerForCompleted() {
         guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
         UserQuestRelationshipManager.shared.addListenerForCompletedQuests(userId: authDataResult.uid)
@@ -194,6 +217,18 @@ final class ProfileViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func updateCompletedQuestStrucListener() {
+        QuestManager.shared.updateCompletedQuestStrucListener(with: completedQuestIds)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] questStrucs in
+                self?.completedQuestStrucs = questStrucs
+            }
+            .store(in: &cancellables)
+    }
+    // COMPLETED QUESTS LISTENER CODE END
+    
+    // FAILED QUESTS LISTENER CODE START
     func addListenerForFailed() {
         guard let authDataResult = try? AuthenticationManager.shared.getAuthenticatedUser() else { return }
         UserQuestRelationshipManager.shared.addListenerForFailedQuests(userId: authDataResult.uid)
@@ -205,12 +240,16 @@ final class ProfileViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func getCreatedQuests() {
-        guard let user else { return }
-        Task {
-            self.createdQuestStrucs = try await UserManager.shared.getUserQuestStrucs(userId: user.userId, listType: .created)
-        }
+    func updateFailedQuestStrucListener() {
+        QuestManager.shared.updateFailedQuestStrucListener(with: failedQuestIds)
+            .sink { completion in
+                
+            } receiveValue: { [weak self] questStrucs in
+                self?.failedQuestStrucs = questStrucs
+            }
+            .store(in: &cancellables)
     }
+    // FAILED QUESTS LISTENER CODE END
     
     func togglePremiumStatus() {
         guard let user else { return }
@@ -259,8 +298,6 @@ final class ProfileViewModel: ObservableObject {
         // Get the user
         guard let user else { return }
         let userId = user.userId
-        
-        getCreatedQuests()
        
         // Delete authentication info
         try await AuthenticationManager.shared.delete()
@@ -268,7 +305,7 @@ final class ProfileViewModel: ObservableObject {
         // Delete from firestore:
         // 1. Delete all quests for the user!
         // 1.1. Delete all user created quests from the quest struc DB
-        if let quests = createdQuestStrucs {
+        if let quests = createdQuestIds { // Use the ID list that's listening to the DB
             try await QuestManager.shared.deleteQuests(quests: quests)
         }
         // 1.2. Delete all relationships involving the USER ID from the relationship table

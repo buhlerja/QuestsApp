@@ -100,9 +100,15 @@ final class QuestViewModel: ObservableObject {
         }
     }
     
+    // Listens to the list of queststrucs being recommended to the user to update them with real time changes
+    // Need to change quests to be a list of IDS and then this listnes to the quest strucs!!!!!!
+    func updateRecommendedQuestStrucListener() { //
+       
+    }
+    
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
-    }*/ // Works but not needed?
+    }*/ // Works but not needed as it doesn't include pagination.
     
     func addUserWatchlistQuest(questId: String) {
         guard let user else { return } // Make sure the user is logged in or authenticated
