@@ -1,0 +1,667 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		132B9DB99CD6468DD92D84233D88CAA3 /* GFGeoHashQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CF55360F32938B8003C00A9066ABBB2 /* GFGeoHashQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13E8CE9A9A47F803D412A6CD1F00FB2B /* GFGeoHash.m in Sources */ = {isa = PBXBuildFile; fileRef = DF38CC5EE812A97C712D800B74B58656 /* GFGeoHash.m */; };
+		1F771ABC882118F0C6B7068813137CED /* Pods-Quests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 21B0FE6DAEE325771B730B7CDFCF7074 /* Pods-Quests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		20EEC9D46B80662DFDE5F61C83BE2633 /* GFGeoHashQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EEFF0A97CB7153593B38A5950A3435D /* GFGeoHashQuery.m */; };
+		366120E1DAE9B36060C4999B195212C2 /* GFBase32Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB2CF675BEAE2827E93BD4EF162FA76 /* GFBase32Utils.m */; };
+		3B6120ECB3EE8496961E9BCA89F8E44D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EAFCA9048A4494997E7D4E32D9BAE9F /* CoreLocation.framework */; };
+		58D007A3A98E9754C6EDFB76F59DEEE8 /* GFGeoQueryBounds.h in Headers */ = {isa = PBXBuildFile; fileRef = CD187348AA4A55736BE44CA92B761EC1 /* GFGeoQueryBounds.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7A4F7899155D660DC6EB044FA4CC2BF7 /* GeoFire-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A73A9BA264FBC62035743B90A38544 /* GeoFire-dummy.m */; };
+		840E0189377CB9FF6FD11F250A9FAC1D /* GFBase32Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = E3ACAB22A716DEACB96388347716F464 /* GFBase32Utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		99F8D18C57AA439B38751E31ACAF4AD6 /* GFUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 447E622974B27A4178BA2CBE44BECD80 /* GFUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E6B953ADF27789E14F399F8BB3C7E18 /* GFGeoHash.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C360003E5AA762D473D1889E36CED5C /* GFGeoHash.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A33A54819EEF369613A916A364328B5C /* GeoFire-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A6AEBE9342259FEE150F6AEAB3D28860 /* GeoFire-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A792CB5CAF6431FAFCAE401DCCF9A3FD /* Pods-Quests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1238D11701C3ACFCBF7BFDBDFC3CFA /* Pods-Quests-dummy.m */; };
+		ADCEAD7FE69AB1107E90BB2CA484A235 /* GFUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8350825C627C4131C08C9FF73A9CABB0 /* GFUtils.m */; };
+		D135048259494F45F0BEB7AA9974E944 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2003667177CA04F5EEB582FD9CDB2807 /* Foundation.framework */; };
+		D8857EC175F4DC82BE192E4099CDF539 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2003667177CA04F5EEB582FD9CDB2807 /* Foundation.framework */; };
+		D8BACA78A47F71E25FD025C96EB5A910 /* GFGeoQueryBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE732AFF625039D9418EAA3B112E9BE /* GFGeoQueryBounds.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9735B7CE02E20D68DA5B5AC8D01DDF51 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A683E1D2568F05EE13B122A5D0FB567D;
+			remoteInfo = GeoFire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		01669EC32C1DBB9B2215074AE9D2B8FF /* GeoFire.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GeoFire.release.xcconfig; sourceTree = "<group>"; };
+		03AED104C4C5FAECD0A66FE82816EBC0 /* GeoFire-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GeoFire-Info.plist"; sourceTree = "<group>"; };
+		0EAFCA9048A4494997E7D4E32D9BAE9F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
+		17D9E5D5F7CBF4061D80F79575D71547 /* Pods-Quests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Quests.modulemap"; sourceTree = "<group>"; };
+		1CF55360F32938B8003C00A9066ABBB2 /* GFGeoHashQuery.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GFGeoHashQuery.h; path = GeoFire/Utils/GFGeoHashQuery.h; sourceTree = "<group>"; };
+		1EEFF0A97CB7153593B38A5950A3435D /* GFGeoHashQuery.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GFGeoHashQuery.m; path = GeoFire/Utils/GFGeoHashQuery.m; sourceTree = "<group>"; };
+		2003667177CA04F5EEB582FD9CDB2807 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		21B0FE6DAEE325771B730B7CDFCF7074 /* Pods-Quests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Quests-umbrella.h"; sourceTree = "<group>"; };
+		2C360003E5AA762D473D1889E36CED5C /* GFGeoHash.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GFGeoHash.h; path = GeoFire/Utils/GFGeoHash.h; sourceTree = "<group>"; };
+		2C446D9F011189B32A8592B3763FF2C8 /* Pods-Quests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Quests.release.xcconfig"; sourceTree = "<group>"; };
+		2DB2CF675BEAE2827E93BD4EF162FA76 /* GFBase32Utils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GFBase32Utils.m; path = GeoFire/Utils/GFBase32Utils.m; sourceTree = "<group>"; };
+		373FA1C889C790E186B72E7B483D4185 /* Pods-Quests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Quests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		447E622974B27A4178BA2CBE44BECD80 /* GFUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GFUtils.h; path = GeoFire/Utils/GFUtils.h; sourceTree = "<group>"; };
+		4D53F71E5A785D5A88BB14520A91DA2D /* GeoFire.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = GeoFire.modulemap; sourceTree = "<group>"; };
+		5B1238D11701C3ACFCBF7BFDBDFC3CFA /* Pods-Quests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Quests-dummy.m"; sourceTree = "<group>"; };
+		7DE732AFF625039D9418EAA3B112E9BE /* GFGeoQueryBounds.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GFGeoQueryBounds.m; path = GeoFire/Utils/GFGeoQueryBounds.m; sourceTree = "<group>"; };
+		8350825C627C4131C08C9FF73A9CABB0 /* GFUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GFUtils.m; path = GeoFire/Utils/GFUtils.m; sourceTree = "<group>"; };
+		8A32D5F3A0DE08F28E56A5DD3FA2364D /* Pods-Quests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Quests"; path = Pods_Quests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AC93C6E70949E8D9326DCBF88CD0C35 /* Pods-Quests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Quests.debug.xcconfig"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A51398E29C133F7078E5AEBFDDAF7BB4 /* GeoFire-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GeoFire-prefix.pch"; sourceTree = "<group>"; };
+		A6AEBE9342259FEE150F6AEAB3D28860 /* GeoFire-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GeoFire-umbrella.h"; sourceTree = "<group>"; };
+		A8D161379C2351E7F8432029472D2ECE /* Pods-Quests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Quests-acknowledgements.plist"; sourceTree = "<group>"; };
+		CD187348AA4A55736BE44CA92B761EC1 /* GFGeoQueryBounds.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GFGeoQueryBounds.h; path = GeoFire/Utils/GFGeoQueryBounds.h; sourceTree = "<group>"; };
+		D449099C9456E9F8C3CDC1324C09DF0B /* GeoFire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GeoFire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEB72A05C0B6468E749C99BA675C7F70 /* GeoFire.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GeoFire.debug.xcconfig; sourceTree = "<group>"; };
+		DF38CC5EE812A97C712D800B74B58656 /* GFGeoHash.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GFGeoHash.m; path = GeoFire/Utils/GFGeoHash.m; sourceTree = "<group>"; };
+		E3ACAB22A716DEACB96388347716F464 /* GFBase32Utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GFBase32Utils.h; path = GeoFire/Utils/GFBase32Utils.h; sourceTree = "<group>"; };
+		E7A73A9BA264FBC62035743B90A38544 /* GeoFire-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GeoFire-dummy.m"; sourceTree = "<group>"; };
+		EBBE2F2E34DFDFEAB8F7AB377CA57A25 /* Pods-Quests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Quests-Info.plist"; sourceTree = "<group>"; };
+		F814D455DF68AC06B786C076383A96EB /* Pods-Quests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Quests-frameworks.sh"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		025D2D0DDE9C8A75A6186745268D0E0C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8857EC175F4DC82BE192E4099CDF539 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		12FF4A1464591914D8655A618826EF6B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B6120ECB3EE8496961E9BCA89F8E44D /* CoreLocation.framework in Frameworks */,
+				D135048259494F45F0BEB7AA9974E944 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0DD32534975543DC6EA9492D8EEC96DF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0F541589C171AD64E0C2909D406818CD /* GeoFire */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		0F541589C171AD64E0C2909D406818CD /* GeoFire */ = {
+			isa = PBXGroup;
+			children = (
+				2FB19AC2E8EFD5D063C4B7352DD7D550 /* Support Files */,
+				681B215762EA018B9168357D9D83105A /* Utils */,
+			);
+			path = GeoFire;
+			sourceTree = "<group>";
+		};
+		1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9196D96EDB75D27B0C8DC6922B707C74 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2FB19AC2E8EFD5D063C4B7352DD7D550 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				4D53F71E5A785D5A88BB14520A91DA2D /* GeoFire.modulemap */,
+				E7A73A9BA264FBC62035743B90A38544 /* GeoFire-dummy.m */,
+				03AED104C4C5FAECD0A66FE82816EBC0 /* GeoFire-Info.plist */,
+				A51398E29C133F7078E5AEBFDDAF7BB4 /* GeoFire-prefix.pch */,
+				A6AEBE9342259FEE150F6AEAB3D28860 /* GeoFire-umbrella.h */,
+				DEB72A05C0B6468E749C99BA675C7F70 /* GeoFire.debug.xcconfig */,
+				01669EC32C1DBB9B2215074AE9D2B8FF /* GeoFire.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/GeoFire";
+			sourceTree = "<group>";
+		};
+		4BC280701CAD3A4FD3887E862D0BD0D0 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				7A873EFF2E4D43898B173AA483C5FF5B /* Pods-Quests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		681B215762EA018B9168357D9D83105A /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E3ACAB22A716DEACB96388347716F464 /* GFBase32Utils.h */,
+				2DB2CF675BEAE2827E93BD4EF162FA76 /* GFBase32Utils.m */,
+				2C360003E5AA762D473D1889E36CED5C /* GFGeoHash.h */,
+				DF38CC5EE812A97C712D800B74B58656 /* GFGeoHash.m */,
+				1CF55360F32938B8003C00A9066ABBB2 /* GFGeoHashQuery.h */,
+				1EEFF0A97CB7153593B38A5950A3435D /* GFGeoHashQuery.m */,
+				CD187348AA4A55736BE44CA92B761EC1 /* GFGeoQueryBounds.h */,
+				7DE732AFF625039D9418EAA3B112E9BE /* GFGeoQueryBounds.m */,
+				447E622974B27A4178BA2CBE44BECD80 /* GFUtils.h */,
+				8350825C627C4131C08C9FF73A9CABB0 /* GFUtils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		7A873EFF2E4D43898B173AA483C5FF5B /* Pods-Quests */ = {
+			isa = PBXGroup;
+			children = (
+				17D9E5D5F7CBF4061D80F79575D71547 /* Pods-Quests.modulemap */,
+				373FA1C889C790E186B72E7B483D4185 /* Pods-Quests-acknowledgements.markdown */,
+				A8D161379C2351E7F8432029472D2ECE /* Pods-Quests-acknowledgements.plist */,
+				5B1238D11701C3ACFCBF7BFDBDFC3CFA /* Pods-Quests-dummy.m */,
+				F814D455DF68AC06B786C076383A96EB /* Pods-Quests-frameworks.sh */,
+				EBBE2F2E34DFDFEAB8F7AB377CA57A25 /* Pods-Quests-Info.plist */,
+				21B0FE6DAEE325771B730B7CDFCF7074 /* Pods-Quests-umbrella.h */,
+				9AC93C6E70949E8D9326DCBF88CD0C35 /* Pods-Quests.debug.xcconfig */,
+				2C446D9F011189B32A8592B3763FF2C8 /* Pods-Quests.release.xcconfig */,
+			);
+			name = "Pods-Quests";
+			path = "Target Support Files/Pods-Quests";
+			sourceTree = "<group>";
+		};
+		9196D96EDB75D27B0C8DC6922B707C74 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				0EAFCA9048A4494997E7D4E32D9BAE9F /* CoreLocation.framework */,
+				2003667177CA04F5EEB582FD9CDB2807 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		C4F5712425C9684F0B4FC8FB291F8A5D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D449099C9456E9F8C3CDC1324C09DF0B /* GeoFire.framework */,
+				8A32D5F3A0DE08F28E56A5DD3FA2364D /* Pods-Quests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				1628BF05B4CAFDCC3549A101F5A10A17 /* Frameworks */,
+				0DD32534975543DC6EA9492D8EEC96DF /* Pods */,
+				C4F5712425C9684F0B4FC8FB291F8A5D /* Products */,
+				4BC280701CAD3A4FD3887E862D0BD0D0 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		45177D8FC9981192A8C45CE2617584A5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F771ABC882118F0C6B7068813137CED /* Pods-Quests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B743D561D4CCFB765F967673D5652AB7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A33A54819EEF369613A916A364328B5C /* GeoFire-umbrella.h in Headers */,
+				840E0189377CB9FF6FD11F250A9FAC1D /* GFBase32Utils.h in Headers */,
+				9E6B953ADF27789E14F399F8BB3C7E18 /* GFGeoHash.h in Headers */,
+				132B9DB99CD6468DD92D84233D88CAA3 /* GFGeoHashQuery.h in Headers */,
+				58D007A3A98E9754C6EDFB76F59DEEE8 /* GFGeoQueryBounds.h in Headers */,
+				99F8D18C57AA439B38751E31ACAF4AD6 /* GFUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A683E1D2568F05EE13B122A5D0FB567D /* GeoFire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 886081931C306C3D498977742D0B7D21 /* Build configuration list for PBXNativeTarget "GeoFire" */;
+			buildPhases = (
+				B743D561D4CCFB765F967673D5652AB7 /* Headers */,
+				81957F96CF275231F4C2D016B504C9BB /* Sources */,
+				12FF4A1464591914D8655A618826EF6B /* Frameworks */,
+				DC920129463106239D2FCB428742FAF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GeoFire;
+			productName = GeoFire;
+			productReference = D449099C9456E9F8C3CDC1324C09DF0B /* GeoFire.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D9B310D1BE736A04F8A13E0A22E4677E /* Pods-Quests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF03301AD2E9A99AB48E7CA59E462EE /* Build configuration list for PBXNativeTarget "Pods-Quests" */;
+			buildPhases = (
+				45177D8FC9981192A8C45CE2617584A5 /* Headers */,
+				A96F90E128EAB41A8C36B95E1F9EBAFB /* Sources */,
+				025D2D0DDE9C8A75A6186745268D0E0C /* Frameworks */,
+				D906C61265AA9265D21FFBF7C5FBDB7D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA9689ED6BA77E7D8106056AAA9BD88F /* PBXTargetDependency */,
+			);
+			name = "Pods-Quests";
+			productName = Pods_Quests;
+			productReference = 8A32D5F3A0DE08F28E56A5DD3FA2364D /* Pods-Quests */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = C4F5712425C9684F0B4FC8FB291F8A5D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A683E1D2568F05EE13B122A5D0FB567D /* GeoFire */,
+				D9B310D1BE736A04F8A13E0A22E4677E /* Pods-Quests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D906C61265AA9265D21FFBF7C5FBDB7D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC920129463106239D2FCB428742FAF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		81957F96CF275231F4C2D016B504C9BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A4F7899155D660DC6EB044FA4CC2BF7 /* GeoFire-dummy.m in Sources */,
+				366120E1DAE9B36060C4999B195212C2 /* GFBase32Utils.m in Sources */,
+				13E8CE9A9A47F803D412A6CD1F00FB2B /* GFGeoHash.m in Sources */,
+				20EEC9D46B80662DFDE5F61C83BE2633 /* GFGeoHashQuery.m in Sources */,
+				D8BACA78A47F71E25FD025C96EB5A910 /* GFGeoQueryBounds.m in Sources */,
+				ADCEAD7FE69AB1107E90BB2CA484A235 /* GFUtils.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A96F90E128EAB41A8C36B95E1F9EBAFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A792CB5CAF6431FAFCAE401DCCF9A3FD /* Pods-Quests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BA9689ED6BA77E7D8106056AAA9BD88F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GeoFire;
+			target = A683E1D2568F05EE13B122A5D0FB567D /* GeoFire */;
+			targetProxy = 9735B7CE02E20D68DA5B5AC8D01DDF51 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		063F9DFACDB37F1832904EE7FE76635F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01669EC32C1DBB9B2215074AE9D2B8FF /* GeoFire.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_PREFIX_HEADER = "Target Support Files/GeoFire/GeoFire-prefix.pch";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Target Support Files/GeoFire/GeoFire-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/GeoFire/GeoFire.modulemap";
+				PRODUCT_MODULE_NAME = GeoFire;
+				PRODUCT_NAME = GeoFire;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		3892242E18A35728589AA1DDEBD07877 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C446D9F011189B32A8592B3763FF2C8 /* Pods-Quests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-Quests/Pods-Quests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Quests/Pods-Quests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		39F5B7CD9D2655A0D1F7D42E37920E8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		3C8E0083E8CE499C77438198DA5FDC27 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9AC93C6E70949E8D9326DCBF88CD0C35 /* Pods-Quests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = "Target Support Files/Pods-Quests/Pods-Quests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Quests/Pods-Quests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7C62AEA22088F38A117DE044D164B7C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DEB72A05C0B6468E749C99BA675C7F70 /* GeoFire.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_PREFIX_HEADER = "Target Support Files/GeoFire/GeoFire-prefix.pch";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Target Support Files/GeoFire/GeoFire-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/GeoFire/GeoFire.modulemap";
+				PRODUCT_MODULE_NAME = GeoFire;
+				PRODUCT_NAME = GeoFire;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C873D3C071BDDC046D6E8F63C69C2591 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39F5B7CD9D2655A0D1F7D42E37920E8B /* Debug */,
+				C873D3C071BDDC046D6E8F63C69C2591 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF03301AD2E9A99AB48E7CA59E462EE /* Build configuration list for PBXNativeTarget "Pods-Quests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C8E0083E8CE499C77438198DA5FDC27 /* Debug */,
+				3892242E18A35728589AA1DDEBD07877 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		886081931C306C3D498977742D0B7D21 /* Build configuration list for PBXNativeTarget "GeoFire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7C62AEA22088F38A117DE044D164B7C5 /* Debug */,
+				063F9DFACDB37F1832904EE7FE76635F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

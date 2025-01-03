@@ -350,6 +350,9 @@ struct CreateQuestContentView: View {
             
             }
         }
+        .onChange(of: questContent.coordinateStart) {
+            questContent.generateGeohash()
+        }
         .task {
             try? await viewModel.loadCurrentUser()
         }

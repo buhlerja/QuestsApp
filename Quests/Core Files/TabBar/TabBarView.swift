@@ -70,6 +70,7 @@ struct TabBarView: View {
             
         }
         .onAppear {
+            mapViewModel.checkIfLocationServicesIsEnabled()
             UITabBar.appearance().unselectedItemTintColor = UIColor.systemGray
             UITabBar.appearance().tintColor = UIColor.blue // For selected items
         }

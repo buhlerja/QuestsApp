@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56C1FC0D8A029515AFF78F4E /* Pods_Quests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F4C4C1FE0ADF052558AF148 /* Pods_Quests.framework */; };
 		830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830524352C5877B5003BD2C2 /* StartingLocSelector.swift */; };
 		830BCD7D2BFA735D0056BC8D /* QuestsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */; };
 		830BCD832BFA73650056BC8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830BCD822BFA73650056BC8D /* Assets.xcassets */; };
@@ -18,7 +19,6 @@
 		831337D12D1B588F0019C84F /* QuestStartScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831337D02D1B588F0019C84F /* QuestStartScreen.swift */; };
 		8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1E92C9F7B010079E403 /* AuthenticationView.swift */; };
 		8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */; };
-		8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */; };
 		8315E1F02CA2176A0079E403 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1EF2CA2176A0079E403 /* RootView.swift */; };
 		8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8315E1F12CA21D580079E403 /* ProfilePage.swift */; };
 		832A938C2CCD323D00324719 /* timerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832A938B2CCD323D00324719 /* timerView.swift */; };
@@ -29,6 +29,9 @@
 		834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834C44912C950DCC00DC1BFC /* areaSelector.swift */; };
 		834C44972C95E29000DC1BFC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44962C95E29000DC1BFC /* FirebaseAnalytics */; };
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
+		83793C6D2D277D690059FF17 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83793C6C2D277D690059FF17 /* AuthenticationManager.swift */; };
+		83793C6F2D277D790059FF17 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83793C6E2D277D790059FF17 /* SignInAppleHelper.swift */; };
+		83793C712D277D880059FF17 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83793C702D277D880059FF17 /* SignInGoogleHelper.swift */; };
 		83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C822C39BA0A0061C8D0 /* QuestView.swift */; };
 		83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */; };
 		83B5DA0B2CF3C5B3000F3444 /* objectiveArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */; };
@@ -45,6 +48,7 @@
 		83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */; };
 		83C7FF522D109A85001AAB2E /* UserQuestRelationshipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF512D109A84001AAB2E /* UserQuestRelationshipManager.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
+		83DC85E12D278E46001E905C /* Coordinate2D+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DC85E02D278E46001E905C /* Coordinate2D+EXT.swift */; };
 		83E9F0772CE2639E003595B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0762CE2639E003595B8 /* CardView.swift */; };
 		83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F0792CE26450003595B8 /* ProfilePageModel.swift */; };
 		83E9F07E2CE26592003595B8 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E9F07D2CE26592003595B8 /* AuthenticationViewModel.swift */; };
@@ -60,12 +64,13 @@
 		83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50642CD84C1A00F4E3B0 /* GoogleSignIn */; };
 		83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50662CD84C1A00F4E3B0 /* GoogleSignInSwift */; };
 		83FF506A2CD84FED00F4E3B0 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF50692CD84FED00F4E3B0 /* Utilities.swift */; };
-		83FF506C2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */; };
-		83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */; };
 		83FF50712CE25D7E00F4E3B0 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 83FF50702CE25D7E00F4E3B0 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F4C4C1FE0ADF052558AF148 /* Pods_Quests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6184757032D302C2B3B25F41 /* Pods-Quests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quests.debug.xcconfig"; path = "Target Support Files/Pods-Quests/Pods-Quests.debug.xcconfig"; sourceTree = "<group>"; };
+		7EFC6104C45A580FB5D5CED1 /* Pods-Quests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quests.release.xcconfig"; path = "Target Support Files/Pods-Quests/Pods-Quests.release.xcconfig"; sourceTree = "<group>"; };
 		830524352C5877B5003BD2C2 /* StartingLocSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartingLocSelector.swift; sourceTree = "<group>"; };
 		830BCD792BFA735D0056BC8D /* Quests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		830BCD7C2BFA735D0056BC8D /* QuestsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestsApp.swift; sourceTree = "<group>"; };
@@ -78,7 +83,6 @@
 		831337D02D1B588F0019C84F /* QuestStartScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestStartScreen.swift; sourceTree = "<group>"; };
 		8315E1E92C9F7B010079E403 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		8315E1EB2C9F7C920079E403 /* SignInEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInEmailView.swift; sourceTree = "<group>"; };
-		8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		8315E1EF2CA2176A0079E403 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		8315E1F12CA21D580079E403 /* ProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePage.swift; sourceTree = "<group>"; };
 		832A938B2CCD323D00324719 /* timerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = timerView.swift; sourceTree = "<group>"; };
@@ -87,6 +91,9 @@
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
+		83793C6C2D277D690059FF17 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		83793C6E2D277D790059FF17 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
+		83793C702D277D880059FF17 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
 		83980C822C39BA0A0061C8D0 /* QuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestView.swift; sourceTree = "<group>"; };
 		83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestInfoView.swift; sourceTree = "<group>"; };
 		83B5DA0A2CF3C5B3000F3444 /* objectiveArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = objectiveArea.swift; sourceTree = "<group>"; };
@@ -104,6 +111,7 @@
 		83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportingView.swift; sourceTree = "<group>"; };
 		83C7FF512D109A84001AAB2E /* UserQuestRelationshipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserQuestRelationshipManager.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
+		83DC85E02D278E46001E905C /* Coordinate2D+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Coordinate2D+EXT.swift"; sourceTree = "<group>"; };
 		83E4D75F2C41F14200B8346F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		83E9F0762CE2639E003595B8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		83E9F0792CE26450003595B8 /* ProfilePageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageModel.swift; sourceTree = "<group>"; };
@@ -118,8 +126,6 @@
 		83FE5BAB2C38B6090005EA55 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		83FF50692CD84FED00F4E3B0 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInGoogleHelper.swift; sourceTree = "<group>"; };
-		83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +138,7 @@
 				83FF50652CD84C1A00F4E3B0 /* GoogleSignIn in Frameworks */,
 				83FF50712CE25D7E00F4E3B0 /* FirebaseFirestore in Frameworks */,
 				83FF50672CD84C1A00F4E3B0 /* GoogleSignInSwift in Frameworks */,
+				56C1FC0D8A029515AFF78F4E /* Pods_Quests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +151,7 @@
 				830BCD7B2BFA735D0056BC8D /* Quests */,
 				830BCD7A2BFA735D0056BC8D /* Products */,
 				83FF506F2CE25D7E00F4E3B0 /* Frameworks */,
+				D1AA8B51B9A765FEA649627A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,8 +174,8 @@
 				83E9F0952CEBCFA6003595B8 /* ConstantsAndMacros */,
 				83E9F0832CE26CE3003595B8 /* FireStore */,
 				83FF50682CD84FCC00F4E3B0 /* Utilities */,
-				83C7D98F2CACC9A10046D553 /* MapViewManager */,
 				8315E1E82C9F7AD00079E403 /* Authentication */,
+				83C7D98F2CACC9A10046D553 /* MapViewManager */,
 				83FE5BA82C38B5430005EA55 /* Models */,
 				83FF50722CE25F1800F4E3B0 /* Core Files */,
 				83FF50612CD849A500F4E3B0 /* GoogleService-Info.plist */,
@@ -188,9 +196,9 @@
 		8315E1E82C9F7AD00079E403 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				8315E1ED2C9F7F030079E403 /* AuthenticationManager.swift */,
-				83FF506B2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift */,
-				83FF506D2CE1718F00F4E3B0 /* SignInAppleHelper.swift */,
+				83793C6C2D277D690059FF17 /* AuthenticationManager.swift */,
+				83793C6E2D277D790059FF17 /* SignInAppleHelper.swift */,
+				83793C702D277D880059FF17 /* SignInGoogleHelper.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -207,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				83B98FB12D224333001D000E /* Query+EXT.swift */,
+				83DC85E02D278E46001E905C /* Coordinate2D+EXT.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -385,6 +394,7 @@
 		83FF506F2CE25D7E00F4E3B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2F4C4C1FE0ADF052558AF148 /* Pods_Quests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -406,6 +416,15 @@
 			path = "Core Files";
 			sourceTree = "<group>";
 		};
+		D1AA8B51B9A765FEA649627A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6184757032D302C2B3B25F41 /* Pods-Quests.debug.xcconfig */,
+				7EFC6104C45A580FB5D5CED1 /* Pods-Quests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -413,9 +432,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 830BCD892BFA73650056BC8D /* Build configuration list for PBXNativeTarget "Quests" */;
 			buildPhases = (
+				F846473EAA721DD8A4F397ED /* [CP] Check Pods Manifest.lock */,
 				830BCD752BFA735D0056BC8D /* Sources */,
 				830BCD762BFA735D0056BC8D /* Frameworks */,
 				830BCD772BFA735D0056BC8D /* Resources */,
+				66EA21051DCB5D7A5A241851 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -483,6 +504,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		66EA21051DCB5D7A5A241851 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Quests/Pods-Quests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Quests/Pods-Quests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Quests/Pods-Quests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F846473EAA721DD8A4F397ED /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Quests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		830BCD752BFA735D0056BC8D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -494,7 +557,6 @@
 				83E9F07A2CE26450003595B8 /* ProfilePageModel.swift in Sources */,
 				83E9F0972CEBCFC7003595B8 /* Macros.swift in Sources */,
 				8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */,
-				83FF506E2CE1718F00F4E3B0 /* SignInAppleHelper.swift in Sources */,
 				83E9F0852CE26D1D003595B8 /* UserManager.swift in Sources */,
 				83B5DA172CFE5AF4000F3444 /* MaterialsDisplayView.swift in Sources */,
 				831337CF2D1B4CA80019C84F /* ReportManager.swift in Sources */,
@@ -507,15 +569,16 @@
 				831337D12D1B588F0019C84F /* QuestStartScreen.swift in Sources */,
 				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
 				83B98FB62D2243C2001D000E /* OnFirstAppearViewModifier.swift in Sources */,
-				8315E1EE2C9F7F030079E403 /* AuthenticationManager.swift in Sources */,
 				830524362C5877B5003BD2C2 /* StartingLocSelector.swift in Sources */,
 				83108B3A2C6D86CE00BDC83B /* ObjectiveStruc.swift in Sources */,
 				83FE5BAA2C38B57D0005EA55 /* QuestStruc.swift in Sources */,
-				83FF506C2CDEFF9E00F4E3B0 /* SignInGoogleHelper.swift in Sources */,
+				83793C6D2D277D690059FF17 /* AuthenticationManager.swift in Sources */,
 				83B5DA0D2CF4EA30000F3444 /* QuestCreateViewModel.swift in Sources */,
 				83E9F0772CE2639E003595B8 /* CardView.swift in Sources */,
 				8315E1EC2C9F7C920079E403 /* SignInEmailView.swift in Sources */,
+				83DC85E12D278E46001E905C /* Coordinate2D+EXT.swift in Sources */,
 				834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */,
+				83793C6F2D277D790059FF17 /* SignInAppleHelper.swift in Sources */,
 				830F234E2CC416A8008586C9 /* QuestCompleteView.swift in Sources */,
 				83E9F0812CE26605003595B8 /* SignInEmailViewModel.swift in Sources */,
 				83FE5BAC2C38B6090005EA55 /* Theme.swift in Sources */,
@@ -529,6 +592,7 @@
 				8315E1EA2C9F7B010079E403 /* AuthenticationView.swift in Sources */,
 				83B5DA0F2CF53044000F3444 /* QuestMetaData.swift in Sources */,
 				83980C832C39BA0A0061C8D0 /* QuestView.swift in Sources */,
+				83793C712D277D880059FF17 /* SignInGoogleHelper.swift in Sources */,
 				83980C852C3E0B9B0061C8D0 /* QuestInfoView.swift in Sources */,
 				831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */,
 				83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */,
@@ -663,6 +727,7 @@
 		};
 		830BCD8A2BFA73650056BC8D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6184757032D302C2B3B25F41 /* Pods-Quests.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -672,6 +737,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Quests/Preview Content\"";
 				DEVELOPMENT_TEAM = 946TY26Z33;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Quests/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Quests;
@@ -697,6 +763,7 @@
 		};
 		830BCD8B2BFA73650056BC8D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7EFC6104C45A580FB5D5CED1 /* Pods-Quests.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -706,6 +773,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Quests/Preview Content\"";
 				DEVELOPMENT_TEAM = 946TY26Z33;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Quests/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Quests;

@@ -7,10 +7,12 @@
 
 import Foundation
 import MapKit
+import GeoFire // For geohashing
 
 struct QuestStruc: Identifiable, Codable {
     let id: UUID
     var coordinateStart: CLLocationCoordinate2D? = nil
+    var hash: String? // GEOHASH
     var title: String
     var description: String
     var hidden: Bool
@@ -31,6 +33,14 @@ struct QuestStruc: Identifiable, Codable {
         self.objectives = objectives
         self.supportingInfo = supportingInfo
         self.metaData = metaData // Has default values in its initializer, so don't need to explicitly pass values on setup
+        
+        // Generate geohash if coordinateStart is available
+        if let coordinateStart = coordinateStart {
+            let startLocation = CLLocationCoordinate2D(latitude: coordinateStart.latitude, longitude: coordinateStart.longitude)
+            self.hash = GFUtils.geoHash(forLocation: startLocation)
+        } else {
+            self.hash = nil
+        }
     }
     
     // Custom encoding and decoding
@@ -45,6 +55,7 @@ struct QuestStruc: Identifiable, Codable {
         case objectives
         case supportingInfo = "supporting_info"
         case metaData = "meta_data"
+        case hash  // Include geohash in encoding and decoding
     }
     
     // How will we determine equality among two quest objects // CAUSES CREATE QUEST FLOW TO BE BAD
@@ -71,6 +82,8 @@ struct QuestStruc: Identifiable, Codable {
         self.objectives = try container.decode([ObjectiveStruc].self, forKey: .objectives)
         self.supportingInfo = try container.decode(SupportingInfoStruc.self, forKey: .supportingInfo)
         self.metaData = try container.decode(QuestMetaData.self, forKey: .metaData)
+        // Decode geohash
+        self.hash = try container.decodeIfPresent(String.self, forKey: .hash)
     }
     
     // Custom encoder to handle encoding of optional CLLocationCoordinate2D
@@ -89,6 +102,10 @@ struct QuestStruc: Identifiable, Codable {
         try container.encode(self.objectives, forKey: .objectives)
         try container.encode(self.supportingInfo, forKey: .supportingInfo)
         try container.encode(self.metaData, forKey: .metaData)
+        // Encode geohash if available
+        if let hash = self.hash {
+            try container.encode(hash, forKey: .hash)
+        }
     }
     
     mutating func editTotalLength(_ objective: ObjectiveStruc, originalHrConstraint: Int = 0, originalMinConstraint: Int = 0) {
@@ -113,6 +130,14 @@ struct QuestStruc: Identifiable, Codable {
         }
        
 
+    }
+    
+    // Sets the hash for the quest's stored starting location
+    mutating func generateGeohash() {
+        if let coordinateStart = coordinateStart {
+            let startLocation = CLLocationCoordinate2D(latitude: coordinateStart.latitude, longitude: coordinateStart.longitude)
+            hash = GFUtils.geoHash(forLocation: startLocation)
+        }
     }
     
     mutating func addObjective(_ objective: ObjectiveStruc) {

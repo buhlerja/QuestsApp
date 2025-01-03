@@ -31,7 +31,7 @@ struct SignInWithAppleButtonViewRepresentable: UIViewRepresentable {
     }
 }
 
-@MainActor
+@MainActor 
 final class SignInAppleHelper: NSObject {
     
     private var currentNonce: String?

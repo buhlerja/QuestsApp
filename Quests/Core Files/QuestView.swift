@@ -137,14 +137,10 @@ struct QuestView: View {
             .task {
                 try? await viewModel.loadCurrentUser() 
             }
-            .onAppear {
-                //showCreateQuestView = false
-                mapViewModel.checkIfLocationServicesIsEnabled()
-                viewModel.getQuests()
+            .onFirstAppear {
+                // We check for location services in the bottom menu view instead of in this view
+                viewModel.getQuests() // Do only on first appear since only refreshes new quests anyways. Called again when bottom of list reached
             }
-            /*.onChange(of: viewModel.quests) { // NEED TO CHANGE QUESTS TO BE A LIST OF IDS INSTEAD OF QUESTSTRUCS
-                // Call the view model function to update the questStruc listener
-            } */
         }
     }
 }

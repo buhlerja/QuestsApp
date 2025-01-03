@@ -16,8 +16,9 @@ struct QuestMetaData: Codable {
     var rating: Double? // Will not show until at least one rating has been given
     var numRatings: Int
     var isPremiumQuest: Bool
+    var distanceToUser: Double? // Locally computed property. Should NEVER be sent to the database. Needed when all is said and done?!!!??
     
-    init(/*dateCreated: Date? = Date(),*/ numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, numRatings: Int = 0, isPremiumQuest: Bool = false) {
+    init(/*dateCreated: Date? = Date(),*/ numTimesPlayed: Int = 0, numSuccesses: Int = 0, numFails: Int = 0, completionRate: Double? = nil, rating: Double? = nil, numRatings: Int = 0, isPremiumQuest: Bool = false, distanceToUser: Double? = nil) {
         //self.dateCreated = dateCreated
         self.numTimesPlayed = numTimesPlayed
         self.numSuccesses = numSuccesses
@@ -26,6 +27,7 @@ struct QuestMetaData: Codable {
         self.rating = rating
         self.numRatings = numRatings
         self.isPremiumQuest = isPremiumQuest
+        self.distanceToUser = distanceToUser
     }
     
     enum CodingKeys: String, CodingKey {
@@ -37,6 +39,7 @@ struct QuestMetaData: Codable {
         case rating = "rating"
         case numRatings = "num_ratings"
         case isPremiumQuest = "is_premium_quest"
+        // distanceToUser is excluded because it should NEVER be sent to DB
     }
     
     init(from decoder: Decoder) throws {
@@ -49,6 +52,7 @@ struct QuestMetaData: Codable {
         self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
         self.numRatings = try container.decode(Int.self, forKey: .numRatings)
         self.isPremiumQuest = try container.decode(Bool.self, forKey: .isPremiumQuest)
+        self.distanceToUser = nil // Never extract from the DB. Shouldn't exist there
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,6 +65,7 @@ struct QuestMetaData: Codable {
         try container.encodeIfPresent(self.rating, forKey: .rating)
         try container.encode(self.numRatings, forKey: .numRatings)
         try container.encode(self.isPremiumQuest, forKey: .isPremiumQuest)
+        // distanceToUser is excluded because it should never be sent to DB
     }
     
 }

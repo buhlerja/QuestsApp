@@ -7,6 +7,8 @@
 
 import Foundation
 import FirebaseFirestore
+import CoreLocation // Neded?
+import GeoFire // For location based querying!
 
 @MainActor
 final class QuestViewModel: ObservableObject {
@@ -78,6 +80,8 @@ final class QuestViewModel: ObservableObject {
         Task {
             print("Getting quests")
             let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
+            // BUG IN FOLLOWING LINE OF CODE: WHEN LOCATION SERVICES OFF, DOESNT APPEND ANY TO THE QUERY
+            //try await calculateDistanceToQuests(questsToCalculate: newQuests) // Calculates distance to each new quest and appends to self.quests
             self.quests.append(contentsOf: newQuests)
             if let lastDocument { // Stops bug. LastDocument is set to nil after a failed / last query
                 self.lastDocument = lastDocument
@@ -100,15 +104,32 @@ final class QuestViewModel: ObservableObject {
         }
     }
     
-    // Listens to the list of queststrucs being recommended to the user to update them with real time changes
-    // Need to change quests to be a list of IDS and then this listnes to the quest strucs!!!!!!
-    func updateRecommendedQuestStrucListener() { //
-       
-    }
-    
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
     }*/ // Works but not needed as it doesn't include pagination.
+    
+    // BUG IN THIS FUNCTION: WHEN LOCATION SERVICES OFF, DOESNT APPEND ANY TO THE QUERY!!!!!!!!!!!!!!!! (Not used right now)
+    func calculateDistanceToQuests(questsToCalculate: [QuestStruc]) async throws {
+        // Calculate the distance between them
+        if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
+            for var quest in questsToCalculate {
+                if let startLocation = quest.coordinateStart {
+                    let latitude = startLocation.latitude
+                    let longitude = startLocation.longitude
+                    let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
+                    quest.metaData.distanceToUser = userLocation.distance(from: questCLLocation)  // in meters
+                    self.quests.append(quest)
+                } else {
+                    print("Start location is invalid")
+                    quest.metaData.distanceToUser = nil
+                    self.quests.append(quest)
+                }
+            }
+        } else {
+            print("No user location available")
+            self.quests.append(contentsOf: questsToCalculate)
+        }
+    }
     
     func addUserWatchlistQuest(questId: String) {
         guard let user else { return } // Make sure the user is logged in or authenticated
@@ -126,6 +147,6 @@ final class QuestViewModel: ObservableObject {
             self.quests.append(contentsOf: newQuests)
             self.lastDocument = lastDocument
         }
-    }*/ // Works but not needed
+    }*/ // Works but not needed right now
     
 }

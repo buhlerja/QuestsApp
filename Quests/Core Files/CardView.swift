@@ -82,6 +82,16 @@ struct CardView: View {
             
             Spacer()
             
+            // Distance to quest start section
+            if let distance = quest.metaData.distanceToUser {
+                HStack {
+                    Text("Distance to start: \(String(format: "%.1f", distance)) meters")
+                       .font(.footnote)
+                       .foregroundColor(.secondary)
+                    Spacer()
+               }
+            }
+            
             HStack {
                 VStack(alignment: .leading){
                     if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {

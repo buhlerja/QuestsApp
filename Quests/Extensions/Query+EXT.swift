@@ -77,4 +77,17 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
         return (publisher.eraseToAnyPublisher(), listener) // Any publisher type with the listener reference in case we need to close it
     }
     
+    // Retrieves the last document from a Firestore query snapshot.
+    func getLastDocument() -> DocumentSnapshot? {
+        var lastDocument: DocumentSnapshot? = nil
+        self.getDocuments { snapshot, error in
+            guard let snapshot = snapshot, error == nil else {
+                print("Error fetching documents: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            lastDocument = snapshot.documents.last
+        }
+        return lastDocument
+    }
+    
 }

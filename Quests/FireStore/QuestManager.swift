@@ -31,7 +31,7 @@ final class QuestManager {
     private var createdQuestStrucsListener: ListenerRegistration? = nil
     private var completedQuestStrucsListener: ListenerRegistration? = nil
     private var failedQuestStrucsListener: ListenerRegistration? = nil
-    private var recommendedQuestStrucsListener: ListenerRegistration? = nil
+    //private var recommendedQuestStrucsListener: ListenerRegistration? = nil
     
     func uploadQuest(quest: QuestStruc) async throws {
         try questDocument(questId: quest.id.uuidString).setData(from: quest, merge: false)
@@ -215,7 +215,7 @@ final class QuestManager {
     }
     // END LISTENER CODE FOR FAILED QUEST STRUCS
     
-    // LISTENER CODE FOR THE QUEST STRUCS IN MAIN QUEST RECOMMENDATION SYSTEM
+    /*// LISTENER CODE FOR RECOMMENDED QUEST STRUCS
     func addListenerForRecommendedQuestStrucs(questsToListenTo: [String]) -> AnyPublisher<[QuestStruc], Error> {
         let (publisher, listener) = questCollection
             .whereField(QuestStruc.CodingKeys.id.rawValue, in: questsToListenTo)
@@ -239,12 +239,11 @@ final class QuestManager {
         // Set up a new listener
         return addListenerForRecommendedQuestStrucs(questsToListenTo: newQuestIds)
     }
-    // END LISTENER CODE FOR RECOMMENDED QUESTS
+    // END LISTENER CODE FOR RECOMMENDED QUEST STRUCS*/
     
     func getAllQuests(costAscending: Bool?, recurring: Bool?, count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         print("Getting quests")
         var query: Query = getAllQuestsQuery()
-        
         if let costAscending, let recurring {
             query = getAllQuestsByCostAndRecurringQuery(ascending: costAscending, recurring: recurring)
         }
@@ -259,7 +258,7 @@ final class QuestManager {
             .limit(to: count)
             .startOptionally(afterDocument: lastDocument)
             .getDocumentsWithSnapshot(as: QuestStruc.self)
-   }
+    }
     
     func getQuestsByRating(count: Int, lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         return try await questCollection
