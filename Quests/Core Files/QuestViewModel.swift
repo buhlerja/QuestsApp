@@ -79,13 +79,16 @@ final class QuestViewModel: ObservableObject {
     func getQuests() {
         Task {
             print("Getting quests")
-            let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
-            // BUG IN FOLLOWING LINE OF CODE: WHEN LOCATION SERVICES OFF, DOESNT APPEND ANY TO THE QUERY
-            //try await calculateDistanceToQuests(questsToCalculate: newQuests) // Calculates distance to each new quest and appends to self.quests
+            
+            // GET ALL QUESTS START
+            /*let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
             self.quests.append(contentsOf: newQuests)
             if let lastDocument { // Stops bug. LastDocument is set to nil after a failed / last query
                 self.lastDocument = lastDocument
-            }
+            }*/
+            // GET ALL QUESTS ENDS
+            
+            // GET QUESTS BY PROXIMITY START
             // Get the user's location to view relevant quests
             /*if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
                 let userCoordinate = userLocation.coordinate
@@ -101,35 +104,31 @@ final class QuestViewModel: ObservableObject {
                 // NEED TO HANDLE GRACEFULLY!!
                 return // Exit if no user location is available
             }*/
+            if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
+                let userCoordinate = userLocation.coordinate
+                print("User Coordinate: \(userCoordinate)")
+                let newQuests = try await QuestManager.shared.getQuestsByProximity(center: userCoordinate, radiusInM: 100000)
+                if var newQuests = newQuests { // Checking for nil condition
+                    for i in 0..<newQuests.count {
+                        if let startLocation = newQuests[i].coordinateStart {
+                            let latitude = startLocation.latitude
+                            let longitude = startLocation.longitude
+                            let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
+                            // Modify the quest's metaData
+                            newQuests[i].metaData.distanceToUser = userLocation.distance(from: questCLLocation)
+                        }
+                    }
+                    self.quests.append(contentsOf: newQuests)
+                    print("Got quests")
+                }
+            }
+            // GET QUESTS BY PROXIMITY END
         }
     }
     
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
     }*/ // Works but not needed as it doesn't include pagination.
-    
-    // BUG IN THIS FUNCTION: WHEN LOCATION SERVICES OFF, DOESNT APPEND ANY TO THE QUERY!!!!!!!!!!!!!!!! (Not used right now)
-    func calculateDistanceToQuests(questsToCalculate: [QuestStruc]) async throws {
-        // Calculate the distance between them
-        if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-            for var quest in questsToCalculate {
-                if let startLocation = quest.coordinateStart {
-                    let latitude = startLocation.latitude
-                    let longitude = startLocation.longitude
-                    let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
-                    quest.metaData.distanceToUser = userLocation.distance(from: questCLLocation)  // in meters
-                    self.quests.append(quest)
-                } else {
-                    print("Start location is invalid")
-                    quest.metaData.distanceToUser = nil
-                    self.quests.append(quest)
-                }
-            }
-        } else {
-            print("No user location available")
-            self.quests.append(contentsOf: questsToCalculate)
-        }
-    }
     
     func addUserWatchlistQuest(questId: String) {
         guard let user else { return } // Make sure the user is logged in or authenticated

@@ -15,6 +15,14 @@ import Foundation
 import FirebaseFirestore
 import CoreLocation
 import Combine
+import GeoFire
+
+// For geoqueries
+@Sendable func fetchMatchingDocs(from query: Query,
+                       center: CLLocationCoordinate2D,
+                       radiusInM: Double) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+    return try await query.getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
+}
 
 final class QuestManager {
     
@@ -268,7 +276,47 @@ final class QuestManager {
             .getDocumentsWithSnapshot(as: QuestStruc.self)
     }
     
-    func getQuestsByProximity(count: Int, lastDocument: DocumentSnapshot?, userLocation: CLLocation) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+    // NEW VERSION OF FUNCTION USING GEOFIRE QUERIES TO FIND ALL RESULTS IN A GIVEN RANGE
+    func getQuestsByProximity(center: CLLocationCoordinate2D, radiusInM: Double) async throws -> [QuestStruc]? {
+        // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
+        // a separate query for each pair. There can be up to 9 pairs of bounds
+        // depending on overlap, but in most cases there are 4.
+        let queryBounds = GFUtils.queryBounds(forLocation: center,
+                                              withRadius: radiusInM)
+        let queries = queryBounds.map { bound -> Query in
+          return questCollection
+            .whereField(QuestStruc.CodingKeys.hash.rawValue, isNotEqualTo: "")
+            .order(by: QuestStruc.CodingKeys.hash.rawValue)
+            .start(at: [bound.startValue])
+            .end(at: [bound.endValue])
+        }
+        
+        // After all callbacks have executed, matchingDocs contains the result. Note that this code
+        // executes all queries serially, which may not be optimal for performance.
+        do {
+            let matchingQuests = try await withThrowingTaskGroup(of: (quests: [QuestStruc], lastDocument: DocumentSnapshot?).self) { group -> [QuestStruc] in
+                for query in queries {
+                    group.addTask {
+                        try await fetchMatchingDocs(from: query, center: center, radiusInM: radiusInM)
+                    }
+                }
+                
+                var matchingQuests = [QuestStruc]()
+                for try await result in group {
+                    matchingQuests.append(contentsOf: result.quests) // Extract quests from the tuple
+                }
+                return matchingQuests
+            }
+            print("Docs matching geoquery: \(matchingQuests)")
+            return matchingQuests
+        } catch {
+            print("Unable to fetch snapshot data. \(error)")
+            return nil
+        }
+    }
+    
+    // OLD VERSION OF FUNCTION USING A SET BOUNDING BOX
+    /*func getQuestsByProximity(count: Int, lastDocument: DocumentSnapshot?, userLocation: CLLocation) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         // lastDocument to return the next batch of items picking up where the last query left off.
         let radius = 100000 // 100 km. Range that we will query distance within
         
@@ -303,7 +351,7 @@ final class QuestManager {
                 .limit(to: count) // Limit the number of results fetched
                 .getDocumentsWithSnapshot(as: QuestStruc.self)
         }
-    }
+    }*/
     
     func getUserQuestStrucsFromIds(questIdList: [String]?) async throws -> [QuestStruc]? {
         // Passed in parameter is an array of ID's corresponding to quest strucs in the quests DB

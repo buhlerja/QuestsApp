@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 import FirebaseFirestore
+import CoreLocation
+import GeoFire
 
 extension Query { // Extension of questCollection's parent type (Collection Reference) (self == questCollection)
     
@@ -38,10 +40,28 @@ extension Query { // Extension of questCollection's parent type (Collection Refe
         try await getDocumentsWithSnapshot(as: type).quests
     }
     
+    func getDocumentsWithGeoFilterAndSnapshot<T>(as type: T.Type, center: CLLocationCoordinate2D, radiusInM: Double) async throws -> (quests: [T], lastDocument: DocumentSnapshot?) where T : Decodable {
+        let snapshot = try await self.getDocuments()
+        let centerPoint = CLLocation(latitude: center.latitude, longitude: center.longitude)
+        let filteredDocuments = snapshot.documents.filter { document in
+            // We have to filter out a few false positives due to GeoHash accuracy, but
+            // most will match
+            let lat = document.data()[QuestStruc.CodingKeys.startingLocLatitude.rawValue] as? Double ?? 0
+            let lng = document.data()[QuestStruc.CodingKeys.startingLocLongitude.rawValue] as? Double ?? 0
+            let coordinates = CLLocation(latitude: lat, longitude: lng)
+            let distance = GFUtils.distance(from: centerPoint, to: coordinates)
+            return distance <= radiusInM
+        }
+        let quests = try filteredDocuments.map({ document in
+            try document.data(as: T.self)
+        })
+        return (quests, filteredDocuments.last)
+    }
+    
     func getDocumentsWithSnapshot<T>(as type: T.Type) async throws -> (quests: [T], lastDocument: DocumentSnapshot?) where T : Decodable { // T is a "generic" that can represent any type
         // Access the entire quests collection
         let snapshot = try await self.getDocuments()
-        print("Snapshot contains \(snapshot.documents.count) documents.")
+        //print("Snapshot contains \(snapshot.documents.count) documents.")
         let quests = try snapshot.documents.map({ document in
             try document.data(as: T.self)
         })

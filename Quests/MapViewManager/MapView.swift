@@ -14,9 +14,8 @@ enum MapDetails {
 }
 
 final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
-    
-    /*@Published var region = MKCoordinateRegion(center: MapDetails.startingLocation,
-                                               /span: MapDetails.defaultSpan) */
+   
+    @Published var isLocationAccessible: Bool = true // If false, we don't have access to the user's location
     
     var locationManager: CLLocationManager?
     
@@ -45,6 +44,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             
             if CLLocationManager.locationServicesEnabled() {
                 DispatchQueue.main.async {
+                    self.isLocationAccessible = true
                     self.locationManager = CLLocationManager()
                     self.locationManager?.delegate = self
                     self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
@@ -54,6 +54,7 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             } else {
                 DispatchQueue.main.async {
                     print("Go turn on location services")
+                    self.isLocationAccessible = false
                     // You can also present an alert to the user here if you wish
                 }
             }
@@ -68,17 +69,16 @@ final class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
                 locationManager.requestWhenInUseAuthorization()
             case .restricted:
                 print("Your location is restricted")
+                self.isLocationAccessible = false
             case .denied:
                 print("You have denied this app location permission. Go into settings to change it.")
+                self.isLocationAccessible = false
             case .authorizedAlways, .authorizedWhenInUse:
-                // Update map region with user's location
-                /*if let locationManager = locationManager.location {
-                        region = MKCoordinateRegion(center: locationManager.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
-                  
-                } */
+            self.isLocationAccessible = true
                 break
             
             @unknown default:
+                self.isLocationAccessible = false
                 break
         }
     }
