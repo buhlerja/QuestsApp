@@ -62,7 +62,14 @@ struct QuestView: View {
                     .padding(.bottom)
                     
                     ScrollView {
-                        VStack {
+                        LazyVStack {
+                            
+                            HStack {
+                                Text("Pull to refresh")
+                                Image(systemName: "arrow.down")
+                            }
+                            .font(.footnote)
+                            .padding(.horizontal)
                             
                             Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
                                 ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
