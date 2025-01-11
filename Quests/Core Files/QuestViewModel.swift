@@ -28,7 +28,8 @@ final class QuestViewModel: ObservableObject {
     @Published var userCoordinate: CLLocationCoordinate2D? = nil
     
     //private var lastDocument: DocumentSnapshot? = nil
-    private var queriesWithLastDocuments: [(Query, DocumentSnapshot?)] = []
+    private var queriesWithLastDocuments: [(Query, DocumentSnapshot?)] = [] /* Used to hold the location based queries
+    provided from GeoFire and the lastDocument associated with each for pagination */
     
     func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -56,6 +57,7 @@ final class QuestViewModel: ObservableObject {
         self.quests = []
         //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
         self.queriesWithLastDocuments = []
+        // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
         self.getQuests()
     }
     
@@ -78,6 +80,7 @@ final class QuestViewModel: ObservableObject {
         self.quests = []
         //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
         self.queriesWithLastDocuments = []
+        // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
         self.getQuests()
     }
     
@@ -86,6 +89,16 @@ final class QuestViewModel: ObservableObject {
             self.userCoordinate = userLocation.coordinate
             print("User Coordinate: \(String(describing: userCoordinate))")
         }
+    }
+    
+    func pullToRefresh() async {
+        // Reset filters in here if applicable
+        /* Fetch a new user location, clear out the old quests array, clear out the old pagination (queries, lastDocument) array, set the boolean noMoreToQuery to false, and fetch quests */
+        self.quests = []
+        self.queriesWithLastDocuments = []
+        self.noMoreToQuery = false
+        try? await getUserLocation()
+        self.getQuests()
     }
         
     func getQuests() {

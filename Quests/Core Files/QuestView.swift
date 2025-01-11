@@ -132,6 +132,9 @@ struct QuestView: View {
                         }
                         .background(Color.cyan)
                     }
+                    .refreshable {
+                        await viewModel.pullToRefresh()
+                    }
                 }
             }
             .task {
