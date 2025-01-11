@@ -20,8 +20,14 @@ import GeoFire
 // For geoqueries
 @Sendable func fetchMatchingDocs(from query: Query,
                        center: CLLocationCoordinate2D,
-                       radiusInM: Double) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
-    return try await query.getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
+                                 radiusInM: Double,
+                                 count: Int,
+                                 lastDocument: DocumentSnapshot?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+    return try await query
+        .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Don't fetch hidden quests
+        .limit(to: count)
+        .startOptionally(afterDocument: lastDocument)
+        .getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
 }
 
 final class QuestManager {
@@ -276,7 +282,83 @@ final class QuestManager {
             .getDocumentsWithSnapshot(as: QuestStruc.self)
     }
     
-    // NEW VERSION OF FUNCTION USING GEOFIRE QUERIES TO FIND ALL RESULTS IN A GIVEN RANGE
+    // V3 of function. VERSION OF getQuestsByProximity With PAGINATION for each query!! To be used in production!!!
+    func getQuestsByProximity(queriesWithLastDocuments: [(Query, DocumentSnapshot?)], count: Int, center: CLLocationCoordinate2D, radiusInM: Double) async throws -> (quests: [QuestStruc]?, queriesWithLastDocuments: [(Query, DocumentSnapshot?)]) {
+        // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
+        // a separate query for each pair. There can be up to 9 pairs of bounds
+        // depending on overlap, but in most cases there are 4.
+        print("Starting getQuestsByProximity")
+        print("Parameters - count: \(count), center: \(center), radiusInM: \(radiusInM)")
+        print("Initial queriesWithLastDocuments count: \(queriesWithLastDocuments.count)")
+        let queries: [Query]
+        if queriesWithLastDocuments.isEmpty { // Fetch the group of queries required to pull nearby quests if the queries haven't already been formed
+            print("QueriesWithLastDocuments is empty. Forming queries from queryBounds.")
+            let queryBounds = GFUtils.queryBounds(forLocation: center,
+                                                  withRadius: radiusInM)
+            print("Generated \(queryBounds.count) query bounds.")
+            queries = queryBounds.map { bound -> Query in
+              return questCollection
+                .whereField(QuestStruc.CodingKeys.hash.rawValue, isNotEqualTo: "") // Making sure a hash value exists
+                .order(by: QuestStruc.CodingKeys.hash.rawValue)
+                .start(at: [bound.startValue])
+                .end(at: [bound.endValue])
+            }
+            
+        } else {
+            // Use the provided queries if already formed
+            print("QueriesWithLastDocuments is not empty. Using existing queries.")
+            queries = queriesWithLastDocuments.map { $0.0 }
+        }
+        // After all callbacks have executed, matchingDocs contains the result. Note that this code
+        // executes all queries serially, which may not be optimal for performance.
+        do {
+            let results = try await withThrowingTaskGroup(
+                of: (query: Query, quests: [QuestStruc], lastDocument: DocumentSnapshot?).self
+            ) { group -> [(Query, quests: [QuestStruc], DocumentSnapshot?)] in
+                print("Adding tasks to fetchMatchingDocs")
+                for (index, query) in queries.enumerated() {
+                   let lastDocument = index < queriesWithLastDocuments.count
+                        ? queriesWithLastDocuments[index].1
+                        : nil
+                    print("Adding task for query \(index), lastDocument: \(String(describing: lastDocument))")
+                    group.addTask {
+                        let result = try await fetchMatchingDocs(from: query, center: center, radiusInM: radiusInM, count: count, lastDocument: lastDocument)
+                        return (query, result.quests, result.lastDocument)
+                    }
+                }
+                
+                var results = [(Query, [QuestStruc], DocumentSnapshot?)]()
+                for try await result in group {
+                    print("Task completed with \(result.quests.count) quests and lastDocument: \(String(describing: result.lastDocument))")
+                    results.append(result)
+                }
+                return results
+            }
+            
+            // Process results
+            var matchingQuests: [QuestStruc] = []
+            var updatedQueriesWithLastDocuments: [(Query, DocumentSnapshot?)] = []
+            for (query, quests, lastDocument) in results {
+                print("Query returned \(quests.count) quests")
+                matchingQuests.append(contentsOf: quests)
+                updatedQueriesWithLastDocuments.append((query, lastDocument))
+            }
+            if !matchingQuests.isEmpty {
+                print("Found \(matchingQuests.count) matching quests.")
+                return (quests: matchingQuests, queriesWithLastDocuments: updatedQueriesWithLastDocuments)
+            }
+            else {
+                print("No matching quests found.")
+                return (nil, queriesWithLastDocuments: updatedQueriesWithLastDocuments)
+            }
+           
+        } catch {
+            print("Unable to fetch snapshot data. \(error)")
+            throw error
+        }
+    }
+    
+    /*// VERSION OF FUNCTION USING GEOFIRE QUERIES TO FIND ALL RESULTS IN A GIVEN RANGE. NO PAGINATION INCLUDED
     func getQuestsByProximity(center: CLLocationCoordinate2D, radiusInM: Double) async throws -> [QuestStruc]? {
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
@@ -313,9 +395,9 @@ final class QuestManager {
             print("Unable to fetch snapshot data. \(error)")
             return nil
         }
-    }
+    }*/
     
-    // OLD VERSION OF FUNCTION USING A SET BOUNDING BOX
+    // VERSION OF FUNCTION USING A SET BOUNDING BOX, INSTEAD OF GEOFIRE (NEW APPROACH)
     /*func getQuestsByProximity(count: Int, lastDocument: DocumentSnapshot?, userLocation: CLLocation) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
         // lastDocument to return the next batch of items picking up where the last query left off.
         let radius = 100000 // 100 km. Range that we will query distance within

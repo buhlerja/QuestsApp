@@ -85,7 +85,7 @@ struct CardView: View {
             // Distance to quest start section
             if let distance = quest.metaData.distanceToUser {
                 HStack {
-                    Text("Distance to start: \(String(format: "%.1f", distance)) meters")
+                    Text("Distance to start: \(String(format: "%.1f", distance / 1000)) km")
                        .font(.footnote)
                        .foregroundColor(.secondary)
                     Spacer()

@@ -23,9 +23,12 @@ final class QuestViewModel: ObservableObject {
     @Published private(set) var quests: [QuestStruc] = []
     @Published var selectedFilter: FilterOption? = nil
     @Published var recurringOption: RecurringOption? = nil
-    //@Published var noMoreToQuery: Bool = false
     
-    private var lastDocument: DocumentSnapshot? = nil
+    @Published var noMoreToQuery: Bool = false
+    @Published var userCoordinate: CLLocationCoordinate2D? = nil
+    
+    //private var lastDocument: DocumentSnapshot? = nil
+    private var queriesWithLastDocuments: [(Query, DocumentSnapshot?)] = []
     
     func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -51,7 +54,8 @@ final class QuestViewModel: ObservableObject {
     func filterSelected(option: FilterOption) async throws {
         self.selectedFilter = option
         self.quests = []
-        self.lastDocument = nil
+        //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
+        self.queriesWithLastDocuments = []
         self.getQuests()
     }
     
@@ -72,14 +76,20 @@ final class QuestViewModel: ObservableObject {
     func recurringOptionSelected(option: RecurringOption) async throws {
         self.recurringOption = option
         self.quests = []
-        self.lastDocument = nil
+        //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
+        self.queriesWithLastDocuments = []
         self.getQuests()
+    }
+    
+    func getUserLocation() async throws {
+        if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
+            self.userCoordinate = userLocation.coordinate
+            print("User Coordinate: \(String(describing: userCoordinate))")
+        }
     }
         
     func getQuests() {
         Task {
-            print("Getting quests")
-            
             // GET ALL QUESTS START
             /*let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
             self.quests.append(contentsOf: newQuests)
@@ -89,37 +99,38 @@ final class QuestViewModel: ObservableObject {
             // GET ALL QUESTS ENDS
             
             // GET QUESTS BY PROXIMITY START
-            // Get the user's location to view relevant quests
-            /*if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-                let userCoordinate = userLocation.coordinate
-                print("User Coordinate: \(userCoordinate)")
-                
-                let (newQuests, lastDocument) = try await QuestManager.shared.getQuestsByProximity(count: 4, lastDocument: lastDocument, userLocation: userLocation) // COMMENT OUT, THIS IS CODE JUST TO TEST MY FUNCTION. FUNCTION WILL EVENTUALLY BE USED BUT IDK HOW
-                self.quests.append(contentsOf: newQuests)
-                self.lastDocument = lastDocument
-                noMoreToQuery = self.lastDocument == nil // lastDocument nil AFTER the query indicates end of query
-                print("Got quests")
-            } else {
-                print("No user location available. Failed to retrieve relevant quests")
-                // NEED TO HANDLE GRACEFULLY!!
-                return // Exit if no user location is available
-            }*/
-            if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-                let userCoordinate = userLocation.coordinate
-                print("User Coordinate: \(userCoordinate)")
-                let newQuests = try await QuestManager.shared.getQuestsByProximity(center: userCoordinate, radiusInM: 100000)
-                if var newQuests = newQuests { // Checking for nil condition
-                    for i in 0..<newQuests.count {
-                        if let startLocation = newQuests[i].coordinateStart {
-                            let latitude = startLocation.latitude
-                            let longitude = startLocation.longitude
-                            let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
-                            // Modify the quest's metaData
-                            newQuests[i].metaData.distanceToUser = userLocation.distance(from: questCLLocation)
+            if !noMoreToQuery {
+                print("Getting quests")
+                if self.userCoordinate == nil {
+                    try? await getUserLocation()
+                }
+                if let userCoordinate = self.userCoordinate {
+                    let (newQuests, updatedQueriesWithLastDocuments)  = try await QuestManager.shared.getQuestsByProximity(queriesWithLastDocuments: queriesWithLastDocuments, count: 2, center: userCoordinate, radiusInM: 100000) // 100 km
+                    if var newQuests = newQuests { // Checking for nil condition
+                        for i in 0..<newQuests.count {
+                            if let startLocation = newQuests[i].coordinateStart {
+                                let latitude = startLocation.latitude
+                                let longitude = startLocation.longitude
+                                let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
+                                let userLocation = CLLocation(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
+                                // Modify the quest's metaData
+                                newQuests[i].metaData.distanceToUser = userLocation.distance(from: questCLLocation)
+                            }
                         }
+                        self.quests.append(contentsOf: newQuests)
+                        print("Got quests")
                     }
-                    self.quests.append(contentsOf: newQuests)
-                    print("Got quests")
+                    // Filter out queries that should stop paginating
+                    self.queriesWithLastDocuments = updatedQueriesWithLastDocuments.filter { queryWithLastDocument in
+                        let (_, lastDocument) = queryWithLastDocument
+                        return lastDocument != nil // Stop paginating if lastDocument is nil
+                    }
+                    
+                    // Check if all queries are exhausted
+                    if self.queriesWithLastDocuments.isEmpty {
+                        print("All queries exhausted. No more quests to fetch.")
+                        noMoreToQuery = true
+                    }
                 }
             }
             // GET QUESTS BY PROXIMITY END
