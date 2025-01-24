@@ -33,268 +33,22 @@ struct ProfilePage: View {
             ScrollView(.vertical) {
                 VStack(alignment: .leading) {
                     
-                    HStack {
-                        Text("Created Quests")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal)
-                        Spacer()
-                    }
-                    if let createdQuests = viewModel.createdQuestStrucs, !createdQuests.isEmpty {
-                        HStack {
-                            Text("Total: \(createdQuests.count)")
-                                .font(.headline)
-                                .italic()
-                                .foregroundColor(.gray)
-                                .padding(.horizontal)
-                            Spacer()
-                        }
-                      
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack { // Use HStack to align the items horizontally
-                                ForEach(createdQuests, id: \.id) { createdQuest in
-                                    VStack {
-                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
-                                            CardView(quest: createdQuest)
-                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
-                                                .navigationBarTitleDisplayMode(.large)
-                                        }
-                                        HStack {
-                                            Button(action: {
-                                                // Trigger the edit flow
-                                                editQuest = createdQuest
-                                                isEditing = true
-                                                
-                                            }, label: {
-                                                Text("Edit")
-                                                    .font(.headline)
-                                                    .foregroundColor(.blue)
-                                                    .padding()
-                                                    .frame(maxWidth: .infinity)
-                                                    .background(Color.clear)
-                                                    .cornerRadius(8)
-                                            })
-                                            if createdQuest.hidden {
-                                                Button(action: {
-                                                    // Unhide the quest
-                                                    viewModel.unhideQuest(questId: createdQuest.id.uuidString)
-                                                }, label: {
-                                                    Text("Unhide")
-                                                        .font(.headline)
-                                                        .foregroundColor(.blue)
-                                                        .padding()
-                                                        .frame(maxWidth: .infinity)
-                                                        .background(Color.clear)
-                                                        .cornerRadius(8)
-                                                })
-                                            } else {
-                                                Button(action: {
-                                                    // Hide the quest
-                                                    viewModel.hideQuest(questId: createdQuest.id.uuidString)
-                                                }, label: {
-                                                    Text("Hide")
-                                                        .font(.headline)
-                                                        .foregroundColor(.blue)
-                                                        .padding()
-                                                        .frame(maxWidth: .infinity)
-                                                        .background(Color.clear)
-                                                        .cornerRadius(8)
-                                                })
-                                            }
-                                            
-                                            Button(action: {
-                                                viewModel.deleteQuest(quest: createdQuest)
-                                            }, label: {
-                                                Text("Delete")
-                                                    .font(.headline)
-                                                    .foregroundColor(.red)
-                                                    .padding()
-                                                    .frame(maxWidth: .infinity)
-                                                    .background(Color.clear)
-                                                    .cornerRadius(8)
-                                            })
-                                        }
-                                        
-                                    }
-                                    .padding() // Add padding between cards
-                                }
-                            }
-                        }
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6)) // Background color resembling a list
-                        )
-                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
-                        .padding(.bottom)
-                    } else {
-                        HStack {
-                            Text("No created quests")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                                .italic()
-                                .padding(.horizontal)
-                                .padding(.bottom)
-
-                            Spacer()
-                        }
-                    }
+                    createdQuestsView
                     
                     Divider()
                     
                     // Watchlist quests view
-                    HStack {
-                        Text("Watchlist Quests")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal)
-                        Spacer()
-                    }
-                    if let watchlistQuests = viewModel.watchlistQuestStrucs, !watchlistQuests.isEmpty {
-                        HStack {
-                            Text("Total: \(watchlistQuests.count)")
-                                .font(.headline)
-                                .italic()
-                                .foregroundColor(.gray)
-                                .padding(.horizontal)
-                            Spacer()
-                        }
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack { // Use HStack to align the items horizontally
-                                ForEach(watchlistQuests, id: \.id) { watchlistQuest in
-                                    VStack {
-                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
-                                            CardView(quest: watchlistQuest)
-                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
-                                                .navigationBarTitleDisplayMode(.large)
-                                        }
-                                        HStack {
-                                            Button(action: {
-                                                viewModel.removeWatchlistQuest(quest: watchlistQuest)
-                                            }, label: {
-                                                Text("Remove from watchlist")
-                                                    .font(.headline)
-                                                    .foregroundColor(.blue)
-                                                    .padding()
-                                                    .frame(maxWidth: .infinity)
-                                                    .background(Color.clear)
-                                                    .cornerRadius(8)
-                                            })
-                                        }
-                                    }
-                                    .padding() // Add padding between cards
-                                }
-                            }
-                        }
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6)) // Background color resembling a list
-                        )
-                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
-                        .padding(.bottom)
-                    } else {
-                        Text("No quests in watchlist")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                            .italic()
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                    }
+                    watchlistQuestsView
                     
                     Divider()
                     
                     // Completed quests view
-                    HStack {
-                        Text("Completed Quests")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal)
-                        Spacer()
-                    }
-                    if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
-                        HStack {
-                            Text("Total: \(completedQuests.count)")
-                                .font(.headline)
-                                .italic()
-                                .foregroundColor(.gray)
-                                .padding(.horizontal)
-                            Spacer()
-                        }
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack { // Use HStack to align the items horizontally
-                                ForEach(completedQuests, id: \.id) { completedQuest in
-                                    VStack {
-                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
-                                            CardView(quest: completedQuest)
-                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
-                                                .navigationBarTitleDisplayMode(.large)
-                                        }
-                                    }
-                                    .padding() // Add padding between cards
-                                }
-                            }
-                        }
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6)) // Background color resembling a list
-                        )
-                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
-                        .padding(.bottom)
-                    } else {
-                        Text("No completed quests")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                            .italic()
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                    }
+                    completedQuestsView
                     
                     Divider()
                     
                     // Failed quests view
-                    HStack {
-                        Text("Failed Quests")
-                            .font(.headline)
-                            .foregroundColor(.primary)
-                            .padding(.horizontal)
-                        Spacer()
-                    }
-                    if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
-                        HStack {
-                            Text("Total: \(failedQuests.count)")
-                                .font(.headline)
-                                .italic()
-                                .foregroundColor(.gray)
-                                .padding(.horizontal)
-                            Spacer()
-                        }
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack { // Use HStack to align the items horizontally
-                                ForEach(failedQuests, id: \.id) { failedQuest in
-                                    VStack {
-                                        NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
-                                            CardView(quest: failedQuest)
-                                                .frame(width: 275) // Set a fixed width for each card, adjust as needed
-                                                .navigationBarTitleDisplayMode(.large)
-                                        }
-                                    }
-                                    .padding() // Add padding between cards
-                                }
-                            }
-                        }
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(.systemGray6)) // Background color resembling a list
-                        )
-                        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
-                        .padding(.bottom)
-                    } else {
-                        Text("No failed quests")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                            .italic()
-                            .padding(.horizontal)
-                            .padding(.bottom)
-                    }
+                    failedQuestsView
                     
                     Divider()
     
@@ -461,7 +215,280 @@ struct ProfilePage: View {
         }
         .animation(.easeInOut, value: isShowingPopup)
     }
+    
+    private var createdQuestsView: some View {
+        VStack {
+            HStack {
+                Text("Created Quests")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .padding(.horizontal)
+                Spacer()
+            }
+            if let createdQuests = viewModel.createdQuestStrucs, !createdQuests.isEmpty {
+                HStack {
+                    Text("Total: \(createdQuests.count)")
+                        .font(.headline)
+                        .italic()
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    Spacer()
+                }
+              
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack { // Use HStack to align the items horizontally
+                        ForEach(createdQuests, id: \.id) { createdQuest in
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: createdQuest, creatorView: true)) {
+                                    CardView(quest: createdQuest)
+                                        .frame(width: 275) // Set a fixed width for each card, adjust as needed
+                                        .navigationBarTitleDisplayMode(.large)
+                                }
+                                HStack {
+                                    Button(action: {
+                                        // Trigger the edit flow
+                                        editQuest = createdQuest
+                                        isEditing = true
+                                        
+                                    }, label: {
+                                        Text("Edit")
+                                            .font(.headline)
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                    if createdQuest.hidden {
+                                        Button(action: {
+                                            // Unhide the quest
+                                            viewModel.unhideQuest(questId: createdQuest.id.uuidString)
+                                        }, label: {
+                                            Text("Unhide")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                    } else {
+                                        Button(action: {
+                                            // Hide the quest
+                                            viewModel.hideQuest(questId: createdQuest.id.uuidString)
+                                        }, label: {
+                                            Text("Hide")
+                                                .font(.headline)
+                                                .foregroundColor(.blue)
+                                                .padding()
+                                                .frame(maxWidth: .infinity)
+                                                .background(Color.clear)
+                                                .cornerRadius(8)
+                                        })
+                                    }
+                                    
+                                    Button(action: {
+                                        viewModel.deleteQuest(quest: createdQuest)
+                                    }, label: {
+                                        Text("Delete")
+                                            .font(.headline)
+                                            .foregroundColor(.red)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                }
+                                
+                            }
+                            .padding() // Add padding between cards
+                        }
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.bottom)
+            } else {
+                HStack {
+                    Text("No created quests")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                        .italic()
+                        .padding(.horizontal)
+                        .padding(.bottom)
+
+                    Spacer()
+                }
+            }
+        }
+    }
+    
+    private var watchlistQuestsView: some View {
+        VStack {
+            HStack {
+                Text("Watchlist Quests")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .padding(.horizontal)
+                Spacer()
+            }
+            if let watchlistQuests = viewModel.watchlistQuestStrucs, !watchlistQuests.isEmpty {
+                HStack {
+                    Text("Total: \(watchlistQuests.count)")
+                        .font(.headline)
+                        .italic()
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    Spacer()
+                }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack { // Use HStack to align the items horizontally
+                        ForEach(watchlistQuests, id: \.id) { watchlistQuest in
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: watchlistQuest, creatorView: false)) {
+                                    CardView(quest: watchlistQuest)
+                                        .frame(width: 275) // Set a fixed width for each card, adjust as needed
+                                        .navigationBarTitleDisplayMode(.large)
+                                }
+                                HStack {
+                                    Button(action: {
+                                        viewModel.removeWatchlistQuest(quest: watchlistQuest)
+                                    }, label: {
+                                        Text("Remove from watchlist")
+                                            .font(.headline)
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                }
+                            }
+                            .padding() // Add padding between cards
+                        }
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.bottom)
+            } else {
+                Text("No quests in watchlist")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .italic()
+                    .padding(.horizontal)
+                    .padding(.bottom)
+            }
+        }
+    }
+
+    private var completedQuestsView: some View {
+        VStack {
+            HStack {
+                Text("Completed Quests")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .padding(.horizontal)
+                Spacer()
+            }
+            if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
+                HStack {
+                    Text("Total: \(completedQuests.count)")
+                        .font(.headline)
+                        .italic()
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    Spacer()
+                }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack { // Use HStack to align the items horizontally
+                        ForEach(completedQuests, id: \.id) { completedQuest in
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: completedQuest, creatorView: false)) {
+                                    CardView(quest: completedQuest)
+                                        .frame(width: 275) // Set a fixed width for each card, adjust as needed
+                                        .navigationBarTitleDisplayMode(.large)
+                                }
+                            }
+                            .padding() // Add padding between cards
+                        }
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.bottom)
+            } else {
+                Text("No completed quests")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .italic()
+                    .padding(.horizontal)
+                    .padding(.bottom)
+            }
+        }
+    }
+
+    private var failedQuestsView: some View {
+        VStack {
+            HStack {
+                Text("Failed Quests")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                    .padding(.horizontal)
+                Spacer()
+            }
+            if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
+                HStack {
+                    Text("Total: \(failedQuests.count)")
+                        .font(.headline)
+                        .italic()
+                        .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    Spacer()
+                }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack { // Use HStack to align the items horizontally
+                        ForEach(failedQuests, id: \.id) { failedQuest in
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: failedQuest, creatorView: false)) {
+                                    CardView(quest: failedQuest)
+                                        .frame(width: 275) // Set a fixed width for each card, adjust as needed
+                                        .navigationBarTitleDisplayMode(.large)
+                                }
+                            }
+                            .padding() // Add padding between cards
+                        }
+                    }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color(.systemGray6)) // Background color resembling a list
+                )
+                .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2) // Add a subtle shadow
+                .padding(.bottom)
+            } else {
+                Text("No failed quests")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .italic()
+                    .padding(.horizontal)
+                    .padding(.bottom)
+            }
+        }
+    }
+    
 }
+
+
 
 extension ProfilePage {
     private var deletePopup: some View {

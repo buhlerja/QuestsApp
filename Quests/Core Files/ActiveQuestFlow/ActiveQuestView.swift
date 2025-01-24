@@ -29,13 +29,12 @@ struct ActiveQuestView: View {
     // Reporting for issues
     @State private var showReportText = false
     
-    @ObservedObject var viewModel: ActiveQuestViewModel
+    @ObservedObject var viewModel: ActiveQuestViewModel // passed in
     //@StateObject var viewModel = ActiveQuestViewModel(mapViewModel: nil)
     
-    let quest: QuestStruc
-    
+    //let quest: QuestStruc // Not needed. We use the version held in the ActiveQuestViewModel
     var currentObjective: ObjectiveStruc {
-        quest.objectives[currentObjectiveIndex]
+        viewModel.quest.objectives[currentObjectiveIndex]
     }
     
     var body: some View {
@@ -80,7 +79,7 @@ struct ActiveQuestView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: quest, failed: $fail)
+                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: viewModel.quest, failed: $fail)
             }
            
             VStack {
@@ -129,7 +128,6 @@ struct ActiveQuestView: View {
             Color(answerIsWrong ? .red.opacity(0.5) : .clear)
                 .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
                 .ignoresSafeArea()
-            
         }
         .onAppear {
             updateTimerValue()
@@ -240,7 +238,7 @@ struct ActiveQuestView: View {
                 }
                 
                 // Progress bar
-                ProgressView(value: Double(currentObjectiveIndex + 1), total: Double(quest.objectives.count))
+                ProgressView(value: Double(currentObjectiveIndex + 1), total: Double(viewModel.quest.objectives.count))
                     .progressViewStyle(LinearProgressViewStyle(tint: .blue))
                     .padding(.vertical, 20)
                 
@@ -298,7 +296,7 @@ struct ActiveQuestView: View {
                                 // Handle the submission
                                 print("Report: \(viewModel.reportText)")
                                 showReportText = false
-                                viewModel.addReportRelationship(questId: quest.id.uuidString)
+                                viewModel.addReportRelationship(questId: viewModel.quest.id.uuidString)
                                 
                             }
                             .buttonStyle(.borderedProminent)
@@ -356,10 +354,10 @@ struct ActiveQuestView: View {
     private func checkSolution() {
         if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
             // Objective has successfully been completed, can move on to the next objective
-            if currentObjectiveIndex == quest.objectives.count - 1 {
+            if currentObjectiveIndex == viewModel.quest.objectives.count - 1 {
                 questCompleted = true // Quest completed
             }
-            if currentObjectiveIndex + 1 < quest.objectives.count {
+            if currentObjectiveIndex + 1 < viewModel.quest.objectives.count {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
                 showHintButton = false // reset showHintButton to false
@@ -408,7 +406,7 @@ struct ActiveQuestView: View {
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
         StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, viewModel: ActiveQuestViewModel(mapViewModel:  nil), quest: QuestStruc.sampleData[0])
+            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]))
         }
     }
     

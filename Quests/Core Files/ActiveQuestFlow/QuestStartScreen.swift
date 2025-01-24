@@ -26,5 +26,5 @@ struct QuestStartScreen: View {
 }
 
 #Preview {
-    QuestStartScreen(viewModel: ActiveQuestViewModel(mapViewModel: nil))
+    QuestStartScreen(viewModel: ActiveQuestViewModel(mapViewModel: nil, initialQuest: QuestStruc.sampleData[0]))
 }

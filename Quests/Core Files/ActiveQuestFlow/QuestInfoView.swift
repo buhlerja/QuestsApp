@@ -14,17 +14,19 @@ struct QuestInfoView: View {
     @State private var completionRateDroppedDown = false
     @State private var position: MapCameraPosition
     
+    // Used for the progress view needed when fetching the required quest object from the DB
+    @State private var hasError: Bool = false
+    
     // Reporting for issues
     @State private var showReportText = false
 
     // For directions search results
     //@State private var route: MKRoute?
     //@State private var directionsErrorMessage: String?
-    //@State private var showProgressView = false
     
     @StateObject private var viewModel: ActiveQuestViewModel
     
-    let quest: QuestStruc
+    let quest: QuestStruc // Passed into the viewModel to initialize it before the new object can be fetched from the server
     let creatorView: Bool
     
     init(mapViewModel: MapViewModel, quest: QuestStruc, creatorView: Bool) {
@@ -33,11 +35,11 @@ struct QuestInfoView: View {
         self.creatorView = creatorView
         // Initialize the position based on quest.coordinateStart
         if let startCoordinate = quest.coordinateStart {
-            _position = State(initialValue: .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500)))
+            position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
         } else {
-            _position = State(initialValue: .userLocation(followsHeading: true, fallback: .automatic))
+            position = .userLocation(followsHeading: true, fallback: .automatic)
         }
-        _viewModel = StateObject(wrappedValue: ActiveQuestViewModel(mapViewModel: mapViewModel))
+        _viewModel = StateObject(wrappedValue: ActiveQuestViewModel(mapViewModel: mapViewModel, initialQuest: quest))
     }
     
     var body: some View {
@@ -45,9 +47,10 @@ struct QuestInfoView: View {
             Color(.systemCyan)
                 .ignoresSafeArea()
             ScrollView(.vertical) {
+                
                 VStack(alignment: .leading, spacing: 10) {
-                   
-                    if quest.hidden {
+                
+                    if viewModel.quest.hidden {
                         Text("Quest not available for play")
                             .font(.headline)
                             .foregroundColor(.white)
@@ -58,6 +61,19 @@ struct QuestInfoView: View {
                             .shadow(radius: 5)
                             .padding()
                     }
+                    
+                    if hasError {
+                        Text("Warning: Could not update Quest information from server")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.red)
+                            .cornerRadius(8)
+                            .shadow(radius: 5)
+                            .padding()
+                    } // MAYBE UPDATE ONE DAY TO INCLUDE ACTUAL DESIRED BEHAVIOUR. THIS IS PROBABLY
+                    // NOT IDEAL
                     
                     if showReportText {
                         VStack {
@@ -73,7 +89,7 @@ struct QuestInfoView: View {
                                     // Handle the submission
                                     print("Report: \(viewModel.reportText)")
                                     showReportText = false
-                                    viewModel.addReportRelationship(questId: quest.id.uuidString)
+                                    viewModel.addReportRelationship(questId: viewModel.quest.id.uuidString)
                                     
                                 }
                                 .buttonStyle(.borderedProminent)
@@ -106,7 +122,7 @@ struct QuestInfoView: View {
                        
                         
                         // Recurring Quest Section (If applicable)
-                        if quest.supportingInfo.recurring {
+                        if viewModel.quest.supportingInfo.recurring {
                             HStack {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                                 Text("Recurring")
@@ -133,7 +149,7 @@ struct QuestInfoView: View {
                         }
 
                         // Treasure Available Section (If applicable)
-                        if quest.supportingInfo.treasure {  // Replace with the actual condition for treasure
+                        if viewModel.quest.supportingInfo.treasure {  // Replace with the actual condition for treasure
                             HStack {
                                 Image(systemName: "bag.fill")
                                 Text("Treasure!")
@@ -158,9 +174,9 @@ struct QuestInfoView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Image(systemName: "play.circle.fill")
-                            Text("Played: \(quest.metaData.numTimesPlayed) times")
+                            Text("Played: \(viewModel.quest.metaData.numTimesPlayed) times")
                         }
-                        if let completionRate = quest.metaData.completionRate {
+                        if let completionRate = viewModel.quest.metaData.completionRate {
                             Button( action: {
                                 completionRateDroppedDown.toggle()
                             }, label: {
@@ -178,12 +194,12 @@ struct QuestInfoView: View {
                             if completionRateDroppedDown {
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
-                                    Text("Successes: \(quest.metaData.numSuccesses)")
+                                    Text("Successes: \(viewModel.quest.metaData.numSuccesses)")
                                 }
                                 .padding([.leading, .trailing])
                                 HStack {
                                     Image(systemName: "xmark.circle.fill")
-                                    Text("Failures: \(quest.metaData.numFails)")
+                                    Text("Failures: \(viewModel.quest.metaData.numFails)")
                                 }
                                 .padding([.leading, .trailing])
                             }
@@ -196,7 +212,7 @@ struct QuestInfoView: View {
                     Divider()
                     
                     // Rating Section (If applicable)
-                    if let rating = quest.metaData.rating {
+                    if let rating = viewModel.quest.metaData.rating {
                         StarRatingView(rating: rating)
                             .padding([.leading, .trailing])
                             .font(.title)
@@ -208,7 +224,7 @@ struct QuestInfoView: View {
                     }
 
                     // Quest description
-                    Text(quest.description)
+                    Text(viewModel.quest.description)
                         .font(.headline)
                         .foregroundColor(.white.opacity(0.8))
                         .padding([.leading, .trailing])
@@ -216,18 +232,18 @@ struct QuestInfoView: View {
                     HStack {
                         Image(systemName: "pin.circle")
                             .foregroundColor(.white.opacity(0.8))
-                        Text("Objectives: \(quest.objectiveCount)")
+                        Text("Objectives: \(viewModel.quest.objectiveCount)")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.8))
                     }
                     .padding([.leading, .trailing])
                     
                     // Treasure value section
-                    if quest.supportingInfo.treasure {
+                    if viewModel.quest.supportingInfo.treasure {
                         HStack {
                             Image(systemName: "dollarsign.circle.fill")
                                 .foregroundColor(.white.opacity(0.8))
-                            Text("Treasure value: \(quest.supportingInfo.treasureValue, specifier: "%.1f")")
+                            Text("Treasure value: \(viewModel.quest.supportingInfo.treasureValue, specifier: "%.1f")")
                                 .font(.headline)
                                 .foregroundColor(.white.opacity(0.8))
                         }
@@ -235,7 +251,7 @@ struct QuestInfoView: View {
                     }
 
                     // Total Length Section
-                    if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
+                    if let totalLength = viewModel.quest.supportingInfo.totalLength, viewModel.quest.supportingInfo.lengthEstimate {
                         HStack {
                             Image(systemName: "clock")
                                 .foregroundColor(.white.opacity(0.8))
@@ -250,7 +266,7 @@ struct QuestInfoView: View {
                     HStack {
                         Image(systemName: "chart.bar.fill")
                             .foregroundColor(.white.opacity(0.8))
-                        Text("Difficulty: \(quest.supportingInfo.difficulty, specifier: "%.1f")")
+                        Text("Difficulty: \(viewModel.quest.supportingInfo.difficulty, specifier: "%.1f")")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.8))
                     }
@@ -260,7 +276,7 @@ struct QuestInfoView: View {
                     HStack {
                         Image(systemName: "figure.walk.circle.fill")
                             .foregroundColor(.white.opacity(0.8))
-                        Text("Travel distance: \(quest.supportingInfo.distance, specifier: "%.1f")")
+                        Text("Travel distance: \(viewModel.quest.supportingInfo.distance, specifier: "%.1f")")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.8))
                     }
@@ -270,7 +286,7 @@ struct QuestInfoView: View {
                     HStack {
                         Image(systemName: "dollarsign.circle")
                             .foregroundColor(.white.opacity(0.8))
-                        if let cost = quest.supportingInfo.cost {
+                        if let cost = viewModel.quest.supportingInfo.cost {
                             Text("\(Int(cost))")
                                 .font(.headline)
                                 .foregroundColor(.white.opacity(0.8))
@@ -300,8 +316,8 @@ struct QuestInfoView: View {
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 16) { // Ensure spacing between cards
-                                        if !quest.objectives.isEmpty {
-                                            ForEach(quest.objectives, id: \.id) { objective in
+                                        if !viewModel.quest.objectives.isEmpty {
+                                            ForEach(viewModel.quest.objectives, id: \.id) { objective in
                                                 VStack(alignment: .leading, spacing: 8) {
                                                     Text("Objective \(objective.objectiveNumber)")
                                                         .font(.headline)
@@ -332,7 +348,7 @@ struct QuestInfoView: View {
                     }
 
                     // Map and directions button
-                    if let startingLocation = quest.coordinateStart {
+                    if let startingLocation = viewModel.quest.coordinateStart {
                         Map(position: $position) {
                             UserAnnotation()
                             Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
@@ -354,7 +370,7 @@ struct QuestInfoView: View {
                         
                         // Directions button
                         Button(action: {
-                            if let startCoordinate = quest.coordinateStart {
+                            if let startCoordinate = viewModel.quest.coordinateStart {
                                 viewModel.showProgressView = true
                                 viewModel.getDirections(startCoordinate: startCoordinate)
                             } else {
@@ -409,13 +425,13 @@ struct QuestInfoView: View {
                     }
                     
                     // List the required materials!
-                    if !quest.supportingInfo.materials.isEmpty {
-                        MaterialsDisplayView(materials: quest.supportingInfo.materials)
+                    if !viewModel.quest.supportingInfo.materials.isEmpty {
+                        MaterialsDisplayView(materials: viewModel.quest.supportingInfo.materials)
                     }
 
                     
                     // List the special instructions!
-                    if let specialInstructions = quest.supportingInfo.specialInstructions {
+                    if let specialInstructions = viewModel.quest.supportingInfo.specialInstructions {
                         Text("Special instructions: \(specialInstructions)")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.8))
@@ -425,7 +441,7 @@ struct QuestInfoView: View {
                     Spacer()
 
                     // Start challenge button
-                    if !quest.hidden {
+                    if !viewModel.quest.hidden {
                         Button(action: { showActiveQuest = true }) {
                             Text("Start Quest")
                                 .font(.title2)
@@ -441,7 +457,7 @@ struct QuestInfoView: View {
                     
                     Spacer()
                 }
-                .navigationTitle(quest.title)
+                .navigationTitle(viewModel.quest.title)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
@@ -473,9 +489,26 @@ struct QuestInfoView: View {
                     }
                 }
                 .fullScreenCover(isPresented: $showActiveQuest) {
-                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel, quest: quest)
+                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel/*, quest: quest*/)
                 }
-                //.padding()
+            }
+        }
+        .onAppear {
+            Task {
+                do {
+                    try await viewModel.getQuest(questId: quest.id.uuidString) // Get an updated version of the quest from the DB
+                    
+                    // Update the position based on the quest's coordinate
+                    if let startCoordinate = viewModel.quest.coordinateStart {
+                        position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
+                    } else {
+                        position = .userLocation(followsHeading: true, fallback: .automatic)
+                    }
+                } catch {
+                    // Handle the error
+                    //errorMessage = error.localizedDescription
+                    hasError = true
+                }
             }
         }
     }

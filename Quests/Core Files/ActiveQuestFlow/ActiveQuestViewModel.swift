@@ -18,12 +18,19 @@ final class ActiveQuestViewModel: ObservableObject {
     @Published var directionsErrorMessage: String? = nil
     @Published var showProgressView = false
     
+    // Passed in parameters initialized in init
+    @Published var quest: QuestStruc
     private var mapViewModel: MapViewModel? = nil
     
-    init(mapViewModel: MapViewModel?) {
-        if let mapViewModel = mapViewModel {
+    init(mapViewModel: MapViewModel?, initialQuest: QuestStruc) {
+            if let mapViewModel = mapViewModel {
             self.mapViewModel = mapViewModel
         }
+        self.quest = initialQuest
+    }
+    
+    func getQuest(questId: String) async throws {
+        self.quest = try await QuestManager.shared.getQuest(questId: questId)
     }
     
     func addReportRelationship(questId: String) {
