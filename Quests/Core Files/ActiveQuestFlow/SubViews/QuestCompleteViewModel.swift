@@ -40,6 +40,7 @@ final class QuestCompleteViewModel: ObservableObject {
                 questId: questId,
                 relationshipType: listType
             )
+            try await UserManager.shared.updateUserQuestsCompletedOrFailed(userId: user.userId, questId: questId, failed: failed)
             print("Successfully updated relationship for questId: \(questId) as \(listType)")
         } catch {
             print("Failed to update relationship: \(error.localizedDescription)")

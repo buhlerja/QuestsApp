@@ -81,8 +81,7 @@ struct QuestCompleteView: View {
             let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
             viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
             // 3. Add to user's completed or failed quests list
-            //viewModel.updateUserQuestsCompletedOrFailed(questId: questJustCompleted.id.uuidString, failed: failed) // NOT WORKING!!!!!!!!!!!!!
-            // Issue has to do with the user being fetched too late, after this function is called on appear. Need to ensure they are sequential
+            // Done in above task
         }
     }
     

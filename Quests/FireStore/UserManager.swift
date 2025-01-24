@@ -14,6 +14,8 @@ struct DBUser: Codable {
     let photoUrl: String? // Optional
     let dateCreated: Date? // Optional (but isn't really optional)
     let isPremium: Bool?
+    let totalQuestsCompleted: Int
+    let totalQuestsFailed: Int
     //let questsCreatedList: [String]? // Stores all the quests a user has created
     //let numQuestsCreated: Int? // The number of quests a user has created
     //let numQuestsCompleted: Int? // Optional (but isn't really optional)
@@ -29,6 +31,8 @@ struct DBUser: Codable {
         self.photoUrl = auth.photoUrl
         self.dateCreated = Date()
         self.isPremium = false
+        self.totalQuestsCompleted = 0
+        self.totalQuestsFailed = 0
     }
     
     init(
@@ -36,13 +40,17 @@ struct DBUser: Codable {
         email: String? = nil,
         photoUrl: String? = nil,
         dateCreated: Date? = nil,
-        isPremium: Bool? = nil
+        isPremium: Bool? = nil,
+        totalQuestsCompleted: Int = 0,
+        totalQuestsFailed: Int = 0
     ) {
         self.userId = userId
         self.email = email
         self.photoUrl = photoUrl
         self.dateCreated = dateCreated
         self.isPremium = isPremium
+        self.totalQuestsCompleted = totalQuestsCompleted
+        self.totalQuestsFailed = totalQuestsFailed
     }
     
     /*mutating func togglePremiumStatus() {
@@ -56,6 +64,8 @@ struct DBUser: Codable {
         case photoUrl = "photo_url"
         case dateCreated = "date_created"
         case isPremium = "is_premium"
+        case totalQuestsCompleted = "total_quests_completed"
+        case totalQuestsFailed = "total_quests_failed"
     }
     
     init(from decoder: any Decoder) throws {
@@ -65,6 +75,8 @@ struct DBUser: Codable {
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium)
+        self.totalQuestsCompleted = try container.decode(Int.self, forKey: .totalQuestsCompleted)
+        self.totalQuestsFailed = try container.decode(Int.self, forKey: .totalQuestsFailed)
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -74,6 +86,8 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.isPremium, forKey: .isPremium)
+        try container.encode(self.totalQuestsCompleted, forKey: .totalQuestsCompleted)
+        try container.encode(self.totalQuestsFailed, forKey: .totalQuestsFailed)
     }
     
 }
@@ -345,37 +359,25 @@ final class UserManager {
         print("Added Quest to watchlist successfully!")
     } */
     
-    // NOT NEEDED ANYMORE BECAUSE THE NUMFAILEDQUESTS and NUMCOMPLETEDQUESTS WAS REMOVED FROM USER DB. RELATIONSHIP MANAGER CALLED DIRECTLY
-    /*func updateUserQuestsCompletedOrFailed(userId: String, questId: String, failed: Bool) async throws {
-        // OLD CODE USED BEFORE THE ADDITION OF THE USER QUESTS RELATIONSHIP TABLE
-        /*let listKey = failed ? DBUser.CodingKeys.failedQuestsList.rawValue : DBUser.CodingKeys.questsCompletedList.rawValue
-        let dict: [String:Any] = [
-            listKey : FieldValue.arrayUnion([questId])
-        ]
-        // Update the questsCompletedList or questsFailedList with the appended questID
-        try await userDocument(userId: userId).updateData(dict)
-        */
+    func updateUserQuestsCompletedOrFailed(userId: String, questId: String, failed: Bool) async throws {
         
-        // Code that utilizes the relationship table
-        let listType: RelationshipType = failed ? .failed : .completed
+        let numberKey = failed ? DBUser.CodingKeys.totalQuestsFailed.rawValue : DBUser.CodingKeys.totalQuestsCompleted.rawValue
         
-        try await UserQuestRelationshipManager.shared.addRelationship(userId: userId, questId: questId, relationshipType: listType)
-        
-        let numberKey = failed ? DBUser.CodingKeys.numQuestsFailed.rawValue : DBUser.CodingKeys.numQuestsCompleted.rawValue
-        
-        if let questsList = try await UserQuestRelationshipManager.shared.getUserQuestIdsByType(userId: userId, listType: listType) {
-            let numQuests = questsList.count
-            // Update the numCompletedQuests or numFailedQuests field
-            try await userDocument(userId: userId).updateData([
-                numberKey : numQuests
-            ])
-            if listType == .completed {
-                print("Added Quest to completed list successfully!")
-            }
-            else if listType == .failed {
-                print("Added Quest to failed list successfully")
-            }
+        // Increment the appropriate field in the user's document
+        try await userDocument(userId: userId).updateData([
+            numberKey: FieldValue.increment(Int64(1)) // Increment the field by 1
+        ])
+    }
+    
+    func getNumTotalQuests(userId: String, listType: RelationshipType) async throws -> Int {
+        // Determine which field to fetch based on the listType
+        // Fetch only the specific field
+        let user = try await userDocument(userId: userId).getDocument(as: DBUser.self)
+        if listType == .failed {
+            return user.totalQuestsFailed
+        } else {
+            return user.totalQuestsCompleted
         }
-    }*/
+    }
     
 }

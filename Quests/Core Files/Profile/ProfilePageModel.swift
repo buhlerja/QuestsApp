@@ -18,11 +18,25 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var completedQuestStrucs: [QuestStruc]? = nil
     @Published private(set) var failedQuestStrucs: [QuestStruc]? = nil
     
+    @Published private(set) var totalNumCompletedQuests: Int? = nil
+    @Published private(set) var totalNumFailedQuests: Int? = nil
+    
     @Published private(set) var watchlistQuestIds: [String]? = nil
     @Published private(set) var createdQuestIds: [String]? = nil
     @Published private(set) var failedQuestIds: [String]? = nil
     @Published private(set) var completedQuestIds: [String]? = nil
     private var cancellables = Set<AnyCancellable>()
+    
+    func getTotalFailedAndCompletedQuests() async throws {
+        guard let user else {
+            print("no user")
+            return
+        }
+        self.totalNumCompletedQuests = try await UserManager.shared.getNumTotalQuests(userId: user.userId, listType: .completed)
+        self.totalNumFailedQuests = try await UserManager.shared.getNumTotalQuests(userId: user.userId, listType: .failed)
+        print(totalNumCompletedQuests ?? "nil")
+        print(totalNumFailedQuests ?? "nil")
+    }
     
     func deleteQuest(quest: QuestStruc) {
         //guard let user else { return } // Make sure the user is logged in or authenticated. not needed here!!

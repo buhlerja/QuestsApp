@@ -198,6 +198,7 @@ struct ProfilePage: View {
         }
         .task {
             try? await viewModel.loadCurrentUser()
+            try? await viewModel.getTotalFailedAndCompletedQuests()
         }
         .onChange(of: viewModel.watchlistQuestIds) {
             //viewModel.getQuestStrucsFromIds(questIdList: viewModel.watchlistQuestIds, listType: .watchlist)
@@ -398,8 +399,27 @@ struct ProfilePage: View {
                 Spacer()
             }
             if let completedQuests = viewModel.completedQuestStrucs, !completedQuests.isEmpty {
+                if let totalNumCompletedQuests = viewModel.totalNumCompletedQuests {
+                    HStack {
+                        Text("Total: \(totalNumCompletedQuests)")
+                            .font(.headline)
+                            .italic()
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                } else {
+                    HStack {
+                        Text("Total: --")
+                            .font(.headline)
+                            .italic()
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                }
                 HStack {
-                    Text("Total: \(completedQuests.count)")
+                    Text("Unique and Active: \(completedQuests.count)")
                         .font(.headline)
                         .italic()
                         .foregroundColor(.gray)
@@ -447,8 +467,27 @@ struct ProfilePage: View {
                 Spacer()
             }
             if let failedQuests = viewModel.failedQuestStrucs, !failedQuests.isEmpty {
+                if let totalNumFailedQuests = viewModel.totalNumFailedQuests {
+                    HStack {
+                        Text("Total: \(totalNumFailedQuests)")
+                            .font(.headline)
+                            .italic()
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                } else {
+                    HStack {
+                        Text("Total: --")
+                            .font(.headline)
+                            .italic()
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        Spacer()
+                    }
+                }
                 HStack {
-                    Text("Total: \(failedQuests.count)")
+                    Text("Unique and Active: \(failedQuests.count)")
                         .font(.headline)
                         .italic()
                         .foregroundColor(.gray)
