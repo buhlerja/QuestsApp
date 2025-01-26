@@ -15,7 +15,8 @@ final class ActiveQuestViewModel: ObservableObject {
     @Published var reportType: ReportType? = nil
     
     @Published var route: MKRoute? = nil
-    @Published var directionsErrorMessage: String? = nil
+    @Published var startingLocDirectionsErrorMessage: String? = nil
+    @Published var objectiveAreaDirectionsErrorMessage: String? = nil
     @Published var showProgressView = false
     
     // Passed in parameters initialized in init
@@ -47,14 +48,15 @@ final class ActiveQuestViewModel: ObservableObject {
         }
     }
     
-    func getDirections(startCoordinate: CLLocationCoordinate2D) {
+    func getDirections(startingLocDirections: Bool, startCoordinate: CLLocationCoordinate2D) {
         guard let mapViewModel = mapViewModel else {
             print("MapViewModel is nil")
             return
         }
         
         route = nil
-        directionsErrorMessage = nil
+        startingLocDirectionsErrorMessage = nil
+        objectiveAreaDirectionsErrorMessage = nil
 
         let request = MKDirections.Request()
         // Create a source item with the current user location
@@ -83,15 +85,25 @@ final class ActiveQuestViewModel: ObservableObject {
                 print("Route calculation completed successfully.")
                 if let route = route {
                     print("Route details: \(route.name) with distance \(route.distance) meters.")
-                    directionsErrorMessage = nil
+                    startingLocDirectionsErrorMessage = nil
+                    objectiveAreaDirectionsErrorMessage = nil
                 } else {
                     print("No routes found.")
-                    directionsErrorMessage = "No routes found."
+                    if startingLocDirections {
+                        startingLocDirectionsErrorMessage = "No routes found."
+                    } else {
+                        objectiveAreaDirectionsErrorMessage = "No routes found."
+                    }
+                    
                 }
             } catch {
                 showProgressView = false
                 print("Error calculating directions: \(error.localizedDescription)")
-                directionsErrorMessage = error.localizedDescription // Assign the detailed error message
+                if startingLocDirections {
+                    startingLocDirectionsErrorMessage = error.localizedDescription // Assign the detailed error message
+                } else {
+                    objectiveAreaDirectionsErrorMessage = error.localizedDescription // Assign the detailed error message
+                }
             }
         }
     }

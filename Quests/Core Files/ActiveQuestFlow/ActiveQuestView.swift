@@ -91,24 +91,36 @@ struct ActiveQuestView: View {
                 
                 // Directions button UI
                 if let center = currentObjective.objectiveArea.center {
-                    HStack {
-                        Button(action: {
-                            viewModel.getDirections(startCoordinate: center) // view model
-                            viewModel.showProgressView = true
-                        }) {
-                            HStack {
-                                Text("Get directions to objective area")
-                                    .fontWeight(.medium)
-                                    .padding()
-                                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                                    .shadow(radius: 5)
-                                    .foregroundColor(.blue)
-                                if viewModel.showProgressView {
-                                    ProgressView()
+                    if let directionsErrorMessage = viewModel.objectiveAreaDirectionsErrorMessage {
+                        Text(directionsErrorMessage)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.red) // Red background
+                            )
+                            .padding(.horizontal)
+                    }
+                    else {
+                        HStack {
+                            Button(action: {
+                                viewModel.getDirections(startingLocDirections: false, startCoordinate: center) // view model
+                                viewModel.showProgressView = true
+                            }) {
+                                HStack {
+                                    Text("Get directions to objective area")
+                                        .fontWeight(.medium)
                                         .padding()
                                         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                                         .shadow(radius: 5)
                                         .foregroundColor(.blue)
+                                    if viewModel.showProgressView {
+                                        ProgressView()
+                                            .padding()
+                                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                            .shadow(radius: 5)
+                                            .foregroundColor(.blue)
+                                    }
                                 }
                             }
                         }
@@ -132,7 +144,7 @@ struct ActiveQuestView: View {
         .onAppear {
             updateTimerValue()
             viewModel.route = nil
-            viewModel.directionsErrorMessage = nil
+            viewModel.objectiveAreaDirectionsErrorMessage = nil
             viewModel.showProgressView = false
         }
         .onChange(of: timerIsUp) {
@@ -177,13 +189,19 @@ struct ActiveQuestView: View {
                     .foregroundColor(.gray)
                     .padding()
 
-                HStack {
-                    Text("Enter Solution:")
-                    TextField("Solution", text: $enteredObjectiveSolution)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                if(currentObjective.objectiveType == .code) {
+                    HStack {
+                        Text("Enter Solution:")
+                        TextField("Solution", text: $enteredObjectiveSolution)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.leading, 10)
+                    }
+                    .padding(.bottom)
+                } else {
+                    Text("Enter Solution: \(enteredObjectiveSolution)")
+                    NumericGrid(solutionCombinationAndCode: $enteredObjectiveSolution)
                         .padding(.leading, 10)
                 }
-                .padding(.bottom)
 
                 if answerIsWrong {
                     Text("Answer Incorrect")
@@ -313,7 +331,7 @@ struct ActiveQuestView: View {
                 Spacer()
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: 700)
+            .frame(maxWidth: .infinity, maxHeight: 800)
             .background(Color.white)
             .cornerRadius(16)
             .shadow(radius: 10)
@@ -362,7 +380,7 @@ struct ActiveQuestView: View {
                 enteredObjectiveSolution = ""
                 showHintButton = false // reset showHintButton to false
                 viewModel.route = nil // Reset the directions route for the next objective
-                viewModel.directionsErrorMessage = nil // Reset the directions error message for the next objective
+                viewModel.objectiveAreaDirectionsErrorMessage = nil // Reset the directions error message for the next objective
                 viewModel.showProgressView = false // Reset the progress view to false for the next objective
                 updateTimerValue() // Reset the timer for the new objective
             }

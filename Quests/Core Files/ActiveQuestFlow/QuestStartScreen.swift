@@ -19,7 +19,6 @@ struct QuestStartScreen: View {
         }
         .onAppear {
             viewModel.route = nil
-            viewModel.directionsErrorMessage = nil
             viewModel.showProgressView = false
         }
     }

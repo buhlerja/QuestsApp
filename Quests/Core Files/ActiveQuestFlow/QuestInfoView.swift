@@ -19,10 +19,6 @@ struct QuestInfoView: View {
     
     // Reporting for issues
     @State private var showReportText = false
-
-    // For directions search results
-    //@State private var route: MKRoute?
-    //@State private var directionsErrorMessage: String?
     
     @StateObject private var viewModel: ActiveQuestViewModel
     
@@ -372,10 +368,10 @@ struct QuestInfoView: View {
                         Button(action: {
                             if let startCoordinate = viewModel.quest.coordinateStart {
                                 viewModel.showProgressView = true
-                                viewModel.getDirections(startCoordinate: startCoordinate)
+                                viewModel.getDirections(startingLocDirections: true, startCoordinate: startCoordinate)
                             } else {
                                 viewModel.showProgressView = false
-                                viewModel.directionsErrorMessage = "Error: No quest starting location"
+                                viewModel.startingLocDirectionsErrorMessage = "Error: No quest starting location"
                             }
                         }) {
                             HStack {
@@ -396,7 +392,7 @@ struct QuestInfoView: View {
                         }
                         .padding()
                         
-                        if let errorMessage = viewModel.directionsErrorMessage {
+                        if let errorMessage = viewModel.startingLocDirectionsErrorMessage {
                             Text(errorMessage)
                                 .foregroundColor(.white)
                                 .padding()
@@ -494,6 +490,7 @@ struct QuestInfoView: View {
             }
         }
         .onAppear {
+            viewModel.startingLocDirectionsErrorMessage = nil // Reset the error message
             Task {
                 do {
                     try await viewModel.getQuest(questId: quest.id.uuidString) // Get an updated version of the quest from the DB
@@ -512,56 +509,6 @@ struct QuestInfoView: View {
             }
         }
     }
-    
-    /*func getDirections() {
-        route = nil
-
-        let request = MKDirections.Request()
-        if let startCoordinate = quest.coordinateStart {
-            // Create a source item with the current user location
-            Task {
-                // Get the user's current location asynchronously
-                if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
-                    let userCoordinate = userLocation.coordinate
-                    print("User Coordinate: \(userCoordinate)")
-                    request.source = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
-                } else {
-                    showProgressView = false
-                    print("No user location available.")
-                    return // Exit if no user location is available
-                }
-
-                // Set the destination as the quest's starting location
-                print("Start Coordinate: \(startCoordinate)")
-                request.destination = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinate))
-
-                // Calculate directions now that both source and destination are set
-                do {
-                    let directions = MKDirections(request: request)
-                    let response = try await directions.calculate()
-                    route = response.routes.first
-                    showProgressView = false
-                    print("Route calculation completed successfully.")
-                    if let route = route {
-                        print("Route details: \(route.name) with distance \(route.distance) meters.")
-                        directionsErrorMessage = nil
-                    } else {
-                        print("No routes found.")
-                        directionsErrorMessage = "No routes found."
-                    }
-                } catch {
-                    showProgressView = false
-                    print("Error calculating directions: \(error.localizedDescription)")
-                    directionsErrorMessage = error.localizedDescription // Assign the detailed error message
-                }
-            }
-        } else {
-            directionsErrorMessage = "Quest starting location is missing."
-            showProgressView = false
-        }
-   
-    }*/
-
 }
 
 struct StarRatingView: View {

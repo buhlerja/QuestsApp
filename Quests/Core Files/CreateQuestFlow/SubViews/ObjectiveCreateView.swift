@@ -57,7 +57,7 @@ struct ObjectiveCreateView: View {
                             VStack {
                                 Text("Solution: \(objectiveContent.solutionCombinationAndCode)")
                                     .padding()
-                                NumericGrid() // Automatically adds the combination to the data structure
+                                NumericGrid(solutionCombinationAndCode: $objectiveContent.solutionCombinationAndCode) // Automatically adds the combination to the data structure
                             }
                         }
                         
@@ -227,42 +227,6 @@ struct ObjectiveCreateView: View {
         .onChange(of: minConstraint) {
             objectiveContent.minutesConstraint = minConstraint == 0 ? nil : minConstraint
         }
-    }
-    
-    // A helper function to display a number as a button
-     func number(of number: Int) -> some View {
-         Button(action: {
-             objectiveContent.solutionCombinationAndCode += "\(number)"
-         }) {
-             ZStack {
-                 Circle()
-                     .fill(Color.cyan) // Set the color for the circle
-                     .frame(width: 50, height: 50) // Set the size of the circle
-                 Text("\(number)")
-                     .font(.title)
-                     .foregroundColor(.white) // Set the text color
-             }
-         }
-         .accessibilityLabel(Text("Button \(number)")) // Accessibility label
-     }
-    
-    // View for the numeric grid
-    func NumericGrid() -> some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16),
-            GridItem(.flexible(), spacing: 16)
-        ]
-
-        return VStack(spacing: 16) {
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(1..<10) { digit in
-                    number(of: digit)
-                }
-            }
-            number(of: 0)
-        }
-        .padding()
     }
     
     // Helper function containing objective description sub-view
