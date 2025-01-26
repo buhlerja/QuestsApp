@@ -21,15 +21,17 @@ final class QuestViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
     @Published private(set) var quests: [QuestStruc] = []
-    @Published var selectedFilter: FilterOption? = nil
-    @Published var recurringOption: RecurringOption? = nil
     
-    @Published var noMoreToQuery: Bool = false
+    @Published var selectedFilter: FilterOption? = nil // Used for new filtering system
+    //@Published var recurringOption: RecurringOption? = nil // From OLD FILTERING SYSTEM. Can be removed once new one is established
+    
     @Published var userCoordinate: CLLocationCoordinate2D? = nil
     
-    //private var lastDocument: DocumentSnapshot? = nil
+    @Published var showProgressView: Bool = false
+    //private var lastDocument: DocumentSnapshot? = nil // No longer needed thanks to queriesWithLastDocuments
     private var queriesWithLastDocuments: [(Query, DocumentSnapshot?)] = [] /* Used to hold the location based queries
     provided from GeoFire and the lastDocument associated with each for pagination */
+    @Published var noMoreToQuery: Bool = false // used to keep track of whether our query is finished or not
     
     func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -37,6 +39,52 @@ final class QuestViewModel: ObservableObject {
     }
     
     enum FilterOption: String, CaseIterable {
+        case noFilter
+        case recurring
+        case nonRecurring
+        case treasure
+        case noTreasure
+        //case premium
+        //case noPremium // OUT OF SCOPE FOR FIRST RELEASE
+        
+        var recurringBool: Bool? {
+            switch self {
+            case .recurring: return true
+            case .nonRecurring: return false
+            default: return nil
+            }
+        }
+        
+        var treasureBool: Bool? {
+            switch self {
+            case .treasure: return true
+            case .noTreasure: return false
+            default: return nil
+            }
+        }
+        
+        // Display name for each filter option
+        var displayName: String {
+            switch self {
+            case .noFilter: return "No Filter"
+            case .recurring: return "Recurring Quests"
+            case .nonRecurring: return "Non-Recurring Quests"
+            case .treasure: return "Treasure Quests"
+            case .noTreasure: return "No Treasure Quests"
+            }
+        }
+    }
+    
+    func filterSelected(option: FilterOption) async throws {
+        self.selectedFilter = option
+        self.quests = [] // Reset the quests array
+        self.queriesWithLastDocuments = [] // Reset the geoqueries + last documents stored for each query
+        self.noMoreToQuery = false
+        self.getQuests()
+    }
+    
+    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
+    /*enum FilterOption: String, CaseIterable {
         case noFilter
         case costHigh
         case costLow
@@ -51,7 +99,8 @@ final class QuestViewModel: ObservableObject {
             }
         }
     }
-    
+     
+    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
     func filterSelected(option: FilterOption) async throws {
         self.selectedFilter = option
         self.quests = []
@@ -59,9 +108,10 @@ final class QuestViewModel: ObservableObject {
         self.queriesWithLastDocuments = []
         // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
         self.getQuests()
-    }
+    }*/
     
-    enum RecurringOption: String, CaseIterable {
+    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
+    /*enum RecurringOption: String, CaseIterable {
         case none
         case recurring
         case nonRecurring
@@ -73,16 +123,17 @@ final class QuestViewModel: ObservableObject {
             case .nonRecurring: return false
             }
         }
-    }
+    }*/
     
-    func recurringOptionSelected(option: RecurringOption) async throws {
+    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
+    /*func recurringOptionSelected(option: RecurringOption) async throws {
         self.recurringOption = option
         self.quests = []
         //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
         self.queriesWithLastDocuments = []
         // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
         self.getQuests()
-    }
+    }*/
     
     func getUserLocation() async throws {
         if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
@@ -102,6 +153,9 @@ final class QuestViewModel: ObservableObject {
     }
         
     func getQuests() {
+        if quests.isEmpty {
+            self.showProgressView = true
+        }
         Task {
             // GET ALL QUESTS START
             /*let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
@@ -112,13 +166,14 @@ final class QuestViewModel: ObservableObject {
             // GET ALL QUESTS ENDS
             
             // GET QUESTS BY PROXIMITY START
+            defer { showProgressView = false }
             if !noMoreToQuery {
                 print("Getting quests")
                 if self.userCoordinate == nil {
                     try? await getUserLocation()
                 }
                 if let userCoordinate = self.userCoordinate {
-                    let (newQuests, updatedQueriesWithLastDocuments)  = try await QuestManager.shared.getQuestsByProximity(queriesWithLastDocuments: queriesWithLastDocuments, count: 2, center: userCoordinate, radiusInM: 100000) // 100 km
+                    let (newQuests, updatedQueriesWithLastDocuments)  = try await QuestManager.shared.getQuestsByProximity(queriesWithLastDocuments: queriesWithLastDocuments, count: 2, center: userCoordinate, radiusInM: 100000, recurring: selectedFilter?.recurringBool, treasure: selectedFilter?.treasureBool) // 100 km search radius entered here
                     if var newQuests = newQuests { // Checking for nil condition
                         for i in 0..<newQuests.count {
                             if let startLocation = newQuests[i].coordinateStart {

@@ -71,9 +71,9 @@ struct QuestView: View {
                             .font(.footnote)
                             .padding(.horizontal)
                             
-                            Menu("Filter: \(viewModel.selectedFilter?.rawValue ?? "None")") {
+                            Menu("Filter: \(viewModel.selectedFilter?.displayName ?? "None")") {
                                 ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
-                                    Button(filterOption.rawValue) {
+                                    Button(filterOption.displayName) {
                                         Task {
                                             try? await viewModel.filterSelected(option: filterOption)
                                         }
@@ -85,20 +85,13 @@ struct QuestView: View {
                             .background(Color.white)
                             .cornerRadius(8)
                             .shadow(radius: 2)
-                            Menu("Recurrance Type: \(viewModel.recurringOption?.rawValue ?? "None")") {
-                                ForEach(QuestViewModel.RecurringOption.allCases, id: \.self) { recurringOption in
-                                    Button(recurringOption.rawValue) {
-                                        Task {
-                                            try? await viewModel.recurringOptionSelected(option: recurringOption)
-                                        }
+                            
+                            if viewModel.showProgressView {
+                                ProgressView()
+                                    .onAppear {
+                                        print("SHOWING PROGRESS VIEW")
                                     }
-                                }
                             }
-                            .menuStyle(.borderlessButton)
-                            .padding(8)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 2)
 
                             ForEach(viewModel.quests) { quest in
                                 VStack {
