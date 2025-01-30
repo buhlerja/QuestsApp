@@ -11,11 +11,8 @@ import SwiftUI
 import MapKit
 
 struct QuestStartScreen: View {
-    
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: ActiveQuestViewModel
-    @Binding var showActiveQuest: Bool
-    
-    @State var nextScreen = false
     
     var body: some View {
         ZStack {
@@ -23,6 +20,15 @@ struct QuestStartScreen: View {
                 .ignoresSafeArea()
             VStack {
                 // Map and directions button
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.black)
+                            .padding()
+                    }
+                    Spacer()
+                }
+                .frame(height: 50)
                 if let startingLocation = viewModel.quest.coordinateStart {
                     Map(position: $viewModel.position) {
                         UserAnnotation()
@@ -97,22 +103,15 @@ struct QuestStartScreen: View {
                     }
                 }
                 
-                Button(action: {
-                    showActiveQuest = false
-                }) {
-                    Text("Exit Active Quest")
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .shadow(radius: 5)
-                }
-                
                 Spacer()
 
                 // GO Button
                 Button(action: {
-                    nextScreen = true
+                    // Dismiss the previous popup and introduce the new one
+                    viewModel.showActiveQuestView = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        dismiss()
+                    }
                 }) {
                     Text("GO")
                         .font(.largeTitle) // Big text
@@ -125,13 +124,12 @@ struct QuestStartScreen: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $nextScreen) {
-            ActiveQuestView(showActiveQuest: $showActiveQuest, viewModel: viewModel)
-        }
+        .navigationBarHidden(true) // Hides the navigation bar completely
+        .toolbar(.hidden, for: .tabBar) // Hides the tab bar
     }
 
 }
 
 #Preview {
-    QuestStartScreen(viewModel: ActiveQuestViewModel(mapViewModel: nil, initialQuest: QuestStruc.sampleData[0]), showActiveQuest: .constant(false))
+    QuestStartScreen(viewModel: ActiveQuestViewModel(mapViewModel: nil, initialQuest: QuestStruc.sampleData[0]))
 }

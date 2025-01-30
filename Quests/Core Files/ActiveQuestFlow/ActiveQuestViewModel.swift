@@ -25,6 +25,10 @@ final class ActiveQuestViewModel: ObservableObject {
     
     @Published var fail: Bool = false // Set to true if any of the quest failure conditions are met
     
+    // For popup state control
+    @Published var showActiveQuestView: Bool = false
+    @Published var showQuestCompletedView: Bool = false
+    
     // Passed in parameters initialized in init
     @Published var quest: QuestStruc
     private var mapViewModel: MapViewModel? = nil

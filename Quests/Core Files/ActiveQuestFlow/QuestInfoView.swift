@@ -10,7 +10,6 @@ import MapKit
 
 struct QuestInfoView: View {
     @ObservedObject var mapViewModel: MapViewModel
-    @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
     
     // Used for the progress view needed when fetching the required quest object from the DB
@@ -35,454 +34,461 @@ struct QuestInfoView: View {
         ZStack {
             Color(.systemCyan)
                 .ignoresSafeArea()
-            ScrollView(.vertical) {
-                
-                VStack(alignment: .leading, spacing: 10) {
-                
-                    if viewModel.quest.hidden {
-                        Text("Quest not available for play")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.red)
-                            .cornerRadius(8)
-                            .shadow(radius: 5)
-                            .padding()
-                    }
+            NavigationStack {
+                ScrollView(.vertical) {
                     
-                    if hasError {
-                        Text("Warning: Could not update Quest information from server")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.red)
-                            .cornerRadius(8)
-                            .shadow(radius: 5)
-                            .padding()
-                    } // MAYBE UPDATE ONE DAY TO INCLUDE ACTUAL DESIRED BEHAVIOUR. THIS IS PROBABLY
-                    // NOT IDEAL
+                    VStack(alignment: .leading, spacing: 10) {
                     
-                    if showReportText {
-                        VStack {
-                            Text("Describe issue: ")
+                        if viewModel.quest.hidden {
+                            Text("Quest not available for play")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                            HStack {
-                                TextField("Describe the issue...", text: $viewModel.reportText)
-                                   .textFieldStyle(RoundedBorderTextFieldStyle())
-                                   .padding()
-                                Button("Submit") {
-                                    // Handle the submission
-                                    print("Report: \(viewModel.reportText)")
-                                    showReportText = false
-                                    viewModel.addReportRelationship(questId: viewModel.quest.id.uuidString)
-                                    
-                                }
-                                .buttonStyle(.borderedProminent)
+                                .frame(maxWidth: .infinity)
+                                .background(Color.red)
+                                .cornerRadius(8)
+                                .shadow(radius: 5)
                                 .padding()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .background(Color.red)
-                        .cornerRadius(8)
-                        .shadow(radius: 5)
-                        .padding()
-                      
-                    }
-                    
-                    HStack {
-                        // Premium Quest Badge (If applicable)
-                        /*if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
-                            HStack {
-                                Image(systemName: "bolt.fill")
-                                Text("Premium")
-                                    .font(.caption2)
-                                    .fontWeight(.bold)
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.green))
-                            .foregroundColor(.white)
-                            .shadow(radius: 3)
-                            //Spacer()
-                        }*/
-                       
-                        
-                        // Recurring Quest Section (If applicable)
-                        if viewModel.quest.supportingInfo.recurring {
-                            HStack {
-                                Image(systemName: "arrow.triangle.2.circlepath")
-                                Text("Recurring")
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.blue))
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            //Spacer()
-                        } else {
-                            HStack {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                Text("Non-Recurring!")
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.red))
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            //Spacer()
-                        }
-
-                        // Treasure Available Section (If applicable)
-                        if viewModel.quest.supportingInfo.treasure {  // Replace with the actual condition for treasure
-                            HStack {
-                                Image(systemName: "bag.fill")
-                                Text("Treasure!")
-                                    .font(.caption2)
-                                    .fontWeight(.semibold)
-                            }
-                            .padding()
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.purple))
-                            .foregroundColor(.white)
-                            .shadow(radius: 5)
-                            //Spacer()
                         }
                         
-                        Spacer()
+                        if hasError {
+                            Text("Warning: Could not update Quest information from server")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.red)
+                                .cornerRadius(8)
+                                .shadow(radius: 5)
+                                .padding()
+                        } // MAYBE UPDATE ONE DAY TO INCLUDE ACTUAL DESIRED BEHAVIOUR. THIS IS PROBABLY
+                        // NOT IDEAL
                         
-                    }
-                    .padding()
-                    
-                    Divider()
-                    
-                    // Quest metadata information
-                    VStack(alignment: .leading, spacing: 10) {
+                        if showReportText {
+                            VStack {
+                                Text("Describe issue: ")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                HStack {
+                                    TextField("Describe the issue...", text: $viewModel.reportText)
+                                       .textFieldStyle(RoundedBorderTextFieldStyle())
+                                       .padding()
+                                    Button("Submit") {
+                                        // Handle the submission
+                                        print("Report: \(viewModel.reportText)")
+                                        showReportText = false
+                                        viewModel.addReportRelationship(questId: viewModel.quest.id.uuidString)
+                                        
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .padding()
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .background(Color.red)
+                            .cornerRadius(8)
+                            .shadow(radius: 5)
+                            .padding()
+                          
+                        }
+                        
                         HStack {
-                            Image(systemName: "play.circle.fill")
-                            Text("Played: \(viewModel.quest.metaData.numTimesPlayed) times")
-                        }
-                        if let completionRate = viewModel.quest.metaData.completionRate {
-                            Button( action: {
-                                completionRateDroppedDown.toggle()
-                            }, label: {
+                            // Premium Quest Badge (If applicable)
+                            /*if quest.metaData.isPremiumQuest {  // Replace with the actual condition when available
                                 HStack {
-                                    Image(systemName: "trophy.circle.fill")
-                                    Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
-                                    if completionRateDroppedDown {
-                                        Image(systemName: "chevron.down")
-                                    }
-                                    else {
-                                        Image(systemName: "chevron.right")
-                                    }
+                                    Image(systemName: "bolt.fill")
+                                    Text("Premium")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
                                 }
-                            })
-                            if completionRateDroppedDown {
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 8).fill(Color.green))
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                                //Spacer()
+                            }*/
+                           
+                            
+                            // Recurring Quest Section (If applicable)
+                            if viewModel.quest.supportingInfo.recurring {
                                 HStack {
-                                    Image(systemName: "checkmark.circle.fill")
-                                    Text("Successes: \(viewModel.quest.metaData.numSuccesses)")
+                                    Image(systemName: "arrow.triangle.2.circlepath")
+                                    Text("Recurring")
+                                        .font(.caption2)
+                                        .fontWeight(.semibold)
                                 }
-                                .padding([.leading, .trailing])
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.blue))
+                                .foregroundColor(.white)
+                                .shadow(radius: 5)
+                                //Spacer()
+                            } else {
                                 HStack {
-                                    Image(systemName: "xmark.circle.fill")
-                                    Text("Failures: \(viewModel.quest.metaData.numFails)")
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Text("Non-Recurring!")
+                                        .font(.caption2)
+                                        .fontWeight(.semibold)
                                 }
-                                .padding([.leading, .trailing])
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.red))
+                                .foregroundColor(.white)
+                                .shadow(radius: 5)
+                                //Spacer()
                             }
+
+                            // Treasure Available Section (If applicable)
+                            if viewModel.quest.supportingInfo.treasure {  // Replace with the actual condition for treasure
+                                HStack {
+                                    Image(systemName: "bag.fill")
+                                    Text("Treasure!")
+                                        .font(.caption2)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.purple))
+                                .foregroundColor(.white)
+                                .shadow(radius: 5)
+                                //Spacer()
+                            }
+                            
+                            Spacer()
+                            
                         }
-                    }
-                    .font(.footnote)
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.horizontal)
-                    
-                    Divider()
-                    
-                    // Rating Section (If applicable)
-                    if let rating = viewModel.quest.metaData.rating {
-                        StarRatingView(rating: rating)
-                            .padding([.leading, .trailing])
-                            .font(.title)
-                            //.background(RoundedRectangle(cornerRadius: 12).fill(Color.yellow))
-                            .foregroundColor(.black)
-                            .shadow(radius: 5)
+                        .padding()
                         
                         Divider()
-                    }
-
-                    // Quest description
-                    Text(viewModel.quest.description)
-                        .font(.headline)
-                        .foregroundColor(.white.opacity(0.8))
-                        .padding([.leading, .trailing])
-                    
-                    HStack {
-                        Image(systemName: "pin.circle")
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("Objectives: \(viewModel.quest.objectiveCount)")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                    .padding([.leading, .trailing])
-                    
-                    // Treasure value section
-                    if viewModel.quest.supportingInfo.treasure {
-                        HStack {
-                            Image(systemName: "dollarsign.circle.fill")
-                                .foregroundColor(.white.opacity(0.8))
-                            Text("Treasure value: \(viewModel.quest.supportingInfo.treasureValue, specifier: "%.1f")")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        .padding([.leading, .trailing])
-                    }
-
-                    // Total Length Section
-                    if let totalLength = viewModel.quest.supportingInfo.totalLength, viewModel.quest.supportingInfo.lengthEstimate {
-                        HStack {
-                            Image(systemName: "clock")
-                                .foregroundColor(.white.opacity(0.8))
-                            Text("\(totalLength) min")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        .padding([.leading, .trailing])
-                    }
-
-                    // Difficulty Section
-                    HStack {
-                        Image(systemName: "chart.bar.fill")
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("Difficulty: \(viewModel.quest.supportingInfo.difficulty, specifier: "%.1f")")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                    .padding([.leading, .trailing])
-                    
-                    // Distance section
-                    HStack {
-                        Image(systemName: "figure.walk.circle.fill")
-                            .foregroundColor(.white.opacity(0.8))
-                        Text("Travel distance: \(viewModel.quest.supportingInfo.distance, specifier: "%.1f")")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                    .padding([.leading, .trailing])
-
-                    // Cost Section
-                    HStack {
-                        Image(systemName: "dollarsign.circle")
-                            .foregroundColor(.white.opacity(0.8))
-                        if let cost = viewModel.quest.supportingInfo.cost {
-                            Text("\(Int(cost))")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        } else {
-                            Text("Unspecified")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                    }
-                    .padding([.leading, .trailing])
-                    
-                    if creatorView {
-                        ZStack {
-                            Rectangle()
-                                .fill(Color.cyan) // Fill with blue color
-                                .frame(height: 250) // Fix height for the banner
-                                .ignoresSafeArea(edges: .horizontal) // Extend the rectangle to screen edges
-                                .shadow(radius: 5) // Add a shadow for better depth
-                            VStack {
-                                HStack {
-                                    Text("Objective List (Creator View Only)")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .padding()
-                                    Spacer()
-                                }
-                                
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 16) { // Ensure spacing between cards
-                                        if !viewModel.quest.objectives.isEmpty {
-                                            ForEach(viewModel.quest.objectives, id: \.id) { objective in
-                                                VStack(alignment: .leading, spacing: 8) {
-                                                    Text("Objective \(objective.objectiveNumber)")
-                                                        .font(.headline)
-                                                        .foregroundColor(.black)
-                                                    Text(objective.objectiveTitle)
-                                                        .font(.headline)
-                                                        .foregroundColor(.black)
-                                                    Text(objective.objectiveDescription)
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.black.opacity(0.8))
-                                                }
-                                                .padding()
-                                                .background(
-                                                    RoundedRectangle(cornerRadius: 12)
-                                                        .fill(Color.white) // Change the color as needed
-                                                        .shadow(radius: 4) // Add a subtle shadow
-                                                )
-                                                .padding(.vertical)
-                                                .frame(width: 250, height: 200)
-                                            }
+                        
+                        // Quest metadata information
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Image(systemName: "play.circle.fill")
+                                Text("Played: \(viewModel.quest.metaData.numTimesPlayed) times")
+                            }
+                            if let completionRate = viewModel.quest.metaData.completionRate {
+                                Button( action: {
+                                    completionRateDroppedDown.toggle()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "trophy.circle.fill")
+                                        Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
+                                        if completionRateDroppedDown {
+                                            Image(systemName: "chevron.down")
+                                        }
+                                        else {
+                                            Image(systemName: "chevron.right")
                                         }
                                     }
-                                    .padding(.horizontal) // Add padding for the horizontal scroll view
+                                })
+                                if completionRateDroppedDown {
+                                    HStack {
+                                        Image(systemName: "checkmark.circle.fill")
+                                        Text("Successes: \(viewModel.quest.metaData.numSuccesses)")
+                                    }
+                                    .padding([.leading, .trailing])
+                                    HStack {
+                                        Image(systemName: "xmark.circle.fill")
+                                        Text("Failures: \(viewModel.quest.metaData.numFails)")
+                                    }
+                                    .padding([.leading, .trailing])
                                 }
                             }
-                            .padding(.top, 20) // Adjust spacing between banner and cards
                         }
-                    }
-
-                    // Map and directions button
-                    if let startingLocation = viewModel.quest.coordinateStart {
-                        Map(position: $viewModel.position) {
-                            UserAnnotation()
-                            Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
-                            if let route = viewModel.route {
-                                MapPolyline(route)
-                                    .stroke(.blue, lineWidth: 5)
-                            }
-                        }
-                        .accentColor(Color.cyan)
-                        .frame(height: 400)
-                        .cornerRadius(15)
-                        .shadow(radius: 10)
+                        .font(.footnote)
+                        .foregroundColor(.white.opacity(0.8))
                         .padding(.horizontal)
-                        .mapControls {
-                            MapUserLocationButton()
-                            MapCompass()
-                            MapScaleView()
-                        }
                         
-                        // Directions button
-                        Button(action: {
-                            if let startCoordinate = viewModel.quest.coordinateStart {
-                                viewModel.showProgressView = true
-                                viewModel.getDirections(startingLocDirections: true, startCoordinate: startCoordinate)
-                            } else {
-                                viewModel.showProgressView = false
-                                viewModel.startingLocDirectionsErrorMessage = "Error: No quest starting location"
-                            }
-                        }) {
+                        Divider()
+                        
+                        // Rating Section (If applicable)
+                        if let rating = viewModel.quest.metaData.rating {
+                            StarRatingView(rating: rating)
+                                .padding([.leading, .trailing])
+                                .font(.title)
+                                //.background(RoundedRectangle(cornerRadius: 12).fill(Color.yellow))
+                                .foregroundColor(.black)
+                                .shadow(radius: 5)
+                            
+                            Divider()
+                        }
+
+                        // Quest description
+                        Text(viewModel.quest.description)
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding([.leading, .trailing])
+                        
+                        HStack {
+                            Image(systemName: "pin.circle")
+                                .foregroundColor(.white.opacity(0.8))
+                            Text("Objectives: \(viewModel.quest.objectiveCount)")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding([.leading, .trailing])
+                        
+                        // Treasure value section
+                        if viewModel.quest.supportingInfo.treasure {
                             HStack {
-                                Text("Get directions to starting location")
-                                    .fontWeight(.medium)
-                                    .padding()
-                                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                                    .shadow(radius: 5)
-                                    .foregroundColor(.blue)
-                                if viewModel.showProgressView {
-                                    ProgressView()
+                                Image(systemName: "dollarsign.circle.fill")
+                                    .foregroundColor(.white.opacity(0.8))
+                                Text("Treasure value: \(viewModel.quest.supportingInfo.treasureValue, specifier: "%.1f")")
+                                    .font(.headline)
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                            .padding([.leading, .trailing])
+                        }
+
+                        // Total Length Section
+                        if let totalLength = viewModel.quest.supportingInfo.totalLength, viewModel.quest.supportingInfo.lengthEstimate {
+                            HStack {
+                                Image(systemName: "clock")
+                                    .foregroundColor(.white.opacity(0.8))
+                                Text("\(totalLength) min")
+                                    .font(.headline)
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                            .padding([.leading, .trailing])
+                        }
+
+                        // Difficulty Section
+                        HStack {
+                            Image(systemName: "chart.bar.fill")
+                                .foregroundColor(.white.opacity(0.8))
+                            Text("Difficulty: \(viewModel.quest.supportingInfo.difficulty, specifier: "%.1f")")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding([.leading, .trailing])
+                        
+                        // Distance section
+                        HStack {
+                            Image(systemName: "figure.walk.circle.fill")
+                                .foregroundColor(.white.opacity(0.8))
+                            Text("Travel distance: \(viewModel.quest.supportingInfo.distance, specifier: "%.1f")")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+                        .padding([.leading, .trailing])
+
+                        // Cost Section
+                        HStack {
+                            Image(systemName: "dollarsign.circle")
+                                .foregroundColor(.white.opacity(0.8))
+                            if let cost = viewModel.quest.supportingInfo.cost {
+                                Text("\(Int(cost))")
+                                    .font(.headline)
+                                    .foregroundColor(.white.opacity(0.8))
+                            } else {
+                                Text("Unspecified")
+                                    .font(.headline)
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                        }
+                        .padding([.leading, .trailing])
+                        
+                        if creatorView {
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color.cyan) // Fill with blue color
+                                    .frame(height: 250) // Fix height for the banner
+                                    .ignoresSafeArea(edges: .horizontal) // Extend the rectangle to screen edges
+                                    .shadow(radius: 5) // Add a shadow for better depth
+                                VStack {
+                                    HStack {
+                                        Text("Objective List (Creator View Only)")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                            .padding()
+                                        Spacer()
+                                    }
+                                    
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 16) { // Ensure spacing between cards
+                                            if !viewModel.quest.objectives.isEmpty {
+                                                ForEach(viewModel.quest.objectives, id: \.id) { objective in
+                                                    VStack(alignment: .leading, spacing: 8) {
+                                                        Text("Objective \(objective.objectiveNumber)")
+                                                            .font(.headline)
+                                                            .foregroundColor(.black)
+                                                        Text(objective.objectiveTitle)
+                                                            .font(.headline)
+                                                            .foregroundColor(.black)
+                                                        Text(objective.objectiveDescription)
+                                                            .font(.subheadline)
+                                                            .foregroundColor(.black.opacity(0.8))
+                                                    }
+                                                    .padding()
+                                                    .background(
+                                                        RoundedRectangle(cornerRadius: 12)
+                                                            .fill(Color.white) // Change the color as needed
+                                                            .shadow(radius: 4) // Add a subtle shadow
+                                                    )
+                                                    .padding(.vertical)
+                                                    .frame(width: 250, height: 200)
+                                                }
+                                            }
+                                        }
+                                        .padding(.horizontal) // Add padding for the horizontal scroll view
+                                    }
+                                }
+                                .padding(.top, 20) // Adjust spacing between banner and cards
+                            }
+                        }
+
+                        // Map and directions button
+                        if let startingLocation = viewModel.quest.coordinateStart {
+                            Map(position: $viewModel.position) {
+                                UserAnnotation()
+                                Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
+                                if let route = viewModel.route {
+                                    MapPolyline(route)
+                                        .stroke(.blue, lineWidth: 5)
+                                }
+                            }
+                            .accentColor(Color.cyan)
+                            .frame(height: 400)
+                            .cornerRadius(15)
+                            .shadow(radius: 10)
+                            .padding(.horizontal)
+                            .mapControls {
+                                MapUserLocationButton()
+                                MapCompass()
+                                MapScaleView()
+                            }
+                            
+                            // Directions button
+                            Button(action: {
+                                if let startCoordinate = viewModel.quest.coordinateStart {
+                                    viewModel.showProgressView = true
+                                    viewModel.getDirections(startingLocDirections: true, startCoordinate: startCoordinate)
+                                } else {
+                                    viewModel.showProgressView = false
+                                    viewModel.startingLocDirectionsErrorMessage = "Error: No quest starting location"
+                                }
+                            }) {
+                                HStack {
+                                    Text("Get directions to starting location")
+                                        .fontWeight(.medium)
                                         .padding()
                                         .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                                         .shadow(radius: 5)
                                         .foregroundColor(.blue)
+                                    if viewModel.showProgressView {
+                                        ProgressView()
+                                            .padding()
+                                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                            .shadow(radius: 5)
+                                            .foregroundColor(.blue)
+                                    }
                                 }
                             }
+                            .padding()
+                            
+                            if let errorMessage = viewModel.startingLocDirectionsErrorMessage {
+                                Text(errorMessage)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.red) // Red background
+                                    )
+                                    .padding(.horizontal)
+                            }
+
+                            
+                        } else {
+                            Map(position: $viewModel.position) {
+                                UserAnnotation()
+                            }
+                            .accentColor(Color.cyan)
+                            .frame(height: 400)
+                            .cornerRadius(15)
+                            .shadow(radius: 10)
+                            .padding(.horizontal)
+                            .mapControls {
+                                MapUserLocationButton()
+                                MapCompass()
+                                MapScaleView()
+                            }
                         }
-                        .padding()
                         
-                        if let errorMessage = viewModel.startingLocDirectionsErrorMessage {
-                            Text(errorMessage)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.red) // Red background
-                                )
-                                .padding(.horizontal)
+                        // List the required materials!
+                        if !viewModel.quest.supportingInfo.materials.isEmpty {
+                            MaterialsDisplayView(materials: viewModel.quest.supportingInfo.materials)
                         }
 
                         
-                    } else {
-                        Map(position: $viewModel.position) {
-                            UserAnnotation()
+                        // List the special instructions!
+                        if let specialInstructions = viewModel.quest.supportingInfo.specialInstructions {
+                            Text("Special instructions: \(specialInstructions)")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding([.leading, .trailing])
                         }
-                        .accentColor(Color.cyan)
-                        .frame(height: 400)
-                        .cornerRadius(15)
-                        .shadow(radius: 10)
-                        .padding(.horizontal)
-                        .mapControls {
-                            MapUserLocationButton()
-                            MapCompass()
-                            MapScaleView()
-                        }
-                    }
-                    
-                    // List the required materials!
-                    if !viewModel.quest.supportingInfo.materials.isEmpty {
-                        MaterialsDisplayView(materials: viewModel.quest.supportingInfo.materials)
-                    }
+                        
+                        Spacer()
 
-                    
-                    // List the special instructions!
-                    if let specialInstructions = viewModel.quest.supportingInfo.specialInstructions {
-                        Text("Special instructions: \(specialInstructions)")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.8))
-                            .padding([.leading, .trailing])
-                    }
-                    
-                    Spacer()
-
-                    // Start challenge button
-                    if !viewModel.quest.hidden {
-                        Button(action: { showActiveQuest = true }) {
-                            Text("Start Quest")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                                .padding()
-                                .background(LinearGradient(gradient: Gradient(colors: [.orange, .yellow]), startPoint: .top, endPoint: .bottom))
-                                .foregroundColor(.white)
-                                .cornerRadius(12)
-                                .shadow(radius: 10)
+                        // Start challenge button
+                        if !viewModel.quest.hidden {
+                            NavigationLink(
+                                destination: QuestStartScreen(viewModel: viewModel)
+                            ) {
+                                Text("Navigate to Quest")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .padding()
+                                    .background(LinearGradient(gradient: Gradient(colors: [.orange, .yellow]), startPoint: .top, endPoint: .bottom))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 10)
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding(.horizontal)
+                        
+                        Spacer()
                     }
-                    
-                    Spacer()
-                }
-                .navigationTitle(viewModel.quest.title)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button("Incomplete", action: {
-                                showReportText = true
-                                viewModel.reportType = .incomplete
-                                print("Selected: Incomplete")
-                            })
-                            Button("Inappropriate", action: {
-                                showReportText = true
-                                viewModel.reportType = .inappropriate
-                                print("Selected: Inappropriate")
-                            })
-                            Button("Other", action: {
-                                showReportText = true
-                                viewModel.reportType = .other
-                                print("Selected: Incomplete")
-                            })
-                       } label: {
-                           HStack {
-                               Image(systemName: "exclamationmark.triangle.fill")
-                                   .foregroundColor(.red)
-                               Text("Report")
-                                   .font(.subheadline)
-                                   .fontWeight(.bold)
-                                   .foregroundColor(.red)
-                           }
+                    .navigationTitle(viewModel.quest.title)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Menu {
+                                Button("Incomplete", action: {
+                                    showReportText = true
+                                    viewModel.reportType = .incomplete
+                                    print("Selected: Incomplete")
+                                })
+                                Button("Inappropriate", action: {
+                                    showReportText = true
+                                    viewModel.reportType = .inappropriate
+                                    print("Selected: Inappropriate")
+                                })
+                                Button("Other", action: {
+                                    showReportText = true
+                                    viewModel.reportType = .other
+                                    print("Selected: Incomplete")
+                                })
+                           } label: {
+                               HStack {
+                                   Image(systemName: "exclamationmark.triangle.fill")
+                                       .foregroundColor(.red)
+                                   Text("Report")
+                                       .font(.subheadline)
+                                       .fontWeight(.bold)
+                                       .foregroundColor(.red)
+                               }
+                            }
                         }
                     }
-                }
-                .fullScreenCover(isPresented: $showActiveQuest) {
-                    //ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel/*, quest: quest*/)
-                    QuestStartScreen(viewModel: viewModel, showActiveQuest: $showActiveQuest)
+                    .fullScreenCover(isPresented: $viewModel.showActiveQuestView) {
+                        ActiveQuestView(viewModel: viewModel)
+                    }
+                    .fullScreenCover(isPresented: $viewModel.showQuestCompletedView) {
+                        QuestCompleteView(viewModel: viewModel)
+                    }
                 }
             }
         }
+        .toolbar(.hidden, for: .tabBar) // Hides the tab bar
         .onAppear {
             viewModel.startingLocDirectionsErrorMessage = nil // Reset the error message
             Task {

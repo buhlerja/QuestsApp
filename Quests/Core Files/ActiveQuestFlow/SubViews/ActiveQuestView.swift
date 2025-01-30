@@ -12,11 +12,9 @@ struct ActiveQuestView: View {
     //@ObservedObject var viewModel: MapViewModel // RIGHT NOW I PASS THIS MODEL BUT DON"T USE IT FOR ANYTHING. IF NOT NEEDED, REMOVE. DOESNT APPEAR TO BE NEEDED AS WE CHECK FOR LOCATION SERVICES ENABLEMENT IN AN EARLIER VIEW
     @State private var bottomMenuExpanded = true
     @State private var position: MapCameraPosition = .userLocation(followsHeading: true, fallback: .automatic) // Should default to the objectiveArea??
-    @Binding var showActiveQuest: Bool
     
     @State private var currentObjectiveIndex = 0
     @State private var enteredObjectiveSolution = ""
-    @State private var questCompleted = false // Indicates both a pass AND fail
     @State private var showHintButton = false
     @State private var displayHint = false
     @State private var answerIsWrong = false
@@ -77,14 +75,14 @@ struct ActiveQuestView: View {
                 }
             }
             .edgesIgnoringSafeArea(.bottom)
-            .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(viewModel: viewModel, showActiveQuest: $showActiveQuest)
-            }
+            /*.fullScreenCover(isPresented: $viewModel.showQuestCompletedView) {
+                QuestCompleteView(viewModel: viewModel)
+            }*/
            
             VStack {
                 /* Ensures that the objective does have a timer value as a condition for displaying a timer */
                 if showTimer {
-                    timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $questCompleted)
+                    timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $viewModel.showQuestCompletedView)
                         .padding()
                 }
                 
@@ -151,7 +149,8 @@ struct ActiveQuestView: View {
                 // The quest has been failed
                 // Order matters here to set fail BEFORE questCompleteView!!
                 viewModel.fail = true
-                questCompleted = true
+                viewModel.showQuestCompletedView = true
+                viewModel.showActiveQuestView = false
             }
         }
     }
@@ -257,7 +256,7 @@ struct ActiveQuestView: View {
                     .padding(.vertical, 20)
                 
                 Button(action: {
-                    showActiveQuest = false
+                    viewModel.showActiveQuestView = false
                 }) {
                     Text("Exit Active Quest")
                         .frame(maxWidth: .infinity)
@@ -369,7 +368,8 @@ struct ActiveQuestView: View {
         if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
             // Objective has successfully been completed, can move on to the next objective
             if currentObjectiveIndex == viewModel.quest.objectives.count - 1 {
-                questCompleted = true // Quest completed
+                viewModel.showQuestCompletedView = true // Quest completed
+                viewModel.showActiveQuestView = false
             }
             if currentObjectiveIndex + 1 < viewModel.quest.objectives.count {
                 currentObjectiveIndex += 1
@@ -419,26 +419,6 @@ struct ActiveQuestView: View {
 
 struct ActiveQuestView_Previews: PreviewProvider {
     static var previews: some View {
-        StatefulPreviewWrapperTwo(true) { showActiveQuest in
-            ActiveQuestView(/*viewModel: sampleViewModel,*/ showActiveQuest: showActiveQuest, viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]))
-        }
-    }
-    
-    //static var sampleViewModel = MapViewModel()
-}
-
-// Helper to provide a Binding in the preview
-struct StatefulPreviewWrapperTwo<Content: View>: View {
-    @State private var value: Bool
-    
-    var content: (Binding<Bool>) -> Content
-    
-    init(_ value: Bool, content: @escaping (Binding<Bool>) -> Content) {
-        _value = State(initialValue: value)
-        self.content = content
-    }
-    
-    var body: some View {
-        content($value)
+        ActiveQuestView(viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]))
     }
 }

@@ -12,7 +12,6 @@ import SwiftUI
 struct QuestCompleteView: View {
     
     @ObservedObject var viewModel: ActiveQuestViewModel // passed in
-    @Binding var showActiveQuest: Bool
     
     @State private var rating: Double? = nil
     
@@ -37,7 +36,8 @@ struct QuestCompleteView: View {
                         viewModel.updateRating(for: viewModel.quest.id.uuidString, rating: rating, currentRating: viewModel.quest.metaData.rating, numRatings: viewModel.quest.metaData.numRatings)
                     }
                    
-                    showActiveQuest = false
+                    viewModel.showQuestCompletedView = false
+                    viewModel.showActiveQuestView = false
                 }) {
                     Text("Close")
                         .background(.white)
@@ -108,6 +108,6 @@ struct QuestCompleteView: View {
 
 struct QuestCompletQuestCompleteView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestCompleteView(viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]), showActiveQuest: .constant(false))
+        QuestCompleteView(viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]))
     }
 }

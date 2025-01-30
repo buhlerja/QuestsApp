@@ -52,13 +52,15 @@ struct timerView: View {
             if delta <= 0 {
                 delta = 0
                 timerIsUp = true // let the parent view know that the timer is up
-                //timer.upstream.connect().cancel() // No need to cancel timer here since change in timerIsUp changes questCompletedStopTimer in parent view ActiveQuestView which stops timer
+                //timer.upstream.connect().cancel() // No need to cancel timer here since change in timerIsUp changes questCompletedStopTimer in parent view which stops timer
             }
             timerValue -= 1
             duration = timerView.durationFormatter.string(from: delta) ?? "---"
         }
         .onChange(of: questCompletedStopTimer) {
-            timer.upstream.connect().cancel() // Stop the timer when questCompletedStopTimer becomes true. Executes for both passes and fails
+            if questCompletedStopTimer {
+                timer.upstream.connect().cancel() // Stop the timer when questCompletedStopTimer becomes true. Executes for both passes and fails
+            }
         }
     }
 }
