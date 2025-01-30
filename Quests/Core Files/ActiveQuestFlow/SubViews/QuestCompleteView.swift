@@ -36,7 +36,6 @@ struct QuestCompleteView: View {
                         viewModel.updateRating(for: viewModel.quest.id.uuidString, rating: rating, currentRating: viewModel.quest.metaData.rating, numRatings: viewModel.quest.metaData.numRatings)
                     }
                    
-                    viewModel.showQuestCompletedView = false
                     viewModel.showActiveQuestView = false
                 }) {
                     Text("Close")
@@ -63,6 +62,8 @@ struct QuestCompleteView: View {
                .padding()
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true) // Hides the navigation bar completely
         .task {
             try? await viewModel.loadCurrentUser()
             // This function relies on the user being verified, so it is done here instead of onAppear in a task

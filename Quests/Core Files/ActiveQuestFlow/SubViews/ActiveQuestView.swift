@@ -35,122 +35,124 @@ struct ActiveQuestView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(.systemCyan)
-                .ignoresSafeArea()
-            
-            VStack {
-                // Map view
-                Map(position: $position) {
-                    UserAnnotation()
-                    if let center = currentObjective.objectiveArea.center {
-                        MapCircle(center: center, radius: currentObjective.objectiveArea.range)
-                            .foregroundStyle(Color.cyan.opacity(0.5))
-                        if let route = viewModel.route {
-                            MapPolyline(route)
-                                .stroke(.blue, lineWidth: 5)
+        NavigationStack {
+            ZStack {
+                Color(.systemCyan)
+                    .ignoresSafeArea()
+        
+                VStack {
+                    // Map view
+                    Map(position: $position) {
+                        UserAnnotation()
+                        if let center = currentObjective.objectiveArea.center {
+                            MapCircle(center: center, radius: currentObjective.objectiveArea.range)
+                                .foregroundStyle(Color.cyan.opacity(0.5))
+                            if let route = viewModel.route {
+                                MapPolyline(route)
+                                    .stroke(.blue, lineWidth: 5)
+                            }
                         }
                     }
-                }
-                .ignoresSafeArea()
-                .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
-                .mapControls {
-                    MapUserLocationButton()
-                    MapCompass()
-                    MapScaleView()
-                }
-                .accentColor(Color.cyan)
-
-                Spacer()
-                
-                // Bottom pop-up menu
-                if bottomMenuExpanded {
-                    bottomMenu
-                        .transition(.move(edge: .bottom))
-                        .animation(.easeInOut, value: bottomMenuExpanded)
-                } else {
-                    smallIndicator
-                        .transition(.move(edge: .bottom))
-                        .animation(.easeInOut, value: bottomMenuExpanded)
-                }
-            }
-            .edgesIgnoringSafeArea(.bottom)
-            /*.fullScreenCover(isPresented: $viewModel.showQuestCompletedView) {
-                QuestCompleteView(viewModel: viewModel)
-            }*/
-           
-            VStack {
-                /* Ensures that the objective does have a timer value as a condition for displaying a timer */
-                if showTimer {
-                    timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $viewModel.showQuestCompletedView)
-                        .padding()
-                }
-                
-                // Directions button UI
-                if let center = currentObjective.objectiveArea.center {
-                    if let directionsErrorMessage = viewModel.objectiveAreaDirectionsErrorMessage {
-                        Text(directionsErrorMessage)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.red) // Red background
-                            )
-                            .padding(.horizontal)
+                    .ignoresSafeArea()
+                    .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
+                    .mapControls {
+                        MapUserLocationButton()
+                        MapCompass()
+                        MapScaleView()
                     }
-                    else {
-                        HStack {
-                            Button(action: {
-                                viewModel.getDirections(startingLocDirections: false, startCoordinate: center) // view model
-                                viewModel.showProgressView = true
-                            }) {
-                                HStack {
-                                    Text("Get directions to objective area")
-                                        .fontWeight(.medium)
-                                        .padding()
-                                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                                        .shadow(radius: 5)
-                                        .foregroundColor(.blue)
-                                    if viewModel.showProgressView {
-                                        ProgressView()
+                    .accentColor(Color.cyan)
+
+                    Spacer()
+                    
+                    // Bottom pop-up menu
+                    if bottomMenuExpanded {
+                        bottomMenu
+                            .transition(.move(edge: .bottom))
+                            .animation(.easeInOut, value: bottomMenuExpanded)
+                    } else {
+                        smallIndicator
+                            .transition(.move(edge: .bottom))
+                            .animation(.easeInOut, value: bottomMenuExpanded)
+                    }
+                }
+                .edgesIgnoringSafeArea(.bottom)
+               
+                VStack {
+                    /* Ensures that the objective does have a timer value as a condition for displaying a timer */
+                    if showTimer {
+                        timerView(timerValue: $timerValue, timerIsUp: $timerIsUp, questCompletedStopTimer: $viewModel.showQuestCompletedView)
+                            .padding()
+                    }
+                    
+                    // Directions button UI
+                    if let center = currentObjective.objectiveArea.center {
+                        if let directionsErrorMessage = viewModel.objectiveAreaDirectionsErrorMessage {
+                            Text(directionsErrorMessage)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.red) // Red background
+                                )
+                                .padding(.horizontal)
+                        }
+                        else {
+                            HStack {
+                                Button(action: {
+                                    viewModel.getDirections(startingLocDirections: false, startCoordinate: center) // view model
+                                    viewModel.showProgressView = true
+                                }) {
+                                    HStack {
+                                        Text("Get directions to objective area")
+                                            .fontWeight(.medium)
                                             .padding()
                                             .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                                             .shadow(radius: 5)
                                             .foregroundColor(.blue)
+                                        if viewModel.showProgressView {
+                                            ProgressView()
+                                                .padding()
+                                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                                                .shadow(radius: 5)
+                                                .foregroundColor(.blue)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    
+                    Spacer()
+                    
                 }
                 
-                Spacer()
+                //Overlay for correct answers
+                Color(answerIsRight ? .green.opacity(0.2) : .clear)
+                    .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                    .ignoresSafeArea()
+                
+                // Overlay for incorrect answers
+                Color(answerIsWrong ? .red.opacity(0.5) : .clear)
+                    .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
+                    .ignoresSafeArea()
                 
             }
-            
-            //Overlay for correct answers
-            Color(answerIsRight ? .green.opacity(0.2) : .clear)
-                .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
-                .ignoresSafeArea()
-            
-            // Overlay for incorrect answers
-            Color(answerIsWrong ? .red.opacity(0.5) : .clear)
-                .animation(.easeInOut(duration: 0.3), value: answerIsWrong)
-                .ignoresSafeArea()
-        }
-        .onAppear {
-            updateTimerValue()
-            viewModel.route = nil
-            viewModel.objectiveAreaDirectionsErrorMessage = nil
-            viewModel.showProgressView = false
-        }
-        .onChange(of: timerIsUp) {
-            if timerIsUp == true {
-                // The quest has been failed
-                // Order matters here to set fail BEFORE questCompleteView!!
-                viewModel.fail = true
-                viewModel.showQuestCompletedView = true
-                viewModel.showActiveQuestView = false
+            .navigationDestination(isPresented: $viewModel.showQuestCompletedView) {
+                QuestCompleteView(viewModel: viewModel)
+            }
+            .onAppear {
+                updateTimerValue()
+                viewModel.route = nil
+                viewModel.objectiveAreaDirectionsErrorMessage = nil
+                viewModel.showProgressView = false
+            }
+            .onChange(of: timerIsUp) {
+                if timerIsUp == true {
+                    // The quest has been failed
+                    // Order matters here to set fail BEFORE questCompleteView!!
+                    viewModel.fail = true
+                    viewModel.showQuestCompletedView = true
+                }
             }
         }
     }
@@ -369,7 +371,6 @@ struct ActiveQuestView: View {
             // Objective has successfully been completed, can move on to the next objective
             if currentObjectiveIndex == viewModel.quest.objectives.count - 1 {
                 viewModel.showQuestCompletedView = true // Quest completed
-                viewModel.showActiveQuestView = false
             }
             if currentObjectiveIndex + 1 < viewModel.quest.objectives.count {
                 currentObjectiveIndex += 1

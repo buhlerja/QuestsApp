@@ -31,10 +31,11 @@ struct QuestInfoView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(.systemCyan)
-                .ignoresSafeArea()
-            NavigationStack {
+        NavigationStack {
+            ZStack {
+                Color(.systemCyan)
+                    .ignoresSafeArea()
+           
                 ScrollView(.vertical) {
                     
                     VStack(alignment: .leading, spacing: 10) {
@@ -72,8 +73,8 @@ struct QuestInfoView: View {
                                     .padding()
                                 HStack {
                                     TextField("Describe the issue...", text: $viewModel.reportText)
-                                       .textFieldStyle(RoundedBorderTextFieldStyle())
-                                       .padding()
+                                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                                        .padding()
                                     Button("Submit") {
                                         // Handle the submission
                                         print("Report: \(viewModel.reportText)")
@@ -90,7 +91,7 @@ struct QuestInfoView: View {
                             .cornerRadius(8)
                             .shadow(radius: 5)
                             .padding()
-                          
+                            
                         }
                         
                         HStack {
@@ -108,7 +109,7 @@ struct QuestInfoView: View {
                                 .shadow(radius: 3)
                                 //Spacer()
                             }*/
-                           
+                            
                             
                             // Recurring Quest Section (If applicable)
                             if viewModel.quest.supportingInfo.recurring {
@@ -467,44 +468,42 @@ struct QuestInfoView: View {
                                     viewModel.reportType = .other
                                     print("Selected: Incomplete")
                                 })
-                           } label: {
-                               HStack {
-                                   Image(systemName: "exclamationmark.triangle.fill")
-                                       .foregroundColor(.red)
-                                   Text("Report")
-                                       .font(.subheadline)
-                                       .fontWeight(.bold)
-                                       .foregroundColor(.red)
-                               }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .foregroundColor(.red)
+                                    Text("Report")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.red)
+                                }
                             }
                         }
                     }
                     .fullScreenCover(isPresented: $viewModel.showActiveQuestView) {
                         ActiveQuestView(viewModel: viewModel)
                     }
-                    .fullScreenCover(isPresented: $viewModel.showQuestCompletedView) {
-                        QuestCompleteView(viewModel: viewModel)
-                    }
                 }
+                
             }
-        }
-        .toolbar(.hidden, for: .tabBar) // Hides the tab bar
-        .onAppear {
-            viewModel.startingLocDirectionsErrorMessage = nil // Reset the error message
-            Task {
-                do {
-                    try await viewModel.getQuest(questId: quest.id.uuidString) // Get an updated version of the quest from the DB
-                    
-                    // Update the position based on the quest's coordinate
-                    if let startCoordinate = viewModel.quest.coordinateStart {
-                        viewModel.position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
-                    } else {
-                        viewModel.position = .userLocation(followsHeading: true, fallback: .automatic)
+            .toolbar(.hidden, for: .tabBar) // Hides the tab bar
+            .onAppear {
+                viewModel.startingLocDirectionsErrorMessage = nil // Reset the error message
+                Task {
+                    do {
+                        try await viewModel.getQuest(questId: quest.id.uuidString) // Get an updated version of the quest from the DB
+                        
+                        // Update the position based on the quest's coordinate
+                        if let startCoordinate = viewModel.quest.coordinateStart {
+                            viewModel.position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
+                        } else {
+                            viewModel.position = .userLocation(followsHeading: true, fallback: .automatic)
+                        }
+                    } catch {
+                        // Handle the error
+                        //errorMessage = error.localizedDescription
+                        hasError = true
                     }
-                } catch {
-                    // Handle the error
-                    //errorMessage = error.localizedDescription
-                    hasError = true
                 }
             }
         }
