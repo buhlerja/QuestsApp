@@ -11,21 +11,17 @@ import SwiftUI
 
 struct QuestCompleteView: View {
     
-    @StateObject private var viewModel = QuestCompleteViewModel()
+    @ObservedObject var viewModel: ActiveQuestViewModel // passed in
     @Binding var showActiveQuest: Bool
     
     @State private var rating: Double? = nil
-    
-    let questJustCompleted: QuestStruc // Parameter to be passed in from ActiveQuestView. Gives questStruc of quest just completed.
-    
-    @Binding var failed: Bool /* Parameter deciding whether the quest has been failed or passed. Passed in from ActiveQuestView. Not changed but passed as a binding to properly reflect state changes to address a bug where wrong value was passed */
     
     var body: some View {
         ZStack {
             Color(.cyan)
                 .ignoresSafeArea()
             VStack {
-                if !failed {
+                if !viewModel.fail{
                     Text("Success: Quest Complete!")
                         .font(.headline)
                 } else {
@@ -38,7 +34,7 @@ struct QuestCompleteView: View {
                 Button(action: {
                     // Update quest rating info
                     if let rating = rating {
-                        viewModel.updateRating(for: questJustCompleted.id.uuidString, rating: rating, currentRating: questJustCompleted.metaData.rating, numRatings: questJustCompleted.metaData.numRatings)
+                        viewModel.updateRating(for: viewModel.quest.id.uuidString, rating: rating, currentRating: viewModel.quest.metaData.rating, numRatings: viewModel.quest.metaData.numRatings)
                     }
                    
                     showActiveQuest = false
@@ -70,16 +66,16 @@ struct QuestCompleteView: View {
         .task {
             try? await viewModel.loadCurrentUser()
             // This function relies on the user being verified, so it is done here instead of onAppear in a task
-            try? await viewModel.updateUserQuestsCompletedOrFailed(questId: questJustCompleted.id.uuidString, failed: failed)
+            try? await viewModel.updateUserQuestsCompletedOrFailed(questId: viewModel.quest.id.uuidString, failed: viewModel.fail)
         }
         .onAppear {
             // 1. Set hidden field to false if not a recurring quest and it was completed successfully
-            if questJustCompleted.supportingInfo.recurring == false && !failed { // watch for bug with the value of failed
-                viewModel.hideQuest(questId: questJustCompleted.id.uuidString)
+            if viewModel.quest.supportingInfo.recurring == false && !viewModel.fail { // watch for bug with the value of failed
+                viewModel.hideQuest(questId: viewModel.quest.id.uuidString)
             }
             // 2. Update Quest fail number, pass number, total num times played, and completion rate
-            let numSuccessesOrFails = failed ? questJustCompleted.metaData.numFails : questJustCompleted.metaData.numSuccesses
-            viewModel.updatePassFailAndCompletionRate(for: questJustCompleted.id.uuidString, fail: failed, numTimesPlayed: questJustCompleted.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: questJustCompleted.metaData.completionRate) // Fail is false since this is the successful completion flow
+            let numSuccessesOrFails = viewModel.fail ? viewModel.quest.metaData.numFails : viewModel.quest.metaData.numSuccesses
+            viewModel.updatePassFailAndCompletionRate(for: viewModel.quest.id.uuidString, fail: viewModel.fail, numTimesPlayed: viewModel.quest.metaData.numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: viewModel.quest.metaData.completionRate) // Fail is false since this is the successful completion flow
             // 3. Add to user's completed or failed quests list
             // Done in above task
         }
@@ -110,8 +106,8 @@ struct QuestCompleteView: View {
    }
 }
 
-struct QuestCompleteView_Previews: PreviewProvider {
+struct QuestCompletQuestCompleteView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestCompleteView(showActiveQuest: .constant(false), questJustCompleted: QuestStruc.sampleData[0], failed: .constant(true))
+        QuestCompleteView(viewModel: ActiveQuestViewModel(mapViewModel:  nil, initialQuest: QuestStruc.sampleData[0]), showActiveQuest: .constant(false))
     }
 }

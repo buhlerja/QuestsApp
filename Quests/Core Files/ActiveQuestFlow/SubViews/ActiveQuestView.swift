@@ -24,7 +24,6 @@ struct ActiveQuestView: View {
     @State var timerValue = 100 // Should be reset to the correct value on appear
     @State private var showTimer = false
     @State var timerIsUp = false // timer is up is a fail condition
-    @State var fail = false // Set to true if any of the fail conditions are met
     
     // Reporting for issues
     @State private var showReportText = false
@@ -79,7 +78,7 @@ struct ActiveQuestView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .fullScreenCover(isPresented: $questCompleted) {
-                QuestCompleteView(showActiveQuest: $showActiveQuest, questJustCompleted: viewModel.quest, failed: $fail)
+                QuestCompleteView(viewModel: viewModel, showActiveQuest: $showActiveQuest)
             }
            
             VStack {
@@ -151,11 +150,8 @@ struct ActiveQuestView: View {
             if timerIsUp == true {
                 // The quest has been failed
                 // Order matters here to set fail BEFORE questCompleteView!!
-                fail = true
-                print("On Change Of in ActiveQuestView:")
-                print(fail)
+                viewModel.fail = true
                 questCompleted = true
-                print("questCompleted set to true")
             }
         }
     }

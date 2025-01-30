@@ -45,7 +45,6 @@
 		83B98FB22D224333001D000E /* Query+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FB12D224333001D000E /* Query+EXT.swift */; };
 		83B98FB62D2243C2001D000E /* OnFirstAppearViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B98FB52D2243C2001D000E /* OnFirstAppearViewModifier.swift */; };
 		83C7D9912CACC9D70046D553 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7D9902CACC9D70046D553 /* MapView.swift */; };
-		83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */; };
 		83C7FF502D0801A6001AAB2E /* ReportingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */; };
 		83C7FF522D109A85001AAB2E /* UserQuestRelationshipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C7FF512D109A84001AAB2E /* UserQuestRelationshipManager.swift */; };
 		83D2D7DC2C4486D20004A35E /* ActiveQuestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */; };
@@ -109,7 +108,6 @@
 		83B98FB52D2243C2001D000E /* OnFirstAppearViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppearViewModifier.swift; sourceTree = "<group>"; };
 		83BDD94A2C1498D0001853A3 /* Quests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quests.entitlements; sourceTree = "<group>"; };
 		83C7D9902CACC9D70046D553 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
-		83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestCompleteViewModel.swift; sourceTree = "<group>"; };
 		83C7FF4F2D0801A6001AAB2E /* ReportingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportingView.swift; sourceTree = "<group>"; };
 		83C7FF512D109A84001AAB2E /* UserQuestRelationshipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserQuestRelationshipManager.swift; sourceTree = "<group>"; };
 		83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveQuestView.swift; sourceTree = "<group>"; };
@@ -208,9 +206,19 @@
 		83953BC42D46B002003D06E1 /* ViewHelperFuncs */ = {
 			isa = PBXGroup;
 			children = (
+				83E9F0762CE2639E003595B8 /* CardView.swift */,
 				83953BC22D46AF80003D06E1 /* NumericGrid.swift */,
 			);
 			path = ViewHelperFuncs;
+			sourceTree = "<group>";
+		};
+		83953BC52D47DEF9003D06E1 /* QuestRecommendation */ = {
+			isa = PBXGroup;
+			children = (
+				83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */,
+				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
+			);
+			path = QuestRecommendation;
 			sourceTree = "<group>";
 		};
 		83B98FAA2D2072CA001D000E /* TabBar */ = {
@@ -356,9 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				83980C842C3E0B9B0061C8D0 /* QuestInfoView.swift */,
-				831337D02D1B588F0019C84F /* QuestStartScreen.swift */,
 				831337CC2D1A59580019C84F /* ActiveQuestViewModel.swift */,
-				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
 				83E9F08E2CE2BA56003595B8 /* SubViews */,
 			);
 			path = ActiveQuestFlow;
@@ -367,8 +373,9 @@
 		83E9F08E2CE2BA56003595B8 /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
+				831337D02D1B588F0019C84F /* QuestStartScreen.swift */,
+				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
-				83C7FF4B2D07B724001AAB2E /* QuestCompleteViewModel.swift */,
 				83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */,
 				832A938B2CCD323D00324719 /* timerView.swift */,
 			);
@@ -412,16 +419,14 @@
 		83FF50722CE25F1800F4E3B0 /* Core Files */ = {
 			isa = PBXGroup;
 			children = (
+				8315E1EF2CA2176A0079E403 /* RootView.swift */,
 				83B98FAA2D2072CA001D000E /* TabBar */,
 				83C7FF4E2D08018C001AAB2E /* Reporting */,
 				83E9F0782CE263E9003595B8 /* Profile */,
 				83E9F08A2CE2B821003595B8 /* CreateQuestFlow */,
 				83E9F07C2CE26551003595B8 /* Authentication */,
 				83E9F08D2CE2B95B003595B8 /* ActiveQuestFlow */,
-				83980C822C39BA0A0061C8D0 /* QuestView.swift */,
-				83B5DA1A2CFE9780000F3444 /* QuestViewModel.swift */,
-				83E9F0762CE2639E003595B8 /* CardView.swift */,
-				8315E1EF2CA2176A0079E403 /* RootView.swift */,
+				83953BC52D47DEF9003D06E1 /* QuestRecommendation */,
 				83953BC42D46B002003D06E1 /* ViewHelperFuncs */,
 			);
 			path = "Core Files";
@@ -609,7 +614,6 @@
 				831337CD2D1A59580019C84F /* ActiveQuestViewModel.swift in Sources */,
 				83B5DA1B2CFE9780000F3444 /* QuestViewModel.swift in Sources */,
 				83B98FAC2D2072EB001D000E /* TabBarView.swift in Sources */,
-				83C7FF4C2D07B725001AAB2E /* QuestCompleteViewModel.swift in Sources */,
 				832A938C2CCD323D00324719 /* timerView.swift in Sources */,
 				83FB09C32C4D920900723EBE /* ObjectiveCreateView.swift in Sources */,
 			);

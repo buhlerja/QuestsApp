@@ -73,7 +73,7 @@ struct SupportingInfoView: View {
                 }
              
                 Toggle(isOn: $supportingInfo.lengthEstimate) {
-                    Text("Add Quest Length Estimate? (Optional)")
+                    Text("Add Quest Duration Estimate? (Optional)")
                         .fontWeight(.bold)
                 }
                 .padding()

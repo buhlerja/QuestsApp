@@ -17,38 +17,35 @@ import CoreLocation
 import Combine
 import GeoFire
 
-// For geoqueries
-@Sendable func fetchMatchingDocs(from query: Query,
+// For GeoQueries
+@Sendable
+func fetchMatchingDocs(from query: Query,
                        center: CLLocationCoordinate2D,
-                                 radiusInM: Double,
-                                 count: Int,
-                                 lastDocument: DocumentSnapshot?,
-                                 recurring: Bool?,
-                                 treasure: Bool?) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+                       radiusInM: Double,
+                       count: Int,
+                       lastDocument: DocumentSnapshot?,
+                       recurring: Bool? = nil,
+                       treasure: Bool? = nil) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+    // Base query setup
+    var baseQuery = query
+        .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Exclude hidden quests
+    
+    // Add specific filters
     if let recurring = recurring {
-        return try await query
-            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Don't fetch hidden quests
-            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.recurring.rawValue, isEqualTo: recurring) // Fetch recurring quests
-            .limit(to: count)
-            .startOptionally(afterDocument: lastDocument)
-            .getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
+        baseQuery = baseQuery.whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.recurring.rawValue, isEqualTo: recurring)
     }
     else if let treasure = treasure {
-        return try await query
-            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Don't fetch hidden quests
-            .whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.treasure.rawValue, isEqualTo: treasure) // Fetch quests with treasure
-            .limit(to: count)
-            .startOptionally(afterDocument: lastDocument)
-            .getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
+        baseQuery = baseQuery.whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.treasure.rawValue, isEqualTo: treasure)
     }
-    else {
-        // NO FILTERS!!!!
-        return try await query
-            .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Don't fetch hidden quests
-            .limit(to: count)
-            .startOptionally(afterDocument: lastDocument)
-            .getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center, radiusInM: radiusInM)
-    }
+    
+    // Apply limit and pagination
+    baseQuery = baseQuery.startOptionally(afterDocument: lastDocument)
+    baseQuery = baseQuery.limit(to: count)
+    
+    // Fetch documents with geo filter
+    return try await baseQuery
+        .getDocumentsWithGeoFilterAndSnapshot(as: QuestStruc.self, center: center,radiusInM: radiusInM)
+
 }
 
 final class QuestManager {
@@ -303,8 +300,9 @@ final class QuestManager {
             .getDocumentsWithSnapshot(as: QuestStruc.self)
     }
     
+    // CURRENTLY USED FUNCTION FOR GETTING QUESTS BY PROXIMITY!!!!
     // V3 of function. VERSION OF getQuestsByProximity With PAGINATION for each query!! To be used in production!!!
-    func getQuestsByProximity(queriesWithLastDocuments: [(Query, DocumentSnapshot?)], count: Int, center: CLLocationCoordinate2D, radiusInM: Double, recurring: Bool?, treasure: Bool?) async throws -> (quests: [QuestStruc]?, queriesWithLastDocuments: [(Query, DocumentSnapshot?)]) {
+    func getQuestsByProximity(queriesWithLastDocuments: [(Query, DocumentSnapshot?)], count: Int, center: CLLocationCoordinate2D, radiusInM: Double, recurring: Bool?, treasure: Bool?, difficultyAscending: Bool?, travelDistanceAscending: Bool?, costAscending: Bool?, durationAscending: Bool?) async throws -> (quests: [QuestStruc]?, queriesWithLastDocuments: [(Query, DocumentSnapshot?)]) {
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
@@ -318,11 +316,11 @@ final class QuestManager {
                                                   withRadius: radiusInM)
             print("Generated \(queryBounds.count) query bounds.")
             queries = queryBounds.map { bound -> Query in
-              return questCollection
-                .whereField(QuestStruc.CodingKeys.hash.rawValue, isNotEqualTo: "") // Making sure a hash value exists
-                .order(by: QuestStruc.CodingKeys.hash.rawValue)
-                .start(at: [bound.startValue])
-                .end(at: [bound.endValue])
+                return questCollection
+                    .whereField(QuestStruc.CodingKeys.hash.rawValue, isNotEqualTo: "") // Making sure a hash value exists
+                    .order(by: QuestStruc.CodingKeys.hash.rawValue)
+                    .start(at: [bound.startValue])
+                    .end(at: [bound.endValue])
             }
             
         } else {

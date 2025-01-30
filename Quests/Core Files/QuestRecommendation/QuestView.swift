@@ -27,42 +27,42 @@ struct QuestView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Welcome banner
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            Text("Welcome!")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.black)
-                            
-                            Image(systemName: "mountain.2.fill")
-                                .foregroundColor(Color.black)
-                                .font(.title2)
-                            
-                            Spacer()
-                        }
-                        
-                        HStack {
-                            Text("Choose your next adventure.")
-                                .foregroundColor(Color.black)
-                            Spacer()
-                        }
-                      
-                        /*Image("mountains_banff")
-                            .resizable()
-                            .cornerRadius(12)
-                            .aspectRatio(contentMode: .fit)
-                            .padding(.all)*/
-                    }
-                    .padding()
-                    .background(Rectangle().foregroundColor(Color.white))
-                    .cornerRadius(12)
-                    .shadow(radius: 15)
-                    .padding(.horizontal)
-                    .padding(.bottom)
                     
                     ScrollView {
                         LazyVStack {
+                            
+                            VStack(alignment: .leading, spacing: 16) {
+                                HStack {
+                                    Text("Welcome!")
+                                        .font(.largeTitle)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.black)
+                                    
+                                    Image(systemName: "mountain.2.fill")
+                                        .foregroundColor(Color.black)
+                                        .font(.title2)
+                                    
+                                    Spacer()
+                                }
+                                
+                                HStack {
+                                    Text("Choose your next adventure.")
+                                        .foregroundColor(Color.black)
+                                    Spacer()
+                                }
+                              
+                                /*Image("mountains_banff")
+                                    .resizable()
+                                    .cornerRadius(12)
+                                    .aspectRatio(contentMode: .fit)
+                                    .padding(.all)*/
+                            }
+                            .padding()
+                            .background(Rectangle().foregroundColor(Color.white))
+                            .cornerRadius(12)
+                            .shadow(radius: 15)
+                            .padding(.horizontal)
+                            .padding(.bottom)
                             
                             HStack {
                                 Text("Pull to refresh")
@@ -86,11 +86,23 @@ struct QuestView: View {
                             .cornerRadius(8)
                             .shadow(radius: 2)
                             
+                            Menu("Order: \(viewModel.selectedOrder?.displayName ?? "None")") {
+                                ForEach(QuestViewModel.OrderingOption.allCases, id: \.self) { orderOption in
+                                    Button(orderOption.displayName) {
+                                        Task {
+                                            try? await viewModel.orderingSelected(option: orderOption)
+                                        }
+                                    }
+                                }
+                            }
+                            .menuStyle(.borderlessButton)
+                            .padding(8)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(radius: 2)
+                            
                             if viewModel.showProgressView {
                                 ProgressView()
-                                    .onAppear {
-                                        print("SHOWING PROGRESS VIEW")
-                                    }
                             }
 
                             ForEach(viewModel.quests) { quest in
@@ -121,7 +133,7 @@ struct QuestView: View {
                                     }
                                 }
                                 
-                                if quest.id == viewModel.quests.last?.id {
+                                if quest.id == viewModel.quests.last?.id && !viewModel.noMoreToQuery {
                                     ProgressView()
                                         .onAppear {
                                             viewModel.getQuests()

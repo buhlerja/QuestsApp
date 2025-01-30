@@ -22,8 +22,8 @@ final class QuestViewModel: ObservableObject {
     @Published private(set) var user: DBUser? = nil
     @Published private(set) var quests: [QuestStruc] = []
     
-    @Published var selectedFilter: FilterOption? = nil // Used for new filtering system
-    //@Published var recurringOption: RecurringOption? = nil // From OLD FILTERING SYSTEM. Can be removed once new one is established
+    @Published var selectedFilter: FilterOption? = nil // Used for FILTERING quests that are recommended
+    @Published var selectedOrder: OrderingOption? = nil // Used for ORDERING quests that are recommended
     
     @Published var userCoordinate: CLLocationCoordinate2D? = nil
     
@@ -83,57 +83,71 @@ final class QuestViewModel: ObservableObject {
         self.getQuests()
     }
     
-    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
-    /*enum FilterOption: String, CaseIterable {
+    enum OrderingOption: String, CaseIterable {
         case noFilter
+        case difficultyHigh
+        case difficultyLow
+        case travelDistanceHigh
+        case travelDistanceLow
         case costHigh
         case costLow
-        //case durationHigh
-        //case durationLow
+        case durationHigh
+        case durationLow
+        
+        var difficultyAscending: Bool? {
+            switch self {
+            case .difficultyLow: return true
+            case .difficultyHigh: return false
+            default: return nil
+            }
+        }
+        
+        var travelDistanceAscending: Bool? {
+            switch self {
+            case .travelDistanceLow: return true
+            case .travelDistanceHigh: return false
+            default: return nil
+            }
+        }
         
         var costAscending: Bool? {
             switch self {
-            case .noFilter: return nil
             case .costLow: return true
             case .costHigh: return false
+            default: return nil
+            }
+        }
+        
+        var durationAscending: Bool? {
+            switch self {
+            case .durationLow: return true
+            case .durationHigh: return false
+            default: return nil
+            }
+        }
+        
+        var displayName: String {
+            switch self {
+            case .noFilter: return "No Ordering"
+            case .difficultyHigh: return "Difficulty High to Low"
+            case .difficultyLow: return "Difficulty Low to High"
+            case .travelDistanceHigh: return "Travel Distance High to Low"
+            case .travelDistanceLow: return "Travel Distance Low to High"
+            case .costHigh: return "Cost High to Low"
+            case .costLow: return "Cost Low to High"
+            case .durationHigh: return "Duration High to Low"
+            case .durationLow: return "Duration Low to High"
             }
         }
     }
-     
-    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
-    func filterSelected(option: FilterOption) async throws {
-        self.selectedFilter = option
-        self.quests = []
-        //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
-        self.queriesWithLastDocuments = []
-        // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
-        self.getQuests()
-    }*/
     
-    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
-    /*enum RecurringOption: String, CaseIterable {
-        case none
-        case recurring
-        case nonRecurring
-        
-        var recurringBool: Bool? {
-            switch self {
-            case .recurring: return true
-            case .none: return nil
-            case .nonRecurring: return false
-            }
-        }
-    }*/
-    
-    // OLD FILTERING SYSTEM. CAN BE REMOVED ONCE THE NEW ONE IS ESTABLISHED
-    /*func recurringOptionSelected(option: RecurringOption) async throws {
-        self.recurringOption = option
-        self.quests = []
-        //self.lastDocument = nil // BRING BACK IF YOU WANT FILTERS
-        self.queriesWithLastDocuments = []
-        // HAVE TO FLIP THE BOOLEAN "noMoreToQuery" IN HERE IF YOU WANT THIS TO PRODUCE RESULTS
+    func orderingSelected(option: OrderingOption) async throws {
+        self.selectedOrder = option
+        self.quests = [] // Reset the quests array
+        self.queriesWithLastDocuments = [] // Reset the geoqueries + last documents stored for each query
+        self.noMoreToQuery = false
         self.getQuests()
-    }*/
+    }
     
     func getUserLocation() async throws {
         if let userLocation = try? await mapViewModel.getLiveLocationUpdates() {
@@ -173,7 +187,7 @@ final class QuestViewModel: ObservableObject {
                     try? await getUserLocation()
                 }
                 if let userCoordinate = self.userCoordinate {
-                    let (newQuests, updatedQueriesWithLastDocuments)  = try await QuestManager.shared.getQuestsByProximity(queriesWithLastDocuments: queriesWithLastDocuments, count: 2, center: userCoordinate, radiusInM: 100000, recurring: selectedFilter?.recurringBool, treasure: selectedFilter?.treasureBool) // 100 km search radius entered here
+                    let (newQuests, updatedQueriesWithLastDocuments)  = try await QuestManager.shared.getQuestsByProximity(queriesWithLastDocuments: queriesWithLastDocuments, count: 10, center: userCoordinate, radiusInM: 100000, recurring: selectedFilter?.recurringBool, treasure: selectedFilter?.treasureBool, difficultyAscending: selectedOrder?.difficultyAscending, travelDistanceAscending: selectedOrder?.travelDistanceAscending, costAscending: selectedOrder?.costAscending, durationAscending: selectedOrder?.durationAscending) // 100 km search radius entered here. Batches of 10.
                     if var newQuests = newQuests { // Checking for nil condition
                         for i in 0..<newQuests.count {
                             if let startLocation = newQuests[i].coordinateStart {

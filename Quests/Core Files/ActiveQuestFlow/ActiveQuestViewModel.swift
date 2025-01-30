@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
 import MapKit
 
 @MainActor
 final class ActiveQuestViewModel: ObservableObject {
+    
+    @Published private(set) var user: DBUser? = nil
     
     @Published var reportText: String = ""
     @Published var reportType: ReportType? = nil
@@ -18,6 +21,9 @@ final class ActiveQuestViewModel: ObservableObject {
     @Published var startingLocDirectionsErrorMessage: String? = nil
     @Published var objectiveAreaDirectionsErrorMessage: String? = nil
     @Published var showProgressView = false
+    @Published var position: MapCameraPosition
+    
+    @Published var fail: Bool = false // Set to true if any of the quest failure conditions are met
     
     // Passed in parameters initialized in init
     @Published var quest: QuestStruc
@@ -28,6 +34,59 @@ final class ActiveQuestViewModel: ObservableObject {
             self.mapViewModel = mapViewModel
         }
         self.quest = initialQuest
+        // Initialize the position based on the start coordinate
+        if let startCoordinate = initialQuest.coordinateStart {
+            self.position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
+        } else {
+            self.position = .userLocation(followsHeading: true, fallback: .automatic)
+        }
+    }
+    
+    // CENTRALIZE USER LOGIC. YOU HAVE THIS "GET USER" ON APPEAR IN LIKE A LOT OF VIEWS
+    func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW (AND OTHERS). SHOULD PROLLY DO ONCE.
+        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+        self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
+    }
+    
+    func hideQuest(questId: String) {
+        Task {
+            try await QuestManager.shared.setQuestHidden(questId: questId, hidden: true)
+        }
+    }
+    
+    func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) async throws {
+        print("Running updateUserQuestsCompletedOrFailedList")
+        guard let user else { return } // Make sure the user is logged in or authenticated
+        print("user validated")
+        // Add to relationship database
+        let listType: RelationshipType = failed ? .failed : .completed
+        print("list type: \(listType)")
+        do {
+            try await UserQuestRelationshipManager.shared.addRelationship(
+                userId: user.userId,
+                questId: questId,
+                relationshipType: listType
+            )
+            try await UserManager.shared.updateUserQuestsCompletedOrFailed(userId: user.userId, questId: questId, failed: failed)
+            print("Successfully updated relationship for questId: \(questId) as \(listType)")
+        } catch {
+            print("Failed to update relationship: \(error.localizedDescription)")
+            throw error
+        }
+    }
+    
+    func updatePassFailAndCompletionRate(for questId: String, fail: Bool, numTimesPlayed: Int, numSuccessesOrFails: Int, completionRate: Double?) {
+        Task {
+            try await QuestManager.shared.updatePassFailAndCompletionRate(questId: questId, fail: fail, numTimesPlayed: numTimesPlayed, numSuccessesOrFails: numSuccessesOrFails, completionRate: completionRate)
+        }
+    }
+    
+    func updateRating(for questId: String, rating: Double, currentRating: Double?, numRatings: Int) {
+        Task {
+            // Update quest in the quests collection
+            try await QuestManager.shared.updateRating(questId: questId, rating: rating, currentRating: currentRating, numRatings: numRatings)
+            print("Rating updated successfully")
+        }
     }
     
     func getQuest(questId: String) async throws {

@@ -12,7 +12,6 @@ struct QuestInfoView: View {
     @ObservedObject var mapViewModel: MapViewModel
     @State private var showActiveQuest = false
     @State private var completionRateDroppedDown = false
-    @State private var position: MapCameraPosition
     
     // Used for the progress view needed when fetching the required quest object from the DB
     @State private var hasError: Bool = false
@@ -29,12 +28,6 @@ struct QuestInfoView: View {
         self.mapViewModel = mapViewModel
         self.quest = quest
         self.creatorView = creatorView
-        // Initialize the position based on quest.coordinateStart
-        if let startCoordinate = quest.coordinateStart {
-            position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
-        } else {
-            position = .userLocation(followsHeading: true, fallback: .automatic)
-        }
         _viewModel = StateObject(wrappedValue: ActiveQuestViewModel(mapViewModel: mapViewModel, initialQuest: quest))
     }
     
@@ -345,7 +338,7 @@ struct QuestInfoView: View {
 
                     // Map and directions button
                     if let startingLocation = viewModel.quest.coordinateStart {
-                        Map(position: $position) {
+                        Map(position: $viewModel.position) {
                             UserAnnotation()
                             Marker("Starting Point", systemImage: "pin.circle.fill", coordinate: startingLocation)
                             if let route = viewModel.route {
@@ -405,7 +398,7 @@ struct QuestInfoView: View {
 
                         
                     } else {
-                        Map(position: $position) {
+                        Map(position: $viewModel.position) {
                             UserAnnotation()
                         }
                         .accentColor(Color.cyan)
@@ -485,7 +478,8 @@ struct QuestInfoView: View {
                     }
                 }
                 .fullScreenCover(isPresented: $showActiveQuest) {
-                    ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel/*, quest: quest*/)
+                    //ActiveQuestView(/*viewModel: mapViewModel,*/ showActiveQuest: $showActiveQuest, viewModel: viewModel/*, quest: quest*/)
+                    QuestStartScreen(viewModel: viewModel, showActiveQuest: $showActiveQuest)
                 }
             }
         }
@@ -497,9 +491,9 @@ struct QuestInfoView: View {
                     
                     // Update the position based on the quest's coordinate
                     if let startCoordinate = viewModel.quest.coordinateStart {
-                        position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
+                        viewModel.position = .camera(MapCamera(centerCoordinate: startCoordinate, distance: 500))
                     } else {
-                        position = .userLocation(followsHeading: true, fallback: .automatic)
+                        viewModel.position = .userLocation(followsHeading: true, fallback: .automatic)
                     }
                 } catch {
                     // Handle the error
