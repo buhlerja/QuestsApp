@@ -48,9 +48,11 @@ struct NumericGrid: View {
     }
 }
 
-#Preview {
-    // Previewing with a mock state variable
+struct NumericGridPreview: View {
     @State var previewSolution: String = ""
-    return NumericGrid(solutionCombinationAndCode: $previewSolution)
+
+    var body: some View {
+        NumericGrid(solutionCombinationAndCode: $previewSolution)
+    }
 }
 

@@ -107,11 +107,8 @@ struct QuestStartScreen: View {
 
                 // GO Button
                 Button(action: {
-                    // Dismiss the previous popup and introduce the new one
+                    dismiss()
                     viewModel.showActiveQuestView = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        dismiss()
-                    }
                 }) {
                     Text("GO")
                         .font(.largeTitle) // Big text

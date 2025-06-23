@@ -25,7 +25,8 @@ func fetchMatchingDocs(from query: Query,
                        count: Int,
                        lastDocument: DocumentSnapshot?,
                        recurring: Bool? = nil,
-                       treasure: Bool? = nil) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
+                       treasure: Bool? = nil,
+                       maxDifficulty: Int? = nil) async throws -> (quests: [QuestStruc], lastDocument: DocumentSnapshot?) {
     // Base query setup
     var baseQuery = query
         .whereField(QuestStruc.CodingKeys.hidden.rawValue, isEqualTo: false) // Exclude hidden quests
@@ -36,6 +37,11 @@ func fetchMatchingDocs(from query: Query,
     }
     else if let treasure = treasure {
         baseQuery = baseQuery.whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.treasure.rawValue, isEqualTo: treasure)
+    }
+    
+    // Add limits if applicable
+    if let maxDifficuly = maxDifficulty {
+        baseQuery = baseQuery.whereField(QuestStruc.CodingKeys.supportingInfo.rawValue + "." + SupportingInfoStruc.CodingKeys.difficulty.rawValue, isLessThanOrEqualTo: maxDifficuly)
     }
     
     // Apply limit and pagination
@@ -302,7 +308,7 @@ final class QuestManager {
     
     // CURRENTLY USED FUNCTION FOR GETTING QUESTS BY PROXIMITY!!!!
     // V3 of function. VERSION OF getQuestsByProximity With PAGINATION for each query!! To be used in production!!!
-    func getQuestsByProximity(queriesWithLastDocuments: [(Query, DocumentSnapshot?)], count: Int, center: CLLocationCoordinate2D, radiusInM: Double, recurring: Bool?, treasure: Bool?, difficultyAscending: Bool?, travelDistanceAscending: Bool?, costAscending: Bool?, durationAscending: Bool?) async throws -> (quests: [QuestStruc]?, queriesWithLastDocuments: [(Query, DocumentSnapshot?)]) {
+    func getQuestsByProximity(queriesWithLastDocuments: [(Query, DocumentSnapshot?)], count: Int, center: CLLocationCoordinate2D, radiusInM: Double, recurring: Bool?, treasure: Bool?, maxDifficulty: Int?) async throws -> (quests: [QuestStruc]?, queriesWithLastDocuments: [(Query, DocumentSnapshot?)]) {
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
@@ -341,7 +347,7 @@ final class QuestManager {
                         : nil
                     print("Adding task for query \(index), lastDocument: \(String(describing: lastDocument))")
                     group.addTask {
-                        let result = try await fetchMatchingDocs(from: query, center: center, radiusInM: radiusInM, count: count, lastDocument: lastDocument, recurring: recurring, treasure: treasure) // Filter conditions passed in here
+                        let result = try await fetchMatchingDocs(from: query, center: center, radiusInM: radiusInM, count: count, lastDocument: lastDocument, recurring: recurring, treasure: treasure, maxDifficulty: maxDifficulty) // Filter conditions passed in here
                         return (query, result.quests, result.lastDocument)
                     }
                 }

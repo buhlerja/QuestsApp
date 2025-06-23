@@ -154,7 +154,10 @@ struct ActiveQuestView: View {
                     viewModel.showQuestCompletedView = true
                 }
             }
+            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
         }
+        .ignoresSafeArea()
     }
     
     private var bottomMenu: some View {

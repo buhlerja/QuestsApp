@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct QuestInfoView: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var mapViewModel: MapViewModel
     @State private var completionRateDroppedDown = false
     
@@ -31,6 +32,7 @@ struct QuestInfoView: View {
     }
     
     var body: some View {
+
         NavigationStack {
             ZStack {
                 Color(.systemCyan)
@@ -480,9 +482,6 @@ struct QuestInfoView: View {
                             }
                         }
                     }
-                    .fullScreenCover(isPresented: $viewModel.showActiveQuestView) {
-                        ActiveQuestView(viewModel: viewModel)
-                    }
                 }
                 
             }
@@ -505,6 +504,9 @@ struct QuestInfoView: View {
                         hasError = true
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $viewModel.showActiveQuestView) {
+                ActiveQuestView(viewModel: viewModel)
             }
         }
     }

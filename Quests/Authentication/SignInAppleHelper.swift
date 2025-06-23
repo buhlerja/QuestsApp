@@ -136,9 +136,9 @@ extension SignInAppleHelper: ASAuthorizationControllerDelegate {
     }
 }
 
-extension UIViewController: ASAuthorizationControllerPresentationContextProviding {
-    
+extension UIViewController: @retroactive ASAuthorizationControllerPresentationContextProviding {
+    // Sus. Had to add @retroactive tag
     public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        return self.view.window!
+        return self.view.window! // Sus force unwrap
     }
 }

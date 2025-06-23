@@ -25,129 +25,142 @@ struct QuestView: View {
             ZStack {
                 Color(.systemCyan)
                     .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
                     
-                    ScrollView {
-                        LazyVStack {
-                            
-                            VStack(alignment: .leading, spacing: 16) {
-                                HStack {
-                                    Text("Welcome!")
-                                        .font(.largeTitle)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color.black)
-                                    
-                                    Image(systemName: "mountain.2.fill")
-                                        .foregroundColor(Color.black)
-                                        .font(.title2)
-                                    
-                                    Spacer()
-                                }
+                ScrollView {
+                    
+                    LazyVStack {
+                        
+                        VStack(alignment: .leading, spacing: 16) {
+                            HStack {
+                                Text("Welcome!")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.black)
                                 
-                                HStack {
-                                    Text("Choose your next adventure.")
-                                        .foregroundColor(Color.black)
-                                    Spacer()
-                                }
-                              
-                                /*Image("mountains_banff")
-                                    .resizable()
-                                    .cornerRadius(12)
-                                    .aspectRatio(contentMode: .fit)
-                                    .padding(.all)*/
+                                Image(systemName: "mountain.2.fill")
+                                    .foregroundColor(Color.black)
+                                    .font(.title2)
+                                
+                                Spacer()
                             }
-                            .padding()
-                            .background(Rectangle().foregroundColor(Color.white))
-                            .cornerRadius(12)
-                            .shadow(radius: 15)
-                            .padding(.horizontal)
-                            .padding(.bottom)
                             
                             HStack {
-                                Text("Pull to refresh")
-                                Image(systemName: "arrow.down")
+                                Text("Choose your next adventure.")
+                                    .foregroundColor(Color.black)
+                                Spacer()
                             }
-                            .font(.footnote)
-                            .padding(.horizontal)
-                            
-                            Menu("Filter: \(viewModel.selectedFilter?.displayName ?? "None")") {
-                                ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
-                                    Button(filterOption.displayName) {
-                                        Task {
-                                            try? await viewModel.filterSelected(option: filterOption)
-                                        }
-                                    }
-                                }
-                            }
-                            .menuStyle(.borderlessButton)
-                            .padding(8)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 2)
-                            
-                            Menu("Order: \(viewModel.selectedOrder?.displayName ?? "None")") {
-                                ForEach(QuestViewModel.OrderingOption.allCases, id: \.self) { orderOption in
-                                    Button(orderOption.displayName) {
-                                        Task {
-                                            try? await viewModel.orderingSelected(option: orderOption)
-                                        }
-                                    }
-                                }
-                            }
-                            .menuStyle(.borderlessButton)
-                            .padding(8)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(radius: 2)
-                            
-                            if viewModel.showProgressView {
-                                ProgressView()
-                            }
-
-                            ForEach(viewModel.quests) { quest in
-                                VStack {
-                                    NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
-                                        CardView(quest: quest)
-                                            .navigationBarTitleDisplayMode(.large)
-                                            .background(Color.cyan)
-                                            .cornerRadius(10)
-                                            .shadow(radius: 5)
-                                            .padding(.horizontal)
-                                            .padding(.top, 5)
-                                    }
-                                    HStack {
-                                        Button(action: {
-                                            // Add to watchlist
-                                            viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
-                                        }, label: {
-                                            Text("+ Add to Watchlist")
-                                                .font(.headline)
-                                                .foregroundColor(.blue)
-                                                .padding()
-                                                .frame(maxWidth: .infinity)
-                                                .background(Color.clear)
-                                                .cornerRadius(8)
-                                        })
-                                        Spacer()
-                                    }
-                                }
-                                
-                                if quest.id == viewModel.quests.last?.id && !viewModel.noMoreToQuery {
-                                    ProgressView()
-                                        .onAppear {
-                                            viewModel.getQuests()
-                                        }
-                                }
-                            }
-                            Spacer()
+                          
+                            /*Image("mountains_banff")
+                                .resizable()
+                                .cornerRadius(12)
+                                .aspectRatio(contentMode: .fit)
+                                .padding(.all)*/
                         }
-                        .background(Color.cyan)
+                        .padding()
+                        .background(Rectangle().foregroundColor(Color.white))
+                        .cornerRadius(12)
+                        .shadow(radius: 15)
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                        
+                        HStack {
+                            Text("Pull to refresh")
+                            Image(systemName: "arrow.down")
+                        }
+                        .font(.footnote)
+                        .padding(.horizontal)
+                        
+                        Menu("Filter: \(viewModel.selectedFilter?.displayName ?? "None")") {
+                            ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
+                                Button(filterOption.displayName) {
+                                    Task {
+                                        try? await viewModel.filterSelected(option: filterOption)
+                                    }
+                                }
+                            }
+                        }
+                        .menuStyle(.borderlessButton)
+                        .padding(8)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .shadow(radius: 2)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Difficulty Limit: \(viewModel.selectedDifficultyLimit.rawValue)")
+                                .font(.subheadline)
+
+                            Slider(
+                                value: Binding(
+                                    get: {
+                                        Double(viewModel.selectedDifficultyLimit.rawValue)
+                                    },
+                                    set: { newValue in
+                                        if let newLimit = QuestViewModel.LimitDifficultyOption(rawValue: Int(newValue)) {
+                                            Task {
+                                                try? await viewModel.difficultyRangeLimitSelected(option: newLimit)
+                                            }
+                                        }
+                                    }
+                                ),
+                                in: 1...10,
+                                step: 1
+                            )
+                            .padding(.horizontal)
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .shadow(radius: 2)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom)
+
+                        
+                        if viewModel.showProgressView {
+                            ProgressView()
+                        }
+
+                        ForEach(viewModel.quests) { quest in
+                            VStack {
+                                NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
+                                    CardView(quest: quest)
+                                        .navigationBarTitleDisplayMode(.large)
+                                        .background(Color.cyan)
+                                        .cornerRadius(10)
+                                        .shadow(radius: 5)
+                                        .padding(.horizontal)
+                                        .padding(.top, 5)
+                                }
+                                HStack {
+                                    Button(action: {
+                                        // Add to watchlist
+                                        viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
+                                    }, label: {
+                                        Text("+ Add to Watchlist")
+                                            .font(.headline)
+                                            .foregroundColor(.blue)
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.clear)
+                                            .cornerRadius(8)
+                                    })
+                                    Spacer()
+                                }
+                            }
+                            
+                            if quest.id == viewModel.quests.last?.id && !viewModel.noMoreToQuery {
+                                ProgressView()
+                                    .onAppear {
+                                        viewModel.getQuests()
+                                    }
+                            }
+                        }
+                        Spacer()
                     }
-                    .refreshable {
-                        await viewModel.pullToRefresh()
-                    }
+                    .background(Color.cyan)
                 }
+            }
+            .refreshable { // May not be doable in a scrollView. Stops working after clicking away from the main tab view.
+                await viewModel.pullToRefresh()
             }
             .task {
                 try? await viewModel.loadCurrentUser() 
