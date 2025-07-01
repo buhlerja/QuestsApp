@@ -151,6 +151,7 @@ struct ActiveQuestView: View {
                     // The quest has been failed
                     // Order matters here to set fail BEFORE questCompleteView!!
                     viewModel.fail = true
+                    viewModel.questEndTime = Date().timeIntervalSince1970
                     viewModel.showQuestCompletedView = true
                 }
             }
@@ -237,6 +238,7 @@ struct ActiveQuestView: View {
                 if showHintButton {
                     Button(action: {
                         displayHint = true
+                        viewModel.hintsUsed += 1
                     }) {
                         HStack {
                             Text("Get a hint")
@@ -372,7 +374,9 @@ struct ActiveQuestView: View {
     private func checkSolution() {
         if enteredObjectiveSolution == currentObjective.solutionCombinationAndCode {
             // Objective has successfully been completed, can move on to the next objective
+            viewModel.objectivesCompleted += 1
             if currentObjectiveIndex == viewModel.quest.objectives.count - 1 {
+                viewModel.questEndTime = Date().timeIntervalSince1970
                 viewModel.showQuestCompletedView = true // Quest completed
             }
             if currentObjectiveIndex + 1 < viewModel.quest.objectives.count {

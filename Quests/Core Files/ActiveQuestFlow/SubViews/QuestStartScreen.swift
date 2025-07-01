@@ -108,6 +108,7 @@ struct QuestStartScreen: View {
                 // GO Button
                 Button(action: {
                     dismiss()
+                    viewModel.questStartTime = Date().timeIntervalSince1970 // Current time
                     viewModel.showActiveQuestView = true
                 }) {
                     Text("GO")

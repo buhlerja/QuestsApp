@@ -25,6 +25,13 @@ final class ActiveQuestViewModel: ObservableObject {
     
     @Published var fail: Bool = false // Set to true if any of the quest failure conditions are met
     
+    // Quest stats variables
+    @Published var hintsUsed: Int = 0 // Set to 0 to start
+    @Published var objectivesCompleted: Int = 0
+    var questStartTime: TimeInterval?
+    var questEndTime: TimeInterval?
+    @Published var questDuration: TimeInterval?
+    
     // For popup state control
     @Published var showActiveQuestView: Bool = false
     @Published var showQuestCompletedView: Bool = false
@@ -47,7 +54,7 @@ final class ActiveQuestViewModel: ObservableObject {
     }
     
     // CENTRALIZE USER LOGIC. YOU HAVE THIS "GET USER" ON APPEAR IN LIKE A LOT OF VIEWS
-    func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW (AND OTHERS). SHOULD PROLLY DO ONCE.
+    func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW (AND OTHERS). SHOULD PROBABLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
     }
@@ -59,7 +66,7 @@ final class ActiveQuestViewModel: ObservableObject {
     }
     
     func updateUserQuestsCompletedOrFailed(questId: String, failed: Bool) async throws {
-        print("Running updateUserQuestsCompletedOrFailedList")
+        //print("Running updateUserQuestsCompletedOrFailedList")
         guard let user else { return } // Make sure the user is logged in or authenticated
         print("user validated")
         // Add to relationship database
@@ -97,6 +104,7 @@ final class ActiveQuestViewModel: ObservableObject {
         self.quest = try await QuestManager.shared.getQuest(questId: questId)
     }
     
+    // UNFINISHED. REPORTING FLOW
     func addReportRelationship(questId: String) {
         Task {
             // Need to get the ID of the user who created the reported quest

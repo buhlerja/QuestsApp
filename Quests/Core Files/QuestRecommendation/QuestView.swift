@@ -13,6 +13,8 @@ struct QuestView: View {
     @ObservedObject private var mapViewModel: MapViewModel
     
     @Binding var showSignInView: Bool
+    
+    @State var showFilters: Bool = false
 
     init(showSignInView: Binding<Bool>,  mapViewModel: MapViewModel) {
         self._showSignInView = showSignInView // Bind the parameter to the @Binding property
@@ -28,124 +30,122 @@ struct QuestView: View {
                     
                 ScrollView {
                     
-                    LazyVStack {
+                    LazyVStack(alignment: .leading, spacing: 16) {
                         
-                        VStack(alignment: .leading, spacing: 16) {
-                            HStack {
-                                Text("Welcome!")
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color.black)
-                                
-                                Image(systemName: "mountain.2.fill")
-                                    .foregroundColor(Color.black)
-                                    .font(.title2)
-                                
-                                Spacer()
-                            }
-                            
-                            HStack {
-                                Text("Choose your next adventure.")
-                                    .foregroundColor(Color.black)
-                                Spacer()
-                            }
-                          
-                            /*Image("mountains_banff")
-                                .resizable()
-                                .cornerRadius(12)
-                                .aspectRatio(contentMode: .fit)
-                                .padding(.all)*/
-                        }
-                        .padding()
-                        .background(Rectangle().foregroundColor(Color.white))
-                        .cornerRadius(12)
-                        .shadow(radius: 15)
-                        .padding(.horizontal)
-                        .padding(.bottom)
+                        QuestHeaderView()
                         
-                        HStack {
-                            Text("Pull to refresh")
-                            Image(systemName: "arrow.down")
-                        }
-                        .font(.footnote)
-                        .padding(.horizontal)
-                        
-                        Menu("Filter: \(viewModel.selectedFilter?.displayName ?? "None")") {
-                            ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { filterOption in
-                                Button(filterOption.displayName) {
-                                    Task {
-                                        try? await viewModel.filterSelected(option: filterOption)
-                                    }
+                        // Filter & Slider Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            Button(action: {
+                                showFilters.toggle()
+                            }) {
+                                HStack {
+                                    Text("Filters")
+                                        .font(.headline)
+                                    Spacer()
+                                    Image(systemName: showFilters ? "chevron.down" : "chevron.right")
+                                        .font(.headline)
                                 }
                             }
-                        }
-                        .menuStyle(.borderlessButton)
-                        .padding(8)
-                        .background(Color.white)
-                        .cornerRadius(8)
-                        .shadow(radius: 2)
                         
-                        VStack(alignment: .leading) {
-                            Text("Difficulty Limit: \(viewModel.selectedDifficultyLimit.rawValue)")
-                                .font(.subheadline)
-
-                            Slider(
-                                value: Binding(
-                                    get: {
-                                        Double(viewModel.selectedDifficultyLimit.rawValue)
-                                    },
-                                    set: { newValue in
-                                        if let newLimit = QuestViewModel.LimitDifficultyOption(rawValue: Int(newValue)) {
+                            if(showFilters) {
+                                // Filter Menu
+                                Menu {
+                                    ForEach(QuestViewModel.FilterOption.allCases, id: \.self) { option in
+                                        Button(option.displayName) {
                                             Task {
-                                                try? await viewModel.difficultyRangeLimitSelected(option: newLimit)
+                                                try? await viewModel.filterSelected(option: option)
                                             }
                                         }
                                     }
-                                ),
-                                in: 1...10,
-                                step: 1
-                            )
-                            .padding(.horizontal)
+                                } label: {
+                                    Label("Filter: \(viewModel.selectedFilter?.displayName ?? "None")", systemImage: "line.3.horizontal.decrease.circle")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding()
+                                        .background(Color(.systemGray6))
+                                        .cornerRadius(10)
+                                }
+                                
+                                // Max Difficulty Slider
+                                VStack(alignment: .leading) {
+                                    Text("Difficulty: \(viewModel.selectedDifficultyLimit.rawValue)")
+                                        .font(.subheadline)
+
+                                    Slider(
+                                        value: Binding(
+                                            get: {
+                                                Double(viewModel.selectedDifficultyLimit.rawValue)
+                                            },
+                                            set: { newValue in
+                                                if let newLimit = QuestViewModel.LimitDifficultyOption(rawValue: Int(newValue)) {
+                                                    Task {
+                                                        try? await viewModel.difficultyRangeLimitSelected(option: newLimit)
+                                                    }
+                                                }
+                                            }
+                                        ),
+                                        in: 1...10,
+                                        step: 1
+                                    )
+                                    //.padding(.horizontal)
+                                }
+                            }
                         }
                         .padding()
                         .background(Color.white)
-                        .cornerRadius(8)
+                        .cornerRadius(12)
                         .shadow(radius: 2)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom)
+                        .padding(.horizontal)
+                        //.padding(.bottom)
+                        
+                        
+                        HStack(spacing: 6) {
+                            Spacer()
+                            Image(systemName: "arrow.down")
+                            Text("Pull to refresh")
+                            Spacer()
+                        }
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
 
                         
-                        if viewModel.showProgressView {
-                            ProgressView()
-                        }
+                        /*if viewModel.showProgressView {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .tint(.white) // makes the spinner white
+                                Spacer()
+                            }
+                        }*/
 
                         ForEach(viewModel.quests) { quest in
                             VStack {
                                 NavigationLink(destination: QuestInfoView(mapViewModel: mapViewModel, quest: quest, creatorView: false)) {
                                     CardView(quest: quest)
-                                        .navigationBarTitleDisplayMode(.large)
-                                        .background(Color.cyan)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 5)
-                                        .padding(.horizontal)
-                                        .padding(.top, 5)
+                                        //.navigationBarTitleDisplayMode(.large)
+                                        //.background(Color.cyan)
+                                        .cornerRadius(12)
+                                        .shadow(radius: 4)
+                                        //.padding(.horizontal)
+                                        //.padding(.top, 5)
                                 }
-                                HStack {
-                                    Button(action: {
-                                        // Add to watchlist
-                                        viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
-                                    }, label: {
-                                        Text("+ Add to Watchlist")
-                                            .font(.headline)
-                                            .foregroundColor(.blue)
-                                            .padding()
-                                            .frame(maxWidth: .infinity)
-                                            .background(Color.clear)
-                                            .cornerRadius(8)
-                                    })
-                                    Spacer()
-                                }
+                                
+                                Button(action: {
+                                    // Add to watchlist
+                                    viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
+                                }, label: {
+                                    HStack {
+                                        Text("Add to Watchlist")
+                                        Image(systemName: "plus.circle")
+                                    }
+                                    .font(.subheadline)
+                                    .foregroundColor(.white)
+                                })
+                                .padding(.horizontal)
                             }
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
                             
                             if quest.id == viewModel.quests.last?.id && !viewModel.noMoreToQuery {
                                 ProgressView()
@@ -156,7 +156,8 @@ struct QuestView: View {
                         }
                         Spacer()
                     }
-                    .background(Color.cyan)
+                    //.background(Color.cyan)
+                    .padding(.top)
                 }
             }
             .refreshable { // May not be doable in a scrollView. Stops working after clicking away from the main tab view.
@@ -172,6 +173,31 @@ struct QuestView: View {
         }
     }
 }
+
+struct QuestHeaderView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Welcome!")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(Color.black)
+                Spacer()
+                Image(systemName: "mountain.2.fill")
+                    .foregroundColor(Color.black)
+                    .font(.title2)
+            }
+            Text("Choose your next adventure.")
+                .font(.subheadline)
+                .foregroundColor(Color.black)
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 4)
+        .padding(.horizontal)
+    }
+}
+
 
 struct QuestView_Previews: PreviewProvider {
     static var previews: some View {
