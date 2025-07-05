@@ -18,7 +18,7 @@ _A location-based adventure platform for real-world challenges_
 The app uses Firebase Authentication to manage user sign-in. Users can log in using one of three supported methods:
 1. Sign in with Google
 2. Sign in with Apple
-3. Username and Password. Traditional email/password login is also supported, enabling users to register and sign in using custom credentials. Firebase handles password hashing, security, and session management.
+3. Username and Password. Enables users to register and sign in using custom credentials. Firebase handles password hashing, security, and session management.
 
 To view the Authentication user interface code, go to Quests/Core Files/Authentication.
 
