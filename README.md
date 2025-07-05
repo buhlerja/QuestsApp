@@ -24,6 +24,7 @@ To view the Authentication user interface code, go to Quests/Core Files/Authenti
 
 Helper functions that interact with the Firestore database can be found in Quests/Authentication.
 
+
 **Quest Recommendation**
 
 The main screen of the app consists of an infinite-scroll Quest recommendation system. This screen leverages the user's location to recommend nearby Quests (at an adjustable distance currently hard-set to 100km). This is implemented using Firebase’s GeoFire library, which enables efficient querying of location-based data via GeoHashes: compact representations of geographic coordinates. 
@@ -33,6 +34,7 @@ As the user scrolls, more results are dynamically fetched and appended to the li
 To view the Quest recommendation code, go to Quests/Core Files/QuestRecommendation.
 
 Helper functions for database retrieval and storage can be found in Quests/FireStore.
+
 
 **Create Challenges**  
 
@@ -46,6 +48,7 @@ The "+" icon of the bottom tab bar takes the user to the Quest creation screen. 
 Note that Quests and Objectives are fully editable even after they've been created, so Quests can be modified and adjusted throughout their lifecycle. 
 
 To view the Quest creation code, go to Quests/Core Files/CreateQuestFlow. 
+
 
 **Profile Screen**
 
