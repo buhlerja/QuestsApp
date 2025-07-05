@@ -122,7 +122,16 @@ struct ObjectiveHighLevelView: View {
                 Spacer()
             }
         }
-        .frame(minWidth: 300/*, maxHeight: 400*/) // Set a frame size
+        //.padding() // Padding inside the box
+        .background(Color.white) // Background inside the border
+        .cornerRadius(12) // Optional: rounded corners
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.black, lineWidth: 2) // Black border
+        )
+        .padding(.vertical) // Padding outside the box
+        .frame(minWidth: 300)
+        
     }
 }
 

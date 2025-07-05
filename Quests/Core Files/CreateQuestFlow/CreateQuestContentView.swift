@@ -336,20 +336,32 @@ struct CreateQuestContentView: View {
                         VStack(spacing: 6) {
                             if noStartingLocation {
                                 Text("Quest was not saved. Please add a **Starting Location**.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white) // Text color
+                                    .padding()              // Inner padding
+                                    .background(Color.red)  // Red background
+                                    .cornerRadius(8)        // Rounded corners
+                                    .shadow(radius: 4)      // Shadow for better visibility
                             }
                             if noTitle {
                                 Text("Quest was not saved. Please add a **Title**.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white) // Text color
+                                    .padding()              // Inner padding
+                                    .background(Color.red)  // Red background
+                                    .cornerRadius(8)        // Rounded corners
+                                    .shadow(radius: 4)      // Shadow for better visibility
                             }
                             if noObjectives {
                                 Text("Quest was not saved. Please add at least one **Objective**.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white) // Text color
+                                    .padding()              // Inner padding
+                                    .background(Color.red)  // Red background
+                                    .cornerRadius(8)        // Rounded corners
+                                    .shadow(radius: 4)      // Shadow for better visibility
                             }
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.white) // Text color
-                        .padding()              // Inner padding
-                        .background(Color.red)  // Red background
-                        .cornerRadius(8)        // Rounded corners
-                        .shadow(radius: 4)      // Shadow for better visibility
                     }
                         
                     Button(action: {

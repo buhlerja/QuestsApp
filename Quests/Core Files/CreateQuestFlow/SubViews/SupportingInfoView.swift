@@ -70,6 +70,7 @@ struct SupportingInfoView: View {
                 
                 if showAddMaterials {
                     addMaterials(materials: $supportingInfo.materials, cost: $supportingInfo.cost)
+                        .padding(.vertical)
                 }
              
                 Toggle(isOn: $supportingInfo.lengthEstimate) {

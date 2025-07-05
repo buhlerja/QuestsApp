@@ -17,8 +17,6 @@ struct ObjectiveCreateView: View {
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
     @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
     
-    @State private var successfullySavedObjective: Bool = false
-    
     @State private var hint: String = ""
     @State private var hrConstraint: Int = 0
     @State private var minConstraint: Int = 0
@@ -223,9 +221,7 @@ struct ObjectiveCreateView: View {
             .padding()
         }
         .onAppear {
-            // Set `hint` to the value of `objectiveContent.objectiveHint` if it exists, otherwise default to an empty string
-            successfullySavedObjective = false
-            hint = objectiveContent.objectiveHint ?? ""
+            hint = objectiveContent.objectiveHint ?? "" // Set `hint` to the value of `objectiveContent.objectiveHint` if it exists, otherwise default to an empty string
             hrConstraint = objectiveContent.hoursConstraint ?? 0
             minConstraint = objectiveContent.minutesConstraint ?? 0
             if objectiveContent.isEditing {
@@ -233,6 +229,9 @@ struct ObjectiveCreateView: View {
                 originalMinConstraint = minConstraint
             }
             
+        }
+        .onChange(of: objectiveContent.objectiveType) {
+            objectiveContent.solutionCombinationAndCode = "" // Reset it so you can't have an "ABC" answer to a combination type solution
         }
         .onChange(of: hint) {
             objectiveContent.objectiveHint = hint.isEmpty ? nil : hint
@@ -291,8 +290,8 @@ struct ObjectiveCreateView_Previews: PreviewProvider {
                                 ObjectiveStruc(
                                     questID: nil,
                                     objectiveNumber: 0,
-                                    objectiveTitle: "Wash me",
-                                    objectiveDescription: "Break into an old folks home and give someone a bath",
+                                    objectiveTitle: "Walk",
+                                    objectiveDescription: "Go for a walk",
                                     objectiveType: .code,
                                     solutionCombinationAndCode: "",
                                     // objectiveHint automatically initialized as nil

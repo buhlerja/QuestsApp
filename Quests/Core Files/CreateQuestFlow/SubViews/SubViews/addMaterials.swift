@@ -75,6 +75,12 @@ struct addMaterials: View {
                     
                     if nameError {
                         Text("Please enter a name for the supply or cost!")
+                            .font(.subheadline)
+                            .foregroundColor(.white) // Text color
+                            .padding()              // Inner padding
+                            .background(Color.red)  // Red background
+                            .cornerRadius(8)        // Rounded corners
+                            .shadow(radius: 4)      // Optional shadow for better visibility
                     }
         
                     Button(action: {
@@ -105,6 +111,7 @@ struct addMaterials: View {
                             Text("Save")
                             Spacer()
                         }
+                        .padding()
                         .background(Color.cyan)
                         .cornerRadius(8)
                     }
@@ -112,7 +119,14 @@ struct addMaterials: View {
                 }
                 .padding()
             }
-        
+            
+            if !materials.isEmpty {
+                Text("Supplies:")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .padding(.top, 10)
+            }
+            
             ForEach(materials) { material in
                 HStack {
                     if let materialCategory = material.category {
@@ -152,6 +166,7 @@ struct addMaterials: View {
                         Text("Add new supplies or costs")
                         Spacer()
                     }
+                    .padding()
                     .background(Color.cyan)
                     .cornerRadius(8)
                 }
@@ -167,7 +182,8 @@ struct addMaterials: View {
             } else {
                 Text("Total Estimated Cost: Unspecified")
             }
-
+            
+            Divider()
             
         }
     }

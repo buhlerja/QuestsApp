@@ -38,6 +38,18 @@ Helper functions for database retrieval and storage can be found in Quests/FireS
 
 ---
 
+**Play Quests Created by Others**  
+
+By clicking on a Quest, users are taken to an information screen which provides additional details and directions to the starting location through an Apple MapKit integration. 
+After starting a Quest, users are provided with a map interface displaying their physical location, and locations of objectives they need to reach. A collapsible menu at the bottom of the screen displays relevant Quest information to the user. 
+After finishing an adventure, users are provided with their Quest statistics and are able to review their experience. 
+
+To view the active Quest code, go to Quests/Core Files/ActiveQuestFlow.
+
+Helper functions for maps and directions can be found in Quests/MapViewManager.
+
+---
+
 **Create Challenges**  
 
 The "+" icon of the bottom tab bar takes the user to the Quest creation screen. This section is broken into smaller subsections where you:
