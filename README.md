@@ -24,6 +24,7 @@ To view the Authentication user interface code, go to Quests/Core Files/Authenti
 
 Helper functions that interact with the Firestore database can be found in Quests/Authentication.
 
+---
 
 **Quest Recommendation**
 
@@ -35,6 +36,7 @@ To view the Quest recommendation code, go to Quests/Core Files/QuestRecommendati
 
 Helper functions for database retrieval and storage can be found in Quests/FireStore.
 
+---
 
 **Create Challenges**  
 
@@ -49,6 +51,7 @@ Note that Quests and Objectives are fully editable even after they've been creat
 
 To view the Quest creation code, go to Quests/Core Files/CreateQuestFlow. 
 
+---
 
 **Profile Screen**
 
