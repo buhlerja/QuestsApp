@@ -14,13 +14,23 @@ struct materialsStruc: Identifiable, Codable {
     var category: CategoryType? = nil
     
     enum CategoryType: String, CaseIterable, Identifiable, Codable {
-        case equipment
+        case gear
         case transit
         case lodging
         case food
         case other
         
         var id: String { rawValue }
+        
+        var displayName: String {
+            switch self {
+            case .gear: return "Gear"
+            case .transit: return "Transit"
+            case .lodging: return "Lodging"
+            case .food: return "Food"
+            case .other: return "Other"
+            }
+        }
     }
 
     init(id: UUID = UUID(), material: String, cost: Double? = nil, category: CategoryType? = nil)
@@ -62,7 +72,7 @@ extension materialsStruc {
             id: UUID(),
             material: "Tent",
             cost: 100.0,
-            category: .equipment
+            category: .gear
         ),
         materialsStruc(
             id: UUID(),
@@ -86,7 +96,7 @@ extension materialsStruc {
             id: UUID(),
             material: "Flashlight",
             cost: 25.0,
-            category: .equipment
+            category: .gear
         ),
         materialsStruc(
             id: UUID(),

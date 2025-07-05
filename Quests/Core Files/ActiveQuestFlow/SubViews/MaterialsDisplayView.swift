@@ -11,7 +11,7 @@ func iconName(for category: materialsStruc.CategoryType) -> String {
     switch category {
     case .transit:
         return "cablecar"
-    case .equipment:
+    case .gear:
         return "storefront"
     case .lodging:
         return "tent"
@@ -26,7 +26,7 @@ func badgeColour(for category: materialsStruc.CategoryType) -> Color {
     switch category {
     case .transit:
         return Color.orange
-    case .equipment:
+    case .gear:
         return Color.mint
     case .lodging:
         return Color.indigo
@@ -41,7 +41,7 @@ struct MaterialsDisplayView: View {
     
     @State private var dropdownState: [materialsStruc.CategoryType: Bool] = [
         .transit : false,
-        .equipment: false,
+        .gear: false,
         .lodging: false,
         .food: false,
         .other: false
@@ -132,7 +132,7 @@ struct MaterialsListView_Previews: PreviewProvider {
                 id: UUID(),
                 material: "Tent",
                 cost: 100.0,
-                category: .equipment
+                category: .gear
             ),
             materialsStruc(
                 id: UUID(),
@@ -156,7 +156,7 @@ struct MaterialsListView_Previews: PreviewProvider {
                 id: UUID(),
                 material: "Flashlight",
                 cost: 25.0,
-                category: .equipment
+                category: .gear
             ),
             materialsStruc(
                 id: UUID(),

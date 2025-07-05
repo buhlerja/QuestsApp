@@ -138,13 +138,13 @@ final class QuestViewModel: ObservableObject {
             self.showProgressView = true
         }
         Task {
-            // GET ALL QUESTS START
+            // GET ALL QUESTS START ***OLD CODE NOT IN USE ANYMORE***
             /*let (newQuests, lastDocument) = try await QuestManager.shared.getAllQuests(costAscending: selectedFilter?.costAscending, recurring: recurringOption?.recurringBool, count: 10, lastDocument: lastDocument)
             self.quests.append(contentsOf: newQuests)
             if let lastDocument { // Stops bug. LastDocument is set to nil after a failed / last query
                 self.lastDocument = lastDocument
             }*/
-            // GET ALL QUESTS ENDS
+            // GET ALL QUESTS ENDS *** OLD CODE NOT IN USE ANYMORE***
             
             // GET QUESTS BY PROXIMITY START
             defer { showProgressView = false }
@@ -163,7 +163,7 @@ final class QuestViewModel: ObservableObject {
                                 let questCLLocation = CLLocation(latitude: latitude, longitude: longitude)
                                 let userLocation = CLLocation(latitude: userCoordinate.latitude, longitude: userCoordinate.longitude)
                                 // Modify the quest's metaData
-                                newQuests[i].metaData.distanceToUser = userLocation.distance(from: questCLLocation)
+                                newQuests[i].metaData.distanceToUser = userLocation.distance(from: questCLLocation) // This code is to fill in the Quest's distance to user parameter
                             }
                         }
                         self.quests.append(contentsOf: newQuests)

@@ -22,6 +22,9 @@ struct CreateQuestContentView: View {
     @State private var descriptionSection = false
     @State private var showCreatedObjectives = false
     
+    // Used to display a message on screen to the user to show that their quest was successfully saved
+    @State private var successfulQuestSave = false
+    
     @Binding var questContent: QuestStruc // Passed in as a parameter to enable an edit flow
     /*@State var questContent = QuestStruc(
         // Starting location is automatically initialized to NIL, but still is a mandatory parameter
@@ -194,27 +197,37 @@ struct CreateQuestContentView: View {
                     )
                     
                     if !questContent.objectives.isEmpty {
-                        Button(action: {
-                            showCreatedObjectives.toggle()
-                        }) {
-                            HStack {
-                                Text("View Created Objectives")
-                                    .fontWeight(.bold)
-                                Image(systemName: showCreatedObjectives ? "chevron.down" : "chevron.right")
-                                Spacer()
+                        VStack {
+                            Button(action: {
+                                showCreatedObjectives.toggle()
+                            }) {
+                                HStack {
+                                    Text("View Created Objectives")
+                                        .font(.title2)
+                                        .fontWeight(.bold)
+                                    Image(systemName: showCreatedObjectives ? "chevron.down" : "chevron.right")
+                                    Spacer()
+                                }
+                                .padding()
                             }
-                            .padding()
-                        }
-                        if showCreatedObjectives {
-                            // Display objectives that have been created.
-                            ForEach(questContent.objectives.indices, id: \.self) { index in
-                                ObjectiveHighLevelView(objective: $questContent.objectives[index], questContent: $questContent)
+                            if showCreatedObjectives {
+                                // Display objectives that have been created.
+                                ForEach(questContent.objectives.indices, id: \.self) { index in
+                                    ObjectiveHighLevelView(objective: $questContent.objectives[index], questContent: $questContent)
+                                }
+                                //.padding(.horizontal)
+                                //.background(Color(.white)) // Added background color
+                                //.cornerRadius(10) // Rounded corners
+                                //.shadow(radius: 5) // Added shadow
                             }
-                            .padding(.horizontal)
-                            .background(Color(.white)) // Added background color
-                            .cornerRadius(10) // Rounded corners
-                            .shadow(radius: 5) // Added shadow
                         }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.white)
+                                .shadow(radius: 5) // Optional: Add shadow for depth
+                                .frame(maxWidth: .infinity) // Ensure background matches the constrained width
+                        )
                     }
                     
                     VStack {
@@ -299,14 +312,44 @@ struct CreateQuestContentView: View {
                     
                     Spacer()
                     
-                    if noStartingLocation {
-                        Text("Oops! You must add a Starting Location to your Quest!")
-                    }
-                    if noTitle {
-                        Text("Oops! You must add a Title to your Quest!")
-                    }
-                    if noObjectives {
-                        Text("Oops! You must add an Objective to your Quest!")
+                    if successfulQuestSave {
+                        Image(systemName: "checkmark.seal.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .padding(10)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .foregroundColor(.green)
+                            .shadow(radius: 3)
+
+                       
+                        Text("Success! Your Quest has been created.")
+                            .font(.subheadline)
+                            .foregroundColor(.white) // Text color
+                            .padding()              // Inner padding
+                            .background(Color.green)  // Red background
+                            .cornerRadius(8)        // Rounded corners
+                            .shadow(radius: 4)      // Shadow for better visibility
+                        
+                    } else if noStartingLocation || noTitle || noObjectives {
+                        VStack(spacing: 6) {
+                            if noStartingLocation {
+                                Text("Quest was not saved. Please add a **Starting Location**.")
+                            }
+                            if noTitle {
+                                Text("Quest was not saved. Please add a **Title**.")
+                            }
+                            if noObjectives {
+                                Text("Quest was not saved. Please add at least one **Objective**.")
+                            }
+                        }
+                        .font(.subheadline)
+                        .foregroundColor(.white) // Text color
+                        .padding()              // Inner padding
+                        .background(Color.red)  // Red background
+                        .cornerRadius(8)        // Rounded corners
+                        .shadow(radius: 4)      // Shadow for better visibility
                     }
                         
                     Button(action: {
@@ -316,6 +359,7 @@ struct CreateQuestContentView: View {
                         noObjectives = questContent.objectives.isEmpty
                         if !noStartingLocation && !noTitle && !noObjectives {
                             print("Proceed to save to database")
+                            successfulQuestSave = true
                             // If the quest is from the editing flow vs the net new flow, handle differently
                             if isEditing == false {
                                 // The net new quest creation flow
@@ -349,6 +393,12 @@ struct CreateQuestContentView: View {
                 .padding()       // Add consistent padding for content
             
             }
+        }
+        .onAppear {
+            successfulQuestSave = false
+            noStartingLocation = false
+            noTitle = false
+            noObjectives = false
         }
         .onChange(of: questContent.coordinateStart) {
             questContent.generateGeohash()

@@ -58,10 +58,10 @@ struct SupportingInfoView: View {
                     }
                 }) {
                     HStack {
-                        Image(systemName: "plus")
                         Text("Add Supplies and Costs")
                             .fontWeight(.bold)
                         Spacer()
+                        Image(systemName: showAddMaterials ? "chevron.down": "chevron.right")
                     }
                     .padding()
                     .background(Color.cyan)

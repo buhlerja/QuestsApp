@@ -17,6 +17,8 @@ struct ObjectiveCreateView: View {
     @Binding var questContent: QuestStruc // Passed in from CreateQuestContentView
     @Binding var objectiveContent: ObjectiveStruc // Changed to @Binding
     
+    @State private var successfullySavedObjective: Bool = false
+    
     @State private var hint: String = ""
     @State private var hrConstraint: Int = 0
     @State private var minConstraint: Int = 0
@@ -42,66 +44,78 @@ struct ObjectiveCreateView: View {
                     .pickerStyle(MenuPickerStyle())
                     Spacer()
                 }
-                .padding()
+                .padding(.horizontal)
                 if objectiveContent.objectiveType == .code  || objectiveContent.objectiveType == .combination {
-                    VStack {
-                        if objectiveContent.objectiveType == .code {
-                            HStack {
-                                Text("Solution: ")
-                                TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                
-                            } .padding()
-                        }
-                        else {
-                            VStack {
-                                Text("Solution: \(objectiveContent.solutionCombinationAndCode)")
-                                    .padding()
-                                NumericGrid(solutionCombinationAndCode: $objectiveContent.solutionCombinationAndCode) // Automatically adds the combination to the data structure
-                            }
-                        }
-                        
-                        HStack {
-                            Text("Enter Time Constraint? (Optional)")
-                            Spacer()
-                        }
-                        HStack {
-                            Picker("Hours", selection: $hrConstraint) {
-                                ForEach(0..<24) { hour in
-                                    Text("\(hour) h").tag(hour)
-                                }
-                            }
-                            .pickerStyle(.wheel)
-                            .frame(/*width: 100,*/ height: 100)
-                            .clipped()
 
-                            Picker("Minutes", selection: $minConstraint) {
-                                ForEach(0..<60) { minute in
-                                    Text("\(minute) min").tag(minute)
+                    if objectiveContent.objectiveType == .code {
+                        HStack {
+                            Text("Solution: ")
+                            TextField("Enter your solution", text: $objectiveContent.solutionCombinationAndCode)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            
+                        } .padding(.horizontal)
+                    }
+                    else {
+                        VStack {
+                            HStack {
+                                Text("Solution: \(objectiveContent.solutionCombinationAndCode)")
+                                    .padding(.horizontal)
+                                Button(action: {
+                                    if !objectiveContent.solutionCombinationAndCode.isEmpty {
+                                        objectiveContent.solutionCombinationAndCode.removeLast()
+                                    }
+                                }) {
+                                    Image(systemName: "arrow.uturn.backward")
                                 }
                             }
-                            .pickerStyle(.wheel)
-                            .frame(/*width: 100,*/ height: 100)
-                            .clipped()
+                            .padding()
+                            
+                            NumericGrid(solutionCombinationAndCode: $objectiveContent.solutionCombinationAndCode) // Automatically adds the combination to the data structure
                         }
-                        .padding()
-        
-                        HStack {
-                            Text("Add Hint? (Optional)") // Optionality of hint is handled
-                            TextField("Enter your hint", text: $hint)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        } .padding()
-                        Text("Users will be able to access your hint after a failed attempt or after half of their time has expired")
-                            .font(.footnote)
-                        HStack {
-                            Text("Add Area? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER AN AREA WAS ADDED OR NOT
-                            Spacer()
-                            // Followed by an AREA selector which appears below.
-                        } .padding()
-                        areaSelector(objectiveArea: $objectiveContent.objectiveArea)
-                            .frame(/*width: 300,*/ height: 300)
-                            .cornerRadius(12)
+                    }
+                    
+                    HStack {
+                        Text("Enter Time Constraint? (Optional)")
+                        Spacer()
+                    }
+                    .padding()
+                    HStack {
+                        Picker("Hours", selection: $hrConstraint) {
+                            ForEach(0..<24) { hour in
+                                Text("\(hour) h").tag(hour)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(/*width: 100,*/ height: 100)
+                        .clipped()
+
+                        Picker("Minutes", selection: $minConstraint) {
+                            ForEach(0..<60) { minute in
+                                Text("\(minute) min").tag(minute)
+                            }
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(/*width: 100,*/ height: 100)
+                        .clipped()
+                    }
+                    .padding(.horizontal)
+    
+                    HStack {
+                        Text("Add Hint? (Optional)") // Optionality of hint is handled
+                        TextField("Enter your hint", text: $hint)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                     } .padding()
+                    Text("Users will be able to access your hint after a failed attempt or after half of their time has expired")
+                        .font(.footnote)
+                        .padding(.horizontal)
+                    HStack {
+                        Text("Add Area? (Optional)") // NEED TO ADD AN INDICATOR AS TO WHETHER AN AREA WAS ADDED OR NOT
+                        Spacer()
+                        // Followed by an AREA selector which appears below.
+                    } .padding()
+                    areaSelector(objectiveArea: $objectiveContent.objectiveArea)
+                        .frame(/*width: 300,*/ height: 300)
+                        .cornerRadius(12)
                 }
                 
                 // Cannot save objective
@@ -210,6 +224,7 @@ struct ObjectiveCreateView: View {
         }
         .onAppear {
             // Set `hint` to the value of `objectiveContent.objectiveHint` if it exists, otherwise default to an empty string
+            successfullySavedObjective = false
             hint = objectiveContent.objectiveHint ?? ""
             hrConstraint = objectiveContent.hoursConstraint ?? 0
             minConstraint = objectiveContent.minutesConstraint ?? 0
@@ -217,6 +232,7 @@ struct ObjectiveCreateView: View {
                 originalHrConstraint = hrConstraint
                 originalMinConstraint = minConstraint
             }
+            
         }
         .onChange(of: hint) {
             objectiveContent.objectiveHint = hint.isEmpty ? nil : hint
@@ -234,9 +250,11 @@ struct ObjectiveCreateView: View {
     {
         VStack(alignment: .leading) {
              Text("Title of Objective: ")
+                .fontWeight(.bold)
              TextField("Title", text: objectiveTitle)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
              Text("Description of Objective: ")
+                .fontWeight(.bold)
              Text("This is the set of instructions the adventurer will be presented with")
                  .font(.subheadline)
                  .padding(.top, 2)

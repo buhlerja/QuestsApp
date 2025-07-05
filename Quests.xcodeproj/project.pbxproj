@@ -90,6 +90,7 @@
 		8344B7062C7263EC00B9216A /* materialsStruc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = materialsStruc.swift; sourceTree = "<group>"; };
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
+		834A9F402E1988FD00D794E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
 		83793C6C2D277D690059FF17 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		83793C6E2D277D790059FF17 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		830BCD702BFA735D0056BC8D = {
 			isa = PBXGroup;
 			children = (
+				834A9F402E1988FD00D794E6 /* README.md */,
 				830BCD7B2BFA735D0056BC8D /* Quests */,
 				830BCD7A2BFA735D0056BC8D /* Products */,
 				83FF506F2CE25D7E00F4E3B0 /* Frameworks */,
@@ -529,9 +531,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Quests/Pods-Quests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Quests/Pods-Quests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

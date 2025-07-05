@@ -18,7 +18,7 @@ struct addMaterials: View {
     @State private var addCost = false
     @State private var costToolTip = false
     @State private var addPlusSymbol = false
-    @State private var selectedCategory: materialsStruc.CategoryType = .equipment
+    @State private var selectedCategory: materialsStruc.CategoryType = .gear
     @Binding var materials: [materialsStruc]
     @Binding var cost: Double?
     
@@ -55,11 +55,9 @@ struct addMaterials: View {
             
                 
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("Name")
-                        TextField("Name", text: $materialName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                    }
+            
+                    TextField("Name", text: $materialName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
                     
                     Toggle("Add cost amount?", isOn: $addCost)
                         .padding()
@@ -118,7 +116,7 @@ struct addMaterials: View {
             ForEach(materials) { material in
                 HStack {
                     if let materialCategory = material.category {
-                        Text(materialCategory.rawValue)
+                        Text(materialCategory.displayName)
                             .font(.headline)
                     }
                     Spacer()
@@ -145,7 +143,7 @@ struct addMaterials: View {
                     materialCost = 0
                     materialName = ""
                     addCost = false
-                    selectedCategory = .equipment
+                    selectedCategory = .gear
                     // Clearing out state variables for the addition of a new material
                     addNew = true
                 }) {
