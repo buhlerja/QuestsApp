@@ -202,7 +202,16 @@ struct ActiveQuestView: View {
                     }
                     .padding(.bottom)
                 } else {
-                    Text("Enter Solution: \(enteredObjectiveSolution)")
+                    HStack {
+                        Text("Enter Solution: \(enteredObjectiveSolution)")
+                        Button(action: {
+                            if !enteredObjectiveSolution.isEmpty {
+                                enteredObjectiveSolution.removeLast()
+                            }
+                        }) {
+                            Image(systemName: "arrow.uturn.backward")
+                        }
+                    }
                     NumericGrid(solutionCombinationAndCode: $enteredObjectiveSolution)
                         .padding(.leading, 10)
                 }
