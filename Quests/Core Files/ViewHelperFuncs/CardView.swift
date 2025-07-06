@@ -95,14 +95,14 @@ struct CardView: View {
             HStack {
                 VStack(alignment: .leading){
                     if let totalLength = quest.supportingInfo.totalLength, quest.supportingInfo.lengthEstimate {
-                        Label("\(totalLength)", systemImage: "clock")
+                        Label("\(totalLength) Minutes", systemImage: "clock")
                             .font(.footnote)
                     } else {
                         Label("Unspecified", systemImage: "clock")
                             .font(.footnote)
                     }
                     if let tempCost = quest.supportingInfo.cost {
-                        Label("\(Int(tempCost))", systemImage: "dollarsign.circle")
+                        Label("\(Int(tempCost)) Dollars", systemImage: "dollarsign.circle")
                             .font(.footnote)
                     } else {
                         Label("Unspecified",  systemImage: "dollarsign.circle")

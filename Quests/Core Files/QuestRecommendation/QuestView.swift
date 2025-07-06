@@ -131,18 +131,36 @@ struct QuestView: View {
                                         //.padding(.top, 5)
                                 }
                                 
-                                Button(action: {
-                                    // Add to watchlist
-                                    viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
-                                }, label: {
+                                if let watchlistQuestIds = viewModel.watchlistQuestIds, watchlistQuestIds.contains(quest.id.uuidString) {
                                     HStack {
-                                        Text("Add to Watchlist")
-                                        Image(systemName: "plus.circle")
+                                        Text("Added to Watchlist")
+                                        Image(systemName: "checkmark.seal.fill")
                                     }
                                     .font(.subheadline)
                                     .foregroundColor(.white)
-                                })
-                                .padding(.horizontal)
+                                    .padding(8)
+                                    .background(Color.green)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal)
+                                }
+                                else {
+                                    Button(action: {
+                                        // Add to watchlist
+                                        viewModel.addUserWatchlistQuest(questId: quest.id.uuidString)
+                                        if viewModel.watchlistQuestIds == nil {
+                                            viewModel.watchlistQuestIds = []
+                                        }
+                                        viewModel.watchlistQuestIds?.append(quest.id.uuidString)
+                                    }, label: {
+                                        HStack {
+                                            Text("Add to Watchlist")
+                                            Image(systemName: "plus.circle")
+                                        }
+                                        .font(.subheadline.bold())
+                                        .foregroundColor(.white)
+                                    })
+                                    .padding(.horizontal)
+                                }
                             }
                             .padding(.horizontal)
                             .padding(.bottom, 8)
@@ -165,6 +183,9 @@ struct QuestView: View {
             }
             .task {
                 try? await viewModel.loadCurrentUser() 
+            }
+            .onAppear {
+                viewModel.getWatchlistQuestIds()
             }
             .onFirstAppear {
                 // We check for location services in the bottom menu view instead of in this view

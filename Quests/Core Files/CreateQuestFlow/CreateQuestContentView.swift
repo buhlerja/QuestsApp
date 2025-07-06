@@ -386,6 +386,7 @@ struct CreateQuestContentView: View {
                             
                         }
                         else {
+                            successfulQuestSave = false
                             print("Error: Could not save Quest")
                         }
                         
@@ -411,6 +412,10 @@ struct CreateQuestContentView: View {
             noStartingLocation = false
             noTitle = false
             noObjectives = false
+            descriptionSection = false
+            showStartingLocCreateView = false
+            showObjectiveCreateView = false
+            showSupportingInfoView = false
         }
         .onChange(of: questContent.coordinateStart) {
             questContent.generateGeohash()

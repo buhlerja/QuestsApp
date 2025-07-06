@@ -54,7 +54,7 @@ struct ActiveQuestView: View {
                         }
                     }
                     .ignoresSafeArea()
-                    .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 250 : 600)
+                    .frame(width: UIScreen.main.bounds.width, height: bottomMenuExpanded ? 200 : 600)
                     .mapControls {
                         MapUserLocationButton()
                         MapCompass()
@@ -162,7 +162,7 @@ struct ActiveQuestView: View {
     }
     
     private var bottomMenu: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 10) { // Adjust spacing for better layout
                 Button(action: {
                     withAnimation {
@@ -183,12 +183,15 @@ struct ActiveQuestView: View {
                 
                 Text(currentObjective.objectiveTitle)
                     .font(.headline)
-                    .padding()
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
 
                 Text(currentObjective.objectiveDescription)
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .padding()
+                    .lineLimit(nil)  // Allow unlimited lines
+                    .fixedSize(horizontal: false, vertical: true) // Ensure the text doesn't get cut off
 
                 if(currentObjective.objectiveType == .code) {
                     HStack {
@@ -333,7 +336,7 @@ struct ActiveQuestView: View {
                 Spacer()
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: 800)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.white)
             .cornerRadius(16)
             .shadow(radius: 10)

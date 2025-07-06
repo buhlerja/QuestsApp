@@ -127,6 +127,8 @@ struct addMaterials: View {
                     .padding(.top, 10)
             }
             
+            Divider()
+            
             ForEach(materials) { material in
                 HStack {
                     if let materialCategory = material.category {
@@ -135,7 +137,7 @@ struct addMaterials: View {
                     }
                     Spacer()
                     Text(material.material)
-                        .font(.headline)
+                        .font(.subheadline)
                     Spacer()
                     if let costOfMaterial = material.cost {
                         if costOfMaterial >= maxPriceValue {

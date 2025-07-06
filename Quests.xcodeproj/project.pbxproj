@@ -26,6 +26,7 @@
 		8344B7072C7263EC00B9216A /* materialsStruc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7062C7263EC00B9216A /* materialsStruc.swift */; };
 		8344B7092C72838F00B9216A /* ObjectiveHighLevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */; };
 		8344B76C2C692A440053084D /* SupportingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8344B76B2C692A440053084D /* SupportingInfoView.swift */; };
+		834A9F422E1AD44A00D794E6 /* ObjectiveCreatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834A9F412E1AD43800D794E6 /* ObjectiveCreatorView.swift */; };
 		834C44922C950DCC00DC1BFC /* areaSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 834C44912C950DCC00DC1BFC /* areaSelector.swift */; };
 		834C44972C95E29000DC1BFC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44962C95E29000DC1BFC /* FirebaseAnalytics */; };
 		834C44992C95E29000DC1BFC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 834C44982C95E29000DC1BFC /* FirebaseAuth */; };
@@ -91,6 +92,7 @@
 		8344B7082C72838F00B9216A /* ObjectiveHighLevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveHighLevelView.swift; sourceTree = "<group>"; };
 		8344B76B2C692A440053084D /* SupportingInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingInfoView.swift; sourceTree = "<group>"; };
 		834A9F402E1988FD00D794E6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		834A9F412E1AD43800D794E6 /* ObjectiveCreatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectiveCreatorView.swift; sourceTree = "<group>"; };
 		834C44912C950DCC00DC1BFC /* areaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = areaSelector.swift; sourceTree = "<group>"; };
 		83793C6C2D277D690059FF17 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
 		83793C6E2D277D790059FF17 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 			isa = PBXGroup;
 			children = (
 				831337D02D1B588F0019C84F /* QuestStartScreen.swift */,
+				834A9F412E1AD43800D794E6 /* ObjectiveCreatorView.swift */,
 				83D2D7DB2C4486D20004A35E /* ActiveQuestView.swift */,
 				830F234D2CC416A8008586C9 /* QuestCompleteView.swift */,
 				83B5DA162CFE5AF4000F3444 /* MaterialsDisplayView.swift */,
@@ -588,6 +591,7 @@
 				8315E1F22CA21D580079E403 /* ProfilePage.swift in Sources */,
 				83B5DA192CFE94BD000F3444 /* QuestManager.swift in Sources */,
 				83E9F0872CE28364003595B8 /* SupportingInfoStruc.swift in Sources */,
+				834A9F422E1AD44A00D794E6 /* ObjectiveCreatorView.swift in Sources */,
 				831337D12D1B588F0019C84F /* QuestStartScreen.swift in Sources */,
 				8315E1F02CA2176A0079E403 /* RootView.swift in Sources */,
 				83B98FB62D2243C2001D000E /* OnFirstAppearViewModifier.swift in Sources */,

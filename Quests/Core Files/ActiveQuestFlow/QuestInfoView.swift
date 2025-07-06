@@ -41,6 +41,11 @@ struct QuestInfoView: View {
                 ScrollView(.vertical) {
                     
                     VStack(alignment: .leading, spacing: 10) {
+                        
+                        Text(viewModel.quest.title)
+                            .font(.largeTitle.bold())
+                            .foregroundColor(.white)
+                            .padding()
                     
                         if viewModel.quest.hidden {
                             Text("Quest not available for play")
@@ -51,7 +56,7 @@ struct QuestInfoView: View {
                                 .background(Color.red)
                                 .cornerRadius(8)
                                 .shadow(radius: 5)
-                                .padding()
+                                .padding(.horizontal)
                         }
                         
                         if hasError {
@@ -164,36 +169,57 @@ struct QuestInfoView: View {
                         
                         // Quest metadata information
                         VStack(alignment: .leading, spacing: 10) {
-                            HStack {
-                                Image(systemName: "play.circle.fill")
-                                Text("Played: \(viewModel.quest.metaData.numTimesPlayed) times")
-                            }
+                            Label(
+                                title: {
+                                    Text("Played: \(viewModel.quest.metaData.numTimesPlayed) times")
+                                        .font(.headline)
+                                },
+                                icon: {
+                                    Image(systemName: "play.circle.fill")
+                                        .foregroundColor(.white.opacity(0.8))
+                                }
+                            )
+
                             if let completionRate = viewModel.quest.metaData.completionRate {
                                 Button( action: {
                                     completionRateDroppedDown.toggle()
                                 }, label: {
                                     HStack {
                                         Image(systemName: "trophy.circle.fill")
+                                            .foregroundColor(.white.opacity(0.8))
                                         Text("Completion Rate: \(completionRate, specifier: "%.1f")%")
-                                        if completionRateDroppedDown {
-                                            Image(systemName: "chevron.down")
-                                        }
-                                        else {
-                                            Image(systemName: "chevron.right")
-                                        }
+                                            .font(.headline)
+                                            .foregroundColor(.white.opacity(0.8))
+                                        Image(systemName: completionRateDroppedDown ? "chevron.down" : "chevron.right")
+                                            .foregroundColor(.white.opacity(0.6))
                                     }
                                 })
                                 if completionRateDroppedDown {
-                                    HStack {
-                                        Image(systemName: "checkmark.circle.fill")
-                                        Text("Successes: \(viewModel.quest.metaData.numSuccesses)")
-                                    }
-                                    .padding([.leading, .trailing])
-                                    HStack {
-                                        Image(systemName: "xmark.circle.fill")
-                                        Text("Failures: \(viewModel.quest.metaData.numFails)")
-                                    }
-                                    .padding([.leading, .trailing])
+                                    Label(
+                                        title: {
+                                            Text("Successes: \(viewModel.quest.metaData.numSuccesses)")
+                                                .font(.subheadline)
+                                        },
+                                        icon: {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.green)
+                                        }
+                                    )
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding(.horizontal)
+
+                                    Label(
+                                        title: {
+                                            Text("Failures: \(viewModel.quest.metaData.numFails)")
+                                                .font(.subheadline)
+                                        },
+                                        icon: {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.red)
+                                        }
+                                    )
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding(.horizontal)
                                 }
                             }
                         }
@@ -217,126 +243,132 @@ struct QuestInfoView: View {
 
                         // Quest description
                         Text(viewModel.quest.description)
-                            .font(.headline)
+                            .font(.title3.bold())
                             .foregroundColor(.white.opacity(0.8))
                             .padding([.leading, .trailing])
                         
-                        HStack {
-                            Image(systemName: "pin.circle")
-                                .foregroundColor(.white.opacity(0.8))
-                            Text("Objectives: \(viewModel.quest.objectiveCount)")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        .padding([.leading, .trailing])
+                        Label("Objectives: \(viewModel.quest.objectiveCount)", systemImage: "pin.circle.fill")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal)
                         
-                        // Treasure value section
+                        // Treasure Value Section
                         if viewModel.quest.supportingInfo.treasure {
-                            HStack {
-                                Image(systemName: "dollarsign.circle.fill")
-                                    .foregroundColor(.white.opacity(0.8))
-                                Text("Treasure value: \(viewModel.quest.supportingInfo.treasureValue, specifier: "%.1f")")
-                                    .font(.headline)
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
-                            .padding([.leading, .trailing])
+                            Label(
+                                title: {
+                                    Text("Treasure value: \(viewModel.quest.supportingInfo.treasureValue, specifier: "%.1f")")
+                                        .font(.headline)
+                                },
+                                icon: {
+                                    Image(systemName: "dollarsign.circle.fill")
+                                        .foregroundColor(.white.opacity(0.8))
+                                }
+                            )
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal)
                         }
 
                         // Total Length Section
-                        if let totalLength = viewModel.quest.supportingInfo.totalLength, viewModel.quest.supportingInfo.lengthEstimate {
-                            HStack {
-                                Image(systemName: "clock")
-                                    .foregroundColor(.white.opacity(0.8))
-                                Text("\(totalLength) min")
-                                    .font(.headline)
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
-                            .padding([.leading, .trailing])
+                        if let totalLength = viewModel.quest.supportingInfo.totalLength,
+                           viewModel.quest.supportingInfo.lengthEstimate {
+                            Label(
+                                title: {
+                                    Text("\(totalLength) min")
+                                        .font(.headline)
+                                },
+                                icon: {
+                                    Image(systemName: "clock.fill") // fixed typo from "cloc.fill"
+                                        .foregroundColor(.white.opacity(0.8))
+                                }
+                            )
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal)
                         }
 
                         // Difficulty Section
-                        HStack {
-                            Image(systemName: "chart.bar.fill")
-                                .foregroundColor(.white.opacity(0.8))
-                            Text("Difficulty: \(viewModel.quest.supportingInfo.difficulty, specifier: "%.1f")")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        .padding([.leading, .trailing])
+                        Label(
+                            title: {
+                                Text("Difficulty: \(viewModel.quest.supportingInfo.difficulty, specifier: "%.1f")")
+                                    .font(.headline)
+                            },
+                            icon: {
+                                Image(systemName: "chart.bar.fill")
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                        )
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal)
                         
-                        // Distance section
-                        HStack {
-                            Image(systemName: "figure.walk.circle.fill")
-                                .foregroundColor(.white.opacity(0.8))
-                            Text("Travel distance: \(viewModel.quest.supportingInfo.distance, specifier: "%.1f")")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                        .padding([.leading, .trailing])
+                        // Distance Section
+                        Label(
+                            title: {
+                                Text("Travel Distance: \(viewModel.quest.supportingInfo.distance, specifier: "%.1f")")
+                                    .font(.headline)
+                            },
+                            icon: {
+                                Image(systemName: "figure.walk.circle.fill")
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                        )
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal)
 
                         // Cost Section
-                        HStack {
-                            Image(systemName: "dollarsign.circle")
-                                .foregroundColor(.white.opacity(0.8))
-                            if let cost = viewModel.quest.supportingInfo.cost {
-                                Text("\(Int(cost))")
-                                    .font(.headline)
-                                    .foregroundColor(.white.opacity(0.8))
-                            } else {
-                                Text("Unspecified")
-                                    .font(.headline)
+                        Label(
+                            title: {
+                                if let cost = viewModel.quest.supportingInfo.cost {
+                                    Text("Cost: \(Int(cost))")
+                                        .font(.headline)
+                                } else {
+                                    Text("Cost: Unspecified")
+                                        .font(.headline)
+                                }
+                            },
+                            icon: {
+                                Image(systemName: "dollarsign.circle.fill")
                                     .foregroundColor(.white.opacity(0.8))
                             }
-                        }
-                        .padding([.leading, .trailing])
+                        )
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal)
                         
                         if creatorView {
-                            ZStack {
-                                Rectangle()
-                                    .fill(Color.cyan) // Fill with blue color
-                                    .frame(height: 250) // Fix height for the banner
-                                    .ignoresSafeArea(edges: .horizontal) // Extend the rectangle to screen edges
-                                    .shadow(radius: 5) // Add a shadow for better depth
-                                VStack {
-                                    HStack {
-                                        Text("Objective List (Creator View Only)")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .padding()
-                                        Spacer()
-                                    }
-                                    
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        HStack(spacing: 16) { // Ensure spacing between cards
-                                            if !viewModel.quest.objectives.isEmpty {
-                                                ForEach(viewModel.quest.objectives, id: \.id) { objective in
-                                                    VStack(alignment: .leading, spacing: 8) {
-                                                        Text("Objective \(objective.objectiveNumber)")
-                                                            .font(.headline)
-                                                            .foregroundColor(.black)
-                                                        Text(objective.objectiveTitle)
-                                                            .font(.headline)
-                                                            .foregroundColor(.black)
-                                                        Text(objective.objectiveDescription)
-                                                            .font(.subheadline)
-                                                            .foregroundColor(.black.opacity(0.8))
-                                                    }
-                                                    .padding()
-                                                    .background(
-                                                        RoundedRectangle(cornerRadius: 12)
-                                                            .fill(Color.white) // Change the color as needed
-                                                            .shadow(radius: 4) // Add a subtle shadow
-                                                    )
-                                                    .padding(.vertical)
-                                                    .frame(width: 250, height: 200)
-                                                }
+                            VStack {
+                                Divider()
+                                HStack {
+                                    Text("Objective List (Creator View Only)")
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white.opacity(0.8))
+                                        .padding()
+                                    Spacer()
+                                }
+        
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 16) { // Spacing between cards
+                                        if !viewModel.quest.objectives.isEmpty {
+                                            ForEach(viewModel.quest.objectives, id: \.id) { objective in
+                                                ObjectiveCreatorView(objective: objective)
+                                                    .frame(width: 300)
                                             }
                                         }
-                                        .padding(.horizontal) // Add padding for the horizontal scroll view
                                     }
+                                    .padding(.horizontal) // Padding for the horizontal scroll view
                                 }
-                                .padding(.top, 20) // Adjust spacing between banner and cards
                             }
+                            .padding(.vertical) // Spacing between banner and cards
+                        }
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Navigation")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding()
+                            Spacer()
                         }
 
                         // Map and directions button
@@ -416,18 +448,38 @@ struct QuestInfoView: View {
                             }
                         }
                         
+                        Divider()
+                        
                         // List the required materials!
                         if !viewModel.quest.supportingInfo.materials.isEmpty {
+                            HStack {
+                                Text("Supplies")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding()
+                                Spacer()
+                            }
                             MaterialsDisplayView(materials: viewModel.quest.supportingInfo.materials)
+                            Divider()
                         }
 
                         
                         // List the special instructions!
                         if let specialInstructions = viewModel.quest.supportingInfo.specialInstructions {
-                            Text("Special instructions: \(specialInstructions)")
+                            HStack {
+                                Text("Special Instructions")
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white.opacity(0.8))
+                                    .padding()
+                                Spacer()
+                            }
+                            Text("\(specialInstructions)")
                                 .font(.headline)
                                 .foregroundColor(.white.opacity(0.8))
-                                .padding([.leading, .trailing])
+                                .padding()
+                            Divider()
                         }
                         
                         Spacer()
@@ -451,7 +503,8 @@ struct QuestInfoView: View {
                         
                         Spacer()
                     }
-                    .navigationTitle(viewModel.quest.title)
+                    .navigationTitle("")
+                    .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Menu {

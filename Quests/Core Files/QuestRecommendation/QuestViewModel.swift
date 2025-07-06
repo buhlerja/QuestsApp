@@ -34,6 +34,8 @@ final class QuestViewModel: ObservableObject {
     provided from GeoFire and the lastDocument associated with each for pagination */
     @Published var noMoreToQuery: Bool = false // used to keep track of whether our query is finished or not
     
+    @Published var watchlistQuestIds: [String]? = nil // Used to conditionally display "Add to Watchlist" button
+    
     func loadCurrentUser() async throws { // DONE REDUNDANTLY HERE, IN PROFILE VIEW, AND IN CREATEQUESTCONTENTVIEW. SHOULD PROLLY DO ONCE.
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userId: authDataResult.uid)
@@ -189,6 +191,13 @@ final class QuestViewModel: ObservableObject {
     /*func getAllQuests() async throws {
         self.quests = try await QuestManager.shared.getAllQuests()
     }*/ // Works but not needed as it doesn't include pagination.
+    
+    func getWatchlistQuestIds() {
+        guard let user else { return }
+        Task {
+            self.watchlistQuestIds = try await UserQuestRelationshipManager.shared.getQuestIdsByUserIdAndType(userId: user.userId, listType: .watchlist)
+        }
+    }
     
     func addUserWatchlistQuest(questId: String) {
         guard let user else { return } // Make sure the user is logged in or authenticated
