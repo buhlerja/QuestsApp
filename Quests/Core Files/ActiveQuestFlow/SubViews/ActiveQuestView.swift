@@ -395,6 +395,7 @@ struct ActiveQuestView: View {
                 currentObjectiveIndex += 1
                 enteredObjectiveSolution = ""
                 showHintButton = false // reset showHintButton to false
+                displayHint = false
                 viewModel.route = nil // Reset the directions route for the next objective
                 viewModel.objectiveAreaDirectionsErrorMessage = nil // Reset the directions error message for the next objective
                 viewModel.showProgressView = false // Reset the progress view to false for the next objective
