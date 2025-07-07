@@ -1,7 +1,7 @@
 # Quests 🗺️  
 _A location-based adventure platform for real-world challenges_
 
-[🎥 Watch the Demo](https://youtu.be/bxcT6RxLWo4) 
+[Watch the Demo](https://youtu.be/bxcT6RxLWo4) 
 
 ---
 
